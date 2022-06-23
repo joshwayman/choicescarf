@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Choice Scarf - Pokemon Speed Calculator and Comparitor</title>
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+        
+        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+		<link rel="icon" href="/favicon.ico" type="image/x-icon">
+        
+        <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+        <link href='http://fonts.googleapis.com/css?family=Noto+Serif:400italic' rel='stylesheet' type='text/css'>
+        
+        <link href="css/speed.css" type="text/css" rel="stylesheet" />
+        
+        <!-- JQuery -->
+        <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+        
+        
+        <!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+        <!-- GSAP -->
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.15.0/TweenMax.min.js"></script>
+    </head>
+    <body>
+	
+		<!-- Google Tag Manager -->
+		<script>
+			dataLayer = [];
+		</script>
+		<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-W7XHSG"
+		height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+		<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+		new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+		j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+		'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+		})(window,document,'script','dataLayer','GTM-W7XHSG');</script>
+		<!-- End Google Tag Manager -->
+
+        
+        <div id="outerContainer">
+            <nav class="navbar navbar-default short">
+                <div class="container">
+                    <div class="center-block v-space">
+                        <div class="brand-msg">
+                            <div class="words">
+                                <h1>ChoiceScarf</h1>
+                                <p>Stop wasting speed EVs</p>
+                            </div>
+                            <img src="img/choice-scarf.png" /> 
+                        </div>
+                    </div>    
+                </div>
+            </nav>
+            <section class="container extra-padding">
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-2">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="alert alert-info alert-dismissible fade in" role="alert">
+                                  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <strong>ChoiceScarf - Version 1.0</strong>
+                                    <p>ChoiceScarf works out the minimum number of EVs and nature to outspeed a pokemon. If it can't outspeed it will calculate what is required to outspeed with a Choice Scarf.</p>
+                                    <p>Use the advanced option to work out how to outspeed at different boosts, levels, under tailwind, swift swim etc.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                                <form id="pokemonFormA" class="col-sm-6">
+                                    <h3 class="col-md-12">Speed to beat</h3>
+
+                                    <div class="form-group col-sm-12">
+                                        <label class="number" for="bs1">Base Speed</label>  
+                                        <input id="bs1" placeholder="98" type="number" class="form-control">
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <label class="number" for="ivs1">IVs</label>
+                                        <input id="ivs1" placeholder="31" default="31" max="31" min="0" type="number" class="form-control">
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <label class="number" for="evs1">EVs</label>
+                                        <input id="evs1" max="252" min="0" placeholder="252" type="number" class="form-control">
+                                    </div>
+
+                                    <div class="form-group col-sm-12">
+                                        <label class="formSubheading">Nature</label>
+                                        <div class="radio">
+
+                                            <label class="" for="pos1">
+                                                <input type="radio" name="nature" id="pos1" value="1.1"> 
+                                                Positive</label>
+                                        </div>
+                                        <div class="radio">
+                                            <label class="" for="neu1">
+                                                <input type="radio" name="nature" id="neu1" value="1" checked>
+                                                Neutral</label>
+                                        </div>
+
+                                        <div class="radio">
+                                            <label class="" for="neg1">
+                                                <input type="radio" name="nature" id="neg1" value="0.9"> 
+                                                Negative</label>
+                                        </div>
+                                    </div>
+                                </form>
+                                <form id="pokemonFormB" class="col-sm-6">
+                                    <h3 class="col-md-12">Your Pokemon</h3>
+
+
+                                    <div class="form-group col-sm-12">
+                                        <label class="number" for="bs2">Base Speed</label>
+                                        <input id="bs2" placeholder="98" type="number" class="form-control">
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <label class="number" for="ivs2">IVs</label>
+                                        <input id="ivs2" placeholder="31" default="31" max="31" min="0" type="number" class="form-control">
+                                    </div>
+
+                                    <div class="form-group col-sm-6">
+                                        <button id="theGoButton" class="btn btn-lg btn-primary">GO!</button>
+                                    </div>
+                                </form>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h3>The results</h3>
+                                <p id="explaination"></p>
+
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <td colspan="4">
+                                                    <span id="speedToBeat"></span>
+                                                    <small>
+                                                        <span id="modsB"></span>
+                                                    </small>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>Nature</th>
+                                                <th></th>
+                                                <th class="text-right">EVs</th>
+                                                <th class="text-right">Speed</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr id="tr-neg">
+                                                <td>Negative<br />
+                                                    <small>Brave, Relaxed, Quiet, Sassy</small>
+                                                </td>
+                                                <td class="scarfs"></td>
+                                                <td id="evsNeg" class="text-right"></td>
+                                                <td id="speedNeg" class="text-right"></td>
+                                            </tr>
+                                            <tr id="tr-neu">
+                                                <td>Neutral<br />
+                                                    <small>Hardy, Docile, Serious, Bashful, Quirky, Careful, <br />
+                                                        Gentle, Calm, Rash, Mild, Modest, Lax, <br />
+                                                        Impish, Bold, Naughty, Adamant, Lonely</small>
+                                                </td>
+                                                <td class="scarfs"></td>
+                                                <td id="evsNeu" class="text-right"></td>
+                                                <td id="speedNeu" class="text-right"></td>
+                                            </tr>
+                                            <tr id="tr-pos">
+                                                <td>Positive<br />
+                                                    <small>Timid, Hasty, Jolly, Naive</small>
+                                                </td>
+                                                <td class="scarfs"></td>
+                                                <td id="evsPos" class="text-right"></td>
+                                                <td id="speedPos" class="text-right"></td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="4">
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="advancedBox row">
+                            <hr />
+                            <div class="toggle col-md-12">
+                                <label class="label-switch"><span class="advancedLabel">ADVANCED</span> <input type="checkbox" id="advancedChecker"><div class="checkbox"></div></label>
+                            </div>
+                            <div class="advancedContent col-md-12" id="advancedContent" style="display: none;">
+                                <div class="pokemonAAdvanced col-sm-6">
+
+                                    <div class="form-group">
+                                        <label class="number" for="level1">Level</label>
+                                        <input id="level1" max="100" min="1" placeholder="100" type="number" value="50" class="form-control">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="slider row">
+                                            <label for="boostsA" class="col-md-12">Boosts</label>
+                                            <div class="col-sm-10">
+                                                <input type="range" max="6" min="-6" value="0" name="boostsA" id="boostsA" oninput="boostsAo.value=boostsA.value"  class="">
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <output id="boostsAo" name="boostsAo" for="boostsA" class="" class="fix">0</output>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="checkbox">
+                                            <label class="" for="scarfA">
+                                                <input type="checkbox" id="scarfA"> Choice Scarf
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="checkbox">
+                                            <label class="" for="tailA">
+                                                <input type="checkbox" id="tailA"> Tailwind
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="checkbox">
+                                            <label class="" for="abilityA">
+                                                <input type="checkbox" id="abilityA">  Swift swim etc.</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="pokemonBAdvanced col-sm-6">
+                                    <div class="form-group">
+                                        <label class="number" for="level2">Level</label>
+                                        <input id="level2" max="100" min="1" placeholder="100" type="number" value="50" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="slider row">
+                                            <label for="boostsB" class="col-md-12">Boosts</label>
+                                            <div class="col-sm-10">
+                                                <input type="range" max="6" min="-6" value="0" name="boostsB" id="boostsB" oninput="boostsBo.value=boostsB.value">
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <output id="boostsBo" name="boostsBo" for="boostsB" class="fix">0</output>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="checkbox">
+                                            <label class="" for="scarfB">
+                                                <input type="checkbox" id="scarfB"> Choice Scarf
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="checkbox">
+                                            <label class="" for="tailB">
+                                                <input type="checkbox" id="tailB"> Tailwind
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="checkbox">
+                                            <label class="" for="abilityB">
+                                                <input type="checkbox" id="abilityB">  Swift swim etc.</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <!--
+        <script type="text/javascript" src="js/pokespeed.js"></script>
+        <script type="text/javascript" src="js/pokespeedV2.js"></script>
+        -->
+        <script type="text/javascript" src="js/pokespeedV3.js"></script>
+    </body>
+</html>
