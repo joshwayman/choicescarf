@@ -1,0 +1,254 @@
+:root {
+  --ff-mono : 'Space Mono', monospace;
+  --fs-base : 18px;
+
+  --yellow : #FFF45C;
+  --blue-light : #C8E7F1;
+  --blue-mid : #4696D0;
+  --blue-dark : #3B6B90;
+  --almost-black : #231815;
+  --black: #000000;
+  --white: #ffffff;
+
+  --gutter : 2rem;
+  --spacing-block: 1rem;
+  --spacing-inline: 2rem;
+
+  --max-width-form : 26rem;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-base);
+  line-height: 1.3;
+  text-rendering: geometricPrecision;
+
+  background-color: var(--almost-black);
+  color: var(--white);
+
+  margin: 0;
+  padding: 0;
+}
+
+.layout {
+  min-height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+
+  background-color: var(--black);
+  padding-inline: var(--gutter);
+  padding-block: var(--spacing-block);
+  width: 100%;
+}
+
+img { display: block; }
+
+header {
+  padding-block: 2rem;
+  display: flex;
+  align-content: center;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1rem;
+  
+}
+
+header img {
+  max-width: 3rem;
+  height: auto;
+}
+header h1 span {
+  display: block;
+  font-size: 0.65em;
+  font-weight: 400;
+}
+
+h1,h3,h4,h5,h6 {
+  margin: 0;
+}
+
+h2 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.form-wrapper {
+  max-width: var(--max-width-form);
+  height: 100vh;
+
+  padding-bottom: 4rem;
+  background-color: var(--black);
+
+  overflow: scroll;
+
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+}
+.form-inner {
+  padding-inline: 2rem;
+  max-width: var(--max-width-form);
+  margin: 0 0 0 auto;
+
+}
+.results-wrapper {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  max-width: calc(100% - var(--max-width-form));
+
+  display: flex;
+  align-items: stretch;
+}
+
+.results-inner {
+  padding-inline: 2rem;
+  padding-top: 2rem;
+  padding-bottom: 4rem;
+  width: 100%;
+}
+
+
+label, input, button {
+  cursor: pointer;
+}
+
+button {
+  padding: 1rem;
+  border: solid 1px var(--blue-light);
+  width: 100%;
+  background-color: transparent;
+  color: var(--blue-light);
+  text-transform: uppercase;
+  font-size: 1.1rem;
+}
+
+.form .pokemon > div {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 2rem;
+  margin-bottom: 1rem;
+}
+
+.form .pokemon > div > div, 
+.form .pokemon > div > label {
+  width: 100%;
+}
+
+.form .pokemon {
+  margin-top: 2rem;
+  margin-bottom: 4rem;
+}
+
+.radio-group {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+
+  border: 1px solid var(--white);
+}
+
+.radio-group label {
+  width: 100%;
+  padding: 0.5rem 0.5rem;
+  font-size: 0.9rem;
+  text-align: center;
+
+  background-color: transparent;
+}
+/*
+.radio-group label:first-of-type {
+  border-radius: 5px 0 0 5px;
+}
+.radio-group label:last-of-type {
+  border-radius: 0 5px 5px 0;
+}
+*/
+
+.radio-group input[type="radio"] {
+  display: none;
+}
+
+.radio-group input[type="radio"]:checked + label {
+  background-color: var(--yellow);
+  color: var(--black);
+}
+
+.form {
+  font-size: 0.9rem;
+}
+
+input, select {
+  width: 100%;
+  padding: 0.5rem 0.5rem;
+  background-color: transparent;
+
+  border: 1px solid var(--blue-light);
+  color: var(--white);
+
+  font-size: 1rem;
+}
+input, select, .radio-group {
+  margin-top: 0.5rem;
+}
+input:focus {
+  outline: none;
+  border-color: var(--yellow);
+}
+
+.chart-header {
+  width: 100%;
+}
+.chart-line {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  align-content: center;
+  flex-direction: row;
+  flex-wrap: nowrap;
+
+  width: 100%;
+  margin-bottom: 1rem;
+}
+.chart-line > div:first-of-type {
+  max-width: 7rem;
+  width: 100%;
+}
+.line-container {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  align-content: center;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+.line-container span {
+  padding-left: 1rem;
+  min-width: 5rem;
+}
+.line-container .line {
+  text-align: center;
+  padding: 0.25rem 0;
+  overflow: hidden;
+}
+.chart-line > div:last-of-type {
+  padding-left: 1rem;
+  min-width: 5rem;
+}
