@@ -10,7 +10,7 @@ export default function ChartLine( {label, evs, speed, max, speedToBeat} ) {
             if(speedInc === speed) return;
             if(speedInc < speed) setSpeedInc( speedInc + 1 );
             if(speedInc > speed) setSpeedInc( speedInc - 1 );
-        }, 4)
+        }, 12)
     }, [speedInc, speed]);
 
     useEffect(() => {
