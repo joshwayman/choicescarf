@@ -4,20 +4,20 @@ export function returnCompleteSpeed( pokemon = {}, pokemonToBeat = {} ) {
     
     //let ev = 0;
     const output = {};
+    const initialChoicescarf = pokemon.choicescarf;
 
     const speedToBeat = calculateBasicSpeed(pokemonToBeat);
-    const rawSpeed = calculateBasicSpeed(pokemon);
-    
-    console.warn('returnCompleteSpeed: ', speedToBeat);
-    console.warn('rawSpeed: ', rawSpeed);
+    //const rawSpeed = calculateBasicSpeed(pokemon);
 
     output.speedToBeat = speedToBeat;
     output.results = [];
+    output.choicescarf = false;
 
     const natures = ['negative', 'neutral', 'positive'];
 
-    natures.map( nature => {
+    let win = false;
 
+    natures.map( nature => {
         pokemon.nature = nature;
 
         const calc = bruteForceSpeedEVs( pokemon, speedToBeat );
@@ -25,15 +25,47 @@ export function returnCompleteSpeed( pokemon = {}, pokemonToBeat = {} ) {
         const obj = { 
             label : nature,
             group: 'nature',
+            choicescarf: false,
             ...calc,
-            stats: pokemon  
+            stats: { ...pokemon }
         };
 
+        if(calc.win) win = true;   
 
         return output.results.push(obj);
     });
 
+    if(win === true) return output;
+
+
+    natures.map( nature => {
+        pokemon.nature = nature;
+        pokemon.choicescarf = true;
+
+        const calc = bruteForceSpeedEVs( pokemon, speedToBeat );
+
+        const obj = { 
+            label : nature,
+            group: 'nature',
+            choicescarf: true,
+            ...calc,
+            stats: { ...pokemon }
+        };
+
+        if(calc.win) win = true;  
+
+        return output.results.push(obj);
+    });
+
+    output.choicescarf = true;
+
+    // Cases
+    //const cases = ['choicescarf','tailwind', 'boosts'];
+
     console.log(output);
+
+    
+    pokemon.choicescarf = initialChoicescarf ? true : false;
 
     return output;
 }
@@ -127,7 +159,7 @@ function bruteForceSpeedEVs( { iv, lvl, nature, baseSpeed, boosts, choicescarf, 
         //console.log('Brute: ev ', ev, calcdSpeed);
 
         if(calcdSpeed > speedToBeat) {
-            console.warn(calcdSpeed, speedToBeat, ev)
+            //console.warn(calcdSpeed, speedToBeat, ev)
             return { ev, speed : calcdSpeed, win : true, speedToBeat };
         } 
 

@@ -42,7 +42,7 @@ const ChoiceScarfContextProvider = ({ children }) => {
     const pokemonToBeat = () => pokemonToBeatState;
 
     const returnResults = () => {
-        console.log('RETURN: ', pokemonState, pokemonToBeatState);
+        /*console.log('RETURN: ', pokemonState, pokemonToBeatState);*/
         const results = returnCompleteSpeed(pokemonState, pokemonToBeatState);
 
         setResults(results);

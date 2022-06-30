@@ -1,7 +1,7 @@
-import { useState, useContext } from "react"
+import { useState, useContext, useEffect } from "react"
 import ChoiceScarfContext from "../../context/choicescarfContext";
 
-export default function Form({children}) {
+export default function Form({children, handleResultsVisibility, resultsVisible}) {
     const {  pokemonState : pokemon,  pokemonToBeatState : pokemonToBeat, setPokemon, setPokemonToBeat, returnResults } = useContext(ChoiceScarfContext);
 
     const [natureToBeat, setNatureToBeat ] = useState('neutral');
@@ -53,8 +53,13 @@ export default function Form({children}) {
         setPokemonToBeat(obj);
     }
 
+    const handleReturnResults = () => {
+        handleResultsVisibility(true);
+        returnResults();
+    }
+
     return(
-        <section className="form-wrapper">
+        <section className={`form-wrapper ${resultsVisible ? 'results-visible' : 'results-hidden'}`}>
             <div className='form-inner'>
                 {children}
                 <div className='form'>
@@ -172,7 +177,7 @@ export default function Form({children}) {
                             </label>
                         </div>
                     </div>
-                    <button onClick={returnResults}>Go</button>
+                    <button onClick={handleReturnResults}>Go</button>
                     <button onClick={() => { setShowAdvanced( showAdvanced ? false : true ) }} className='btn-subtle'>{showAdvanced ? 'Hide' : 'Show'} advanced</button>
                 </div>
             </div>

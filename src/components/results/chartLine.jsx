@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react"
+import { ImgScarf } from './';
+//import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
-export default function ChartLine( {label, evs, speed, max, speedToBeat} ) {
+export default function ChartLine( {label, evs, speed, max, choicescarf, speedToBeat} ) {
     const [speedInc, setSpeedInc] = useState(0);
     const [evInc, setEvInc] = useState(0);
     const lineId = `line_${speed}_${evs}`;
@@ -25,9 +27,9 @@ export default function ChartLine( {label, evs, speed, max, speedToBeat} ) {
         <div className="chart-line">
             <div>{`${label[0].toUpperCase()}${label.slice(1)}`}</div>
             <div className='line-container'>
-                <div id={lineId} className='line' style={{ width : ( evInc / 252 * 100 )+'%', backgroundColor: 'orange'  }}> {evInc} EVs </div>
+                <div id={lineId} className={`line ${choicescarf ? 'choiced' : ''} ${speedInc > speedToBeat ? 'win' : ( speedInc === speedToBeat ? 'tie' : 'lose') }`} style={{ '--after-width' : ( evInc / 252 * 100 )+'%'  }}> {choicescarf ? <ImgScarf />: ''}{evInc} EVs </div>
             </div>
-            <div> {speedInc > speedToBeat ? '⭐' : '❌' } {speedInc}</div>
+            <div className='speed'> <span>{speedInc > speedToBeat ? '⭐' : ( speedInc === speedToBeat ? '🟰' : '❌') }</span> {speedInc}</div>
         </div>
     )
 }
