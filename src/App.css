@@ -3,7 +3,7 @@
   
 
 	/* Type */
-  --fs-base : 22px;
+  --base-font-size : 18px;
 	--base-line-height : 1.75;
 	--fs-s3 : 0.422rem;
 	--fs-s2 : 0.563rem;
@@ -28,16 +28,41 @@
   --spacing-inline: 2rem;
 
   --max-width-form : 26rem;
+  --max-width-form-inner : 26rem;
+  --max-width-form-wide : 48rem;
 
   --body-bg : var(--black);
   --body-bg-alt : var(--almost-black);
   --body-text : var(--white);
 
   --highlight : var(--yellow);
+  --highlight-alt : var(--blue-light);
+  --highlight-subtle : var(--blue-dark);
   --win : var(--blue-mid);
   --lose : var(--black);
   --tie : var(--blue-dark);
 
+  --footer-bg : var(--black);
+  --footer-color : var(--white);
+
+}
+
+/* Light mode! */
+@media (prefers-color-scheme: light) {
+  :root {
+    --body-bg : var(--white);
+    --body-bg-alt : var(--blue-light);
+    --body-text : var(--black);
+
+    --highlight-alt : var(--blue-mid);
+    --highlight-subtle : var(--blue-light);
+
+    --footer-bg: var(--blue-mid);
+
+    --win : var(--yellow);
+    --lose : var(--blue-mid);
+    --tie : var(--white);
+  }
 }
 
 * {
@@ -46,7 +71,7 @@
 
 body {
   font-family: var(--ff-mono);
-  font-size: var(--fs-base);
+  font-size: var(--base-font-size);
   line-height: var(--base-line-height);
   text-rendering: geometricPrecision;
   -webkit-font-smoothing: antialiased;
@@ -70,11 +95,13 @@ footer {
   bottom: 0;
   left: 0;
 
-  background-color: var(--black);
+  background-color: var(--footer-bg);
+  color: var(--footer-color);
   padding-inline: var(--gutter);
   padding-block: 0.5rem;
   width: 100%;
   font-size: var(--fs-s1);
+  z-index: 3;
 }
 footer a {
   color: var(--highlight);
@@ -89,7 +116,7 @@ header {
   align-items: center;
   justify-content: flex-start;
   gap: 1rem;
-  
+  min-height: 8rem;
 }
 
 header img {
@@ -109,6 +136,7 @@ h1,h3,h4,h5,h6 {
 h2 {
   margin-top: 0;
   margin-bottom: 1rem;
+  line-height: 1.3;
 }
 
 .form-wrapper {
@@ -147,16 +175,13 @@ h2 {
 }
 
 .results-inner {
-  padding-inline: 2rem;
+  padding-inline: 4rem;
   padding-top: 2rem;
   padding-bottom: 4rem;
   width: 100%;
-
-  display: flex;
-  align-items: flex-start;
-  flex-wrap: nowrap;
-  flex-direction: column;
-  justify-content: center;
+  margin-top: 9rem;
+  max-width: 48rem;
+  margin-inline: auto;
 }
 
 .results-inner h2 {
@@ -170,10 +195,10 @@ label, input, button {
 
 button {
   padding: 1rem;
-  border: solid 1px var(--blue-light);
+  border: solid 1px var(--highlight-alt);
   width: 100%;
   background-color: transparent;
-  color: var(--blue-light);
+  color: var(--highlight-alt);
   text-transform: uppercase;
   font-size: 1.1rem;
 
@@ -208,7 +233,7 @@ button:hover {
   flex-direction: row;
   flex-wrap: nowrap;
 
-  border: 1px solid var(--body-text);
+  border: 1px solid var(--highlight-alt);
 }
 
 .radio-group label {
@@ -234,7 +259,7 @@ button:hover {
 
 .radio-group input[type="radio"]:checked + label {
   background-color: var(--highlight);
-  color: var(--black);
+  color: var(--highlight-alt);
 }
 
 .form {
@@ -246,7 +271,7 @@ input, select {
   padding: 0.5rem 0.5rem;
   background-color: transparent;
 
-  border: 1px solid var(--blue-light);
+  border: 1px solid var(--highlight-alt);
   color: var(--body-text);
 
   font-size: 1rem;
@@ -263,7 +288,6 @@ input:focus {
 .chart {
   border: solid 1px white;
   padding: var(--gutter);
-  max-width: 48rem;
   width: 100%;
   margin-top: 2rem;
 }
@@ -357,7 +381,7 @@ input:focus {
   margin-bottom: 0;
 
   padding-inline: 0.5rem;
-  background-color: var(--blue-dark);
+  background-color: var(--highlight-subtle);
 }
 .form .pokemon > .row.advanced.show {
   max-height: 6rem;
@@ -427,6 +451,10 @@ button.btn-subtle {
 .form-wrapper.results-hidden {
   max-width: calc(50vw + (var(--max-width-form) / 2) );
   width: 100%;
+  box-shadow: 5px 0px 5px -2px rgb(0 0 0 / 0%);
+}
+.form-wrapper.results-visible {
+  box-shadow: 5px 0px 5px -2px rgb(0 0 0 / 10%);
 }
 
 .form-wrapper.results-hidden + .results-wrapper {
@@ -438,4 +466,205 @@ button.btn-subtle {
 }
 .results-wrapper.is-displayed {
   opacity: 1;
+}
+
+button.btn-side-up {
+  display: none;
+  position: absolute;
+  top: 1rem;
+  right: 2rem;
+
+  width: auto;
+  padding: 0.25rem;
+  line-height: 1;
+  border: none;
+  border-radius: 100%;
+}
+button.btn-side-up svg { 
+  display: block;
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+@media screen and (min-width: 1290px) {
+  :root {
+    --max-width-form : 45vw;
+  }
+  .form-wrapper.results-hidden {
+    max-width : calc(50vw + (var(--max-width-form-inner) / 2) );
+  }
+  .form-wrapper .form-inner {
+    max-width : var(--max-width-form-inner);
+  }
+
+}
+
+@media screen and (max-width: 64rem) { /* 960px */
+  :root {
+    --max-width-form: 100%;
+    --max-width-form-inner : 26rem;
+  }
+  header {
+    justify-content: center;
+  }
+  /*
+  .layout {
+    overflow: auto;
+    max-height: max-content;
+  }*/  
+  .results-hidden, .results-wrapper {
+    max-width: 100%;
+  }
+  .form-inner {
+    max-width : var(--max-width-form-inner);
+    margin-inline: auto;
+    transition: max-width 150ms ease;
+  }
+  .form-wrapper {
+    position: initial;
+  }
+
+  /* Results */
+  button.btn-side-up {
+    display: block;
+  }
+  .results-wrapper {
+    overflow: hidden;
+    transition-duration: 500ms;
+    top: 100vh;
+    left:0;
+
+    max-width: 100%;
+    box-shadow: 5px 0px 5px -2px rgb(0 0 0 / 0%);
+  }
+  .results-wrapper.is-visible {
+    box-shadow: 0px -2px 4px -1px rgb(0 0 0 / 10%);
+  }
+  .results-wrapper.is-visible.is-tall {
+    top: 10rem;
+  }
+  .results-wrapper.is-visible.is-short {
+    top: 75vh;
+  }
+  .results-inner {
+    margin-top: 0rem;
+    padding-inline: var(--gutter);
+    max-width: var(--max-width-form-wide);
+  }
+
+  .is-short button.btn-side-up {
+    transform: rotate(180deg);
+  }
+
+  /* Subtle style changes */
+  .form .pokemon > div {
+    gap: 0.5rem;
+  }
+}
+
+@media screen and (max-width: 64rem) and (min-width: 41.15rem) {
+  .results-visible .form-inner {
+    max-width : var(--max-width-form-wide);
+    padding-bottom: 4rem;
+  }
+  .results-visible .form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--gutter);
+  }
+  .results-visible .pokemon {
+    flex-basis: calc(50% - var(--gutter) / 2);
+    width: calc(50% - var(--gutter) / 2);
+  }
+  .results-visible button:not(.btn-subtle) {
+    flex-basis: calc(75% - var(--gutter) / 2);
+    width: calc(75% - var(--gutter) / 2);
+  }
+  .results-visible button.btn-subtle {
+    margin-top: 0;
+    flex-basis: calc(25% - var(--gutter) / 2);
+    width: calc(25% - var(--gutter) / 2);
+    border: 1px solid var(--highlight-subtle);
+  }
+  .results-visible .form .pokemon {
+    margin-bottom: 0rem;
+  }
+}
+
+@media screen and (max-width: 41.15rem) { /* 660px */
+  .form .pokemon {
+    margin-bottom: 2rem;
+  }
+  .chart {
+    border: none;
+    padding: 2rem 0 4rem;
+  }
+  .chart .chart-line:first-child {
+    font-size: var(--fs-base);
+  }
+  .chart .chart-line:first-child .chart-header {
+    display: none;
+  }
+  .chart .chart-line:first-child > div:last-child {
+    margin-left: auto;
+    text-align: right;
+  }
+  .chart-line:first-child {
+    margin-bottom: 0.5rem;
+  }
+  .chart-line:not(:first-child) {
+    flex-wrap: wrap;
+    margin-bottom: 1.25rem;
+  }
+  .chart-line > div:first-child {
+    width: 100%;
+    flex-basis: 100%;
+    max-width: 100%;
+    margin-bottom: 0.25rem;
+  }
+  .chart-line .line-container {
+    max-width: calc(100% - 5.5rem);
+  }
+  .chart-line > div.speed {
+    font-size: var(--fs-h6);
+    max-width: 5.5rem;
+    min-width: 5.5rem;
+    text-align: right;
+  }
+  .results-wrapper {
+    z-index: 5;
+    overflow: scroll;
+    transition-duration: 350ms;
+  }
+  .results-wrapper.is-visible.is-tall {
+    top: 10vh;
+  }
+  .results-wrapper.is-visible.is-short {
+    top: 100vh;
+    overflow: visible;
+  }
+  .results-wrapper.is-visible button.btn-side-up {
+    position: fixed;
+    top: unset;
+    bottom: 2rem;
+    background-color: var(--highlight);
+  }
+  .results-wrapper.is-visible.is-tall button.btn-side-up {
+    color: var(--body-text);
+  }
+
+  .results-inner h2 {
+    font-size: var(--h3);
+  }
+
+}
+
+
+@media screen and (max-width: 22rem) {
+  :root {
+    --base-font-size: 16px;
+  }
+  body {
+    color: pink;
+  }
 }

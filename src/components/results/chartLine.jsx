@@ -27,9 +27,9 @@ export default function ChartLine( {label, evs, speed, max, choicescarf, speedTo
         <div className="chart-line">
             <div>{`${label[0].toUpperCase()}${label.slice(1)}`}</div>
             <div className='line-container'>
-                <div id={lineId} className={`line ${choicescarf ? 'choiced' : ''} ${speedInc > speedToBeat ? 'win' : ( speedInc === speedToBeat ? 'tie' : 'lose') }`} style={{ '--after-width' : ( evInc / 252 * 100 )+'%'  }}> {choicescarf ? <ImgScarf />: ''}{evInc} EVs </div>
+                <div id={lineId} className={`line ${choicescarf ? 'choiced' : ''} ${speed > speedToBeat ? 'win' : ( speed === speedToBeat ? 'tie' : 'lose') }`} style={{ '--after-width' : ( evInc / 252 * 100 )+'%'  }}> {choicescarf ? <ImgScarf />: ''}{evInc} EVs </div>
             </div>
-            <div className='speed'> <span>{speedInc > speedToBeat ? '⭐' : ( speedInc === speedToBeat ? '🟰' : '❌') }</span> {speedInc}</div>
+            <div className='speed'> <span>{speed > speedToBeat ? '⭐' : ( speed === speedToBeat ? '🟰' : '❌') }</span> {speedInc}</div>
         </div>
     )
 }
