@@ -632,6 +632,7 @@ button.btn-side-up svg {
     text-align: right;
   }
   .results-wrapper {
+    position: fixed;
     z-index: 5;
     overflow: scroll;
     transition-duration: 350ms;
@@ -663,8 +664,5 @@ button.btn-side-up svg {
 @media screen and (max-width: 22rem) {
   :root {
     --base-font-size: 16px;
-  }
-  body {
-    color: pink;
   }
 }
