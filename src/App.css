@@ -63,6 +63,8 @@
     --lose : var(--blue-mid);
     --tie : var(--white);
   }
+
+
 }
 
 * {
@@ -259,7 +261,7 @@ button:hover {
 
 .radio-group input[type="radio"]:checked + label {
   background-color: var(--highlight);
-  color: var(--highlight-alt);
+  color: var(--body-bg);
 }
 
 .form {
@@ -676,11 +678,10 @@ button.btn-side-up svg {
   padding: 1rem;
   border: 1px solid var(--highlight);
   background-color: var(--highlight);
-  color: var(--body-text);
-  box-shadow: 2px 2px 4px -2px rgb(0 0 0 / 10%);
+  color: var(--body-bg);
+  box-shadow: 2px 2px 7px 0px rgb(255 255 255 / 80%);
   max-width: 320px;
   width: 100%;
-
 
   display: none;
   opacity: 0;
@@ -721,4 +722,15 @@ button.btn-side-up svg {
   display: block;
   --icon--color: currentColor;
   --icon--accent: var(--highlight);
+}
+
+
+@media (prefers-color-scheme: light) {
+  .side-notification {
+    box-shadow: 2px 2px 4px -2px rgb(0 0 0 / 20%);
+    color: var(--body-color);
+  }
+  .radio-group input[type="radio"]:checked + label {
+    color: var(--highlight-alt);
+  }
 }

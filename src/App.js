@@ -23,7 +23,10 @@ function App() {
         <Results visible={resultsDisplayed} />
       </ChoiceScarfContextProvider>
       <Footer />
-      <SideNotification title="So everything is updated!" text="Totally new interface and design. Same features but easier to use. Also dark mode. I hope you enjoy it." />
+      <SideNotification 
+        messageId="updatedMessage" 
+        title="I updated everything!" 
+        text="Totally new interface and design. Same features, easier to use. Also dark mode. I hope you enjoy it." />
     </Layout>
   );
 }
