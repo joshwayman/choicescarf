@@ -666,3 +666,39 @@ button.btn-side-up svg {
     --base-font-size: 16px;
   }
 }
+
+
+.side-notification {
+  position: fixed;
+  z-index: 10000;
+  bottom: 1rem;
+  right: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--highlight);
+  background-color: var(--highlight);
+  box-shadow: 2px 2px 4px -2px rgb(0 0 0 / 10%);
+  max-width: 320px;
+  width: 100%;
+
+}
+.side-notification .inner { position: relative; }
+.side-notification .close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: block;
+}
+.side-notification h4 {
+  margin-bottom: 0.5rem;
+  line-height: 1;
+  width: calc(100% - 1rem);
+}
+.side-notification p {
+  font-size: 0.9rem;
+  margin: 0;
+}
+.side-notification svg {
+  display: block;
+  --icon--color: var(--body-text);
+  --icon--accent: var(--highlight);
+}

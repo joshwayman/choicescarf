@@ -4,6 +4,7 @@ import {Layout, Header, Footer } from './components/layout';
 import { Form } from './components/form';
 import { Results } from './components/results';
 import { ChoiceScarfContextProvider } from './context/choicescarfContext';
+import { SideNotification } from './components/notification';
 
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
         <Results visible={resultsDisplayed} />
       </ChoiceScarfContextProvider>
       <Footer />
+      {/*<SideNotification title="So I updated everything" text="I hope you enjoy it." />*/}
     </Layout>
   );
 }
