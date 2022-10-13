@@ -671,34 +671,54 @@ button.btn-side-up svg {
 .side-notification {
   position: fixed;
   z-index: 10000;
-  bottom: 1rem;
+  /*bottom: 1rem;*/
   right: 1rem;
   padding: 1rem;
   border: 1px solid var(--highlight);
   background-color: var(--highlight);
+  color: var(--body-text);
   box-shadow: 2px 2px 4px -2px rgb(0 0 0 / 10%);
   max-width: 320px;
   width: 100%;
 
+
+  display: none;
+  opacity: 0;
+  bottom: -2rem;
+
+  transition: all ease 250ms;
 }
+.side-notification.opening, .side-notification.open, .side-notification.closing {
+  display: block;
+}
+.side-notification.open {
+  opacity: 1;
+  bottom: 1rem;
+}
+
 .side-notification .inner { position: relative; }
 .side-notification .close {
   position: absolute;
   top: 0;
   right: 0;
   display: block;
+  cursor: pointer;
 }
 .side-notification h4 {
-  margin-bottom: 0.5rem;
-  line-height: 1;
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  line-height: 1.15;
   width: calc(100% - 1rem);
 }
 .side-notification p {
   font-size: 0.9rem;
   margin: 0;
+  line-height: 1.2;
 }
 .side-notification svg {
+  width: 1.5rem;
+  height: 1.5rem;
   display: block;
-  --icon--color: var(--body-text);
+  --icon--color: currentColor;
   --icon--accent: var(--highlight);
 }
