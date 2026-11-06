@@ -6,7 +6,7 @@ Guidance for coding agents (Claude Code, Codex, Copilot, etc.) working in this r
 
 ChoiceScarf is a Pokémon speed EV calculator, live at **choicescarf.com**. It works out the minimum Speed EVs your Pokémon needs to outspeed a target, for each nature, and whether a Choice Scarf is needed.
 
-- React 18 single-page app built with **Vite**, tested with **Vitest** + Testing Library, linted with ESLint 9 (flat config)
+- React 19 single-page app built with **Vite**, tested with **Vitest** + Testing Library, linted with ESLint 9 (flat config)
 - Deployed on **Vercel** from the `v4` branch. Every PR gets a Vercel preview deployment.
 - Default branch: `v4`
 
