@@ -6,8 +6,7 @@ import jsxA11y from 'eslint-plugin-jsx-a11y';
 
 export default [
   {
-    // pokespeed*.js are unused old versions, to be deleted in #13.
-    ignores: ['dist', 'build', 'coverage', 'src/lib/pokespeed*.js'],
+    ignores: ['dist', 'build', 'coverage'],
   },
   js.configs.recommended,
   react.configs.flat.recommended,

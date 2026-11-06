@@ -37,7 +37,7 @@ export function SideNotification( {title, text, messageId} ) {
             <div className="inner">
                 <h4>{title}</h4>
                 <p>{text}</p>
-                {/* TODO(#17): make this a <button> with an aria-label. */}
+                {/* TODO(#18): make this a <button> with an aria-label. */}
                 {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
                 <div className="close" onClick={dismissMessage}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">

@@ -151,14 +151,3 @@ export function bruteForceSpeedEVs( { iv, lvl, nature, baseSpeed, boosts, choice
 
     return { ev, speed : calcdSpeed, win : false, speedToBeat };
 }
-
-
-/* Testing 
-const pokemon = {
-    iv : 31, lvl : 50, baseSpeed : 98, nature : 'positive'
-};
-const pokemonToBeat = {
-    iv : 31, lvl : 50, baseSpeed : 98, ev : 252, nature : 'neutral'
-};
-
-returnCompleteSpeed(pokemon, pokemonToBeat); */

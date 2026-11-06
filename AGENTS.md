@@ -16,10 +16,9 @@ ChoiceScarf is a Pokémon speed EV calculator, live at **choicescarf.com**. It w
 |---|---|
 | `src/lib/speedCalc.js` | All the speed maths. The important file. |
 | `src/lib/speedCalc.test.js` | Unit tests for the maths |
-| `src/context/choicescarfContext.js` | State for both Pokémon and the results |
+| `src/context/choicescarfContext.jsx` | State for both Pokémon and the results |
 | `src/components/form/` | Input form |
 | `src/components/results/` | Results chart |
-| `src/lib/pokespeed*.js` | Old versions, unused (to be deleted, #13) |
 | `index.html` | Vite entry; also holds the GTM snippet |
 | `vite.config.js` | Vite + Vitest config |
 | `eslint.config.js` | ESLint flat config |
@@ -75,8 +74,8 @@ Short imperative summary (`Fix speed flooring for positive natures`), blank line
 
 ## Gotchas
 
-- **The speed formula has a known flooring bug (#23).** The app floors once at the end; the game floors before nature and again after boosts. Don't "fix" tests to match the current output.
-- `returnCompleteSpeed` mutates the object passed to it (#14).
-- Both forms reuse the same element IDs (`baseSpeed`, `iv`, ...) (#17). In tests, use `getAllByLabelText` or scope with `within`.
+- **The speed formula must floor where the games do** (fixed in #23): floor the stat before nature, floor after the boost stage, then apply Scarf/Tailwind/weather as one chained 4096-based modifier. Check new expected values against the in-game formula, not the current output.
+- `returnCompleteSpeed` mutates the object passed to it (#15).
+- Both forms reuse the same element IDs (`baseSpeed`, `iv`, ...) (#18). In tests, use `getAllByLabelText` or scope with `within`.
 - GTM (`GTM-W7XHSG`) is loaded by the snippet in `index.html`. Don't remove it without the maintainer agreeing.
 - Tests use Vitest globals (`describe`, `it`, `expect`, `vi`). Use `vi.fn()` / `vi.spyOn()`, not `jest.*`.
