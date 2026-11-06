@@ -19,9 +19,11 @@ npm start      # http://localhost:3000
 3. **Make the change.** Keep it focused on one issue.
 4. **Check it:**
    ```bash
+   npm run lint
    CI=true npm test -- --watchAll=false
    CI=true npm run build
    ```
+   GitHub Actions runs the same checks on every PR and they must pass.
 5. **Open a PR into `v4`** using the template. In the PR:
    - put `Closes #<issue>` in the description
    - assign **@joshwayman**
