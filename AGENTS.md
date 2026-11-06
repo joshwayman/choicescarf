@@ -27,6 +27,7 @@ ChoiceScarf is a Pokémon speed EV calculator, live at **choicescarf.com**. It w
 nvm use                      # Node 22 (see .nvmrc)
 npm ci
 npm start                    # dev server on :3000
+npm run lint                 # zero warnings allowed
 CI=true npm test -- --watchAll=false
 CI=true npm run build        # CI=true turns lint warnings into errors
 ```
@@ -37,7 +38,7 @@ CI=true npm run build        # CI=true turns lint warnings into errors
 2. **One issue per PR** where possible. Put `Closes #<n>` in the PR body.
 3. **Assign the PR to `joshwayman`** (sole maintainer and reviewer).
 4. **Label the PR** with one type label and, for roadmap work, its phase label (see below).
-5. **Run the tests and build before opening or updating a PR**, and say in the PR what you ran and the result.
+5. **Run lint, tests and build before opening or updating a PR** (CI runs the same steps and must be green), and say in the PR what you ran and the result.
 6. **Don't change the speed maths without tests.** Any change to `speedCalc.js` needs a test showing the before/after values. Check numbers against the in-game formula, not against the current code.
 7. Don't skip, delete or weaken a test to make CI pass.
 8. Keep PRs small and focused. Don't mix refactors with behaviour changes.
