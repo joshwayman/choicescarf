@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import { ImgScarf } from './';
 //import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
-export default function ChartLine( {label, evs, speed, max, choicescarf, speedToBeat} ) {
+export default function ChartLine( {label, evs, speed, choicescarf, speedToBeat} ) {
     const [speedInc, setSpeedInc] = useState(0);
     const [evInc, setEvInc] = useState(0);
     const lineId = `line_${speed}_${evs}`;

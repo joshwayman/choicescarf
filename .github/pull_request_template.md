@@ -7,8 +7,8 @@ Closes #
 ## How I checked it
 
 - [ ] `npm run lint` passes
-- [ ] `CI=true npm test -- --watchAll=false` passes
-- [ ] `CI=true npm run build` passes
+- [ ] `npm test` passes
+- [ ] `npm run build` passes
 - [ ] Checked the Vercel preview
 
 <!-- For speed-maths changes, include a before/after example. -->

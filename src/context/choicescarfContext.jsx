@@ -2,8 +2,8 @@ import { createContext, useState } from "react";
 import { returnCompleteSpeed } from '../lib/speedCalc';
 
 const ChoiceScarfContext = createContext({
-    setPokemon: ( card ) => { console.log('do a thing!') },
-    setPokemonToBeat : ( card ) => { console.log('do a thing!') },
+    setPokemon: () => { console.log('do a thing!') },
+    setPokemonToBeat : () => { console.log('do a thing!') },
     pokemon : {},
     pokemonToBeat : {},
     returnResults : ( ) => { console.log('do a thing!') },

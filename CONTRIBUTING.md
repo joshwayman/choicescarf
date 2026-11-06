@@ -7,7 +7,7 @@ Thanks for helping out. ChoiceScarf is maintained by [@joshwayman](https://githu
 ```bash
 nvm use        # Node 22, from .nvmrc
 npm ci
-npm start      # http://localhost:3000
+npm run dev    # http://localhost:3000
 ```
 
 ## How changes get made
@@ -20,8 +20,8 @@ npm start      # http://localhost:3000
 4. **Check it:**
    ```bash
    npm run lint
-   CI=true npm test -- --watchAll=false
-   CI=true npm run build
+   npm test
+   npm run build
    ```
    GitHub Actions runs the same checks on every PR and they must pass.
 5. **Open a PR into `v4`** using the template. In the PR:

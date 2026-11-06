@@ -6,7 +6,7 @@ Guidance for coding agents (Claude Code, Codex, Copilot, etc.) working in this r
 
 ChoiceScarf is a Pokémon speed EV calculator, live at **choicescarf.com**. It works out the minimum Speed EVs your Pokémon needs to outspeed a target, for each nature, and whether a Choice Scarf is needed.
 
-- React 18 single-page app, bootstrapped with Create React App (migration to Vite is planned, see #1)
+- React 18 single-page app built with **Vite**, tested with **Vitest** + Testing Library, linted with ESLint 9 (flat config)
 - Deployed on **Vercel** from the `v4` branch. Every PR gets a Vercel preview deployment.
 - Default branch: `v4`
 
@@ -20,16 +20,21 @@ ChoiceScarf is a Pokémon speed EV calculator, live at **choicescarf.com**. It w
 | `src/components/form/` | Input form |
 | `src/components/results/` | Results chart |
 | `src/lib/pokespeed*.js` | Old versions, unused (to be deleted, #13) |
+| `index.html` | Vite entry; also holds the GTM snippet |
+| `vite.config.js` | Vite + Vitest config |
+| `eslint.config.js` | ESLint flat config |
+| `vercel.json` | Tells Vercel to build with Vite into `dist/` |
 
 ## Commands
 
 ```bash
 nvm use                      # Node 22 (see .nvmrc)
 npm ci
-npm start                    # dev server on :3000
+npm run dev                  # dev server on :3000
 npm run lint                 # zero warnings allowed
-CI=true npm test -- --watchAll=false
-CI=true npm run build        # CI=true turns lint warnings into errors
+npm test                     # vitest run (npm run test:watch to watch)
+npm run build                # outputs to dist/
+npm run preview              # serve the production build
 ```
 
 ## Rules
@@ -73,4 +78,5 @@ Short imperative summary (`Fix speed flooring for positive natures`), blank line
 - **The speed formula has a known flooring bug (#23).** The app floors once at the end; the game floors before nature and again after boosts. Don't "fix" tests to match the current output.
 - `returnCompleteSpeed` mutates the object passed to it (#14).
 - Both forms reuse the same element IDs (`baseSpeed`, `iv`, ...) (#17). In tests, use `getAllByLabelText` or scope with `within`.
-- GTM (`GTM-W7XHSG`) is initialised in `src/index.js`. Don't remove it without the maintainer agreeing.
+- GTM (`GTM-W7XHSG`) is loaded by the snippet in `index.html`. Don't remove it without the maintainer agreeing.
+- Tests use Vitest globals (`describe`, `it`, `expect`, `vi`). Use `vi.fn()` / `vi.spyOn()`, not `jest.*`.

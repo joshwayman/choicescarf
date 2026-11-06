@@ -15,6 +15,5 @@ test('calculates the speed to beat and shows results', async () => {
   expect(await screen.findByText(/speed to beat is 152/i)).toBeInTheDocument();
 
   // One bar per nature (negative / neutral / positive); positive outspeeds so no Scarf rows
-  // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
   expect(container.querySelectorAll('.chart .line')).toHaveLength(3);
 });
