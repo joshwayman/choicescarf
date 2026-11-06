@@ -4,10 +4,8 @@ import {
   returnCompleteSpeed,
 } from './speedCalc';
 
-// All expected values are level 50 / 31 IV unless stated, and were checked
-// against the in-game stat formula. Cases where the current formula is known
-// to disagree with the game are tracked in #23 and are deliberately avoided
-// here (see the it.todo at the bottom).
+// All expected values are level 50 / 31 IV unless stated, and were worked out
+// by hand from the in-game formula (Gen 3+ stats, Gen 5+ battle modifiers).
 
 const base = (overrides = {}) => ({
   ev: 252,
@@ -84,6 +82,35 @@ describe('calculateBasicSpeed', () => {
     ])('stage %i gives %i', (boosts, expected) => {
       expect(calculateBasicSpeed(base({ boosts }))).toBe(expected);
     });
+
+    it('clamps stages outside -6..+6', () => {
+      expect(calculateBasicSpeed(base({ boosts: 7 }))).toBe(608);
+      expect(calculateBasicSpeed(base({ boosts: -7 }))).toBe(38);
+    });
+
+    it('floors the stat before applying the stage', () => {
+      // base 100, 40 EVs, positive = 137; 137 * 1.5 = 205.5 -> 205
+      expect(
+        calculateBasicSpeed(base({ ev: 40, nature: 'positive', boosts: 1 }))
+      ).toBe(205);
+    });
+  });
+
+  describe('flooring before nature (#23)', () => {
+    // Inner value is (2*100 + 31 + 10) * 50 / 100 = 120.5 -> 120, +5 = 125.
+    // 125 * 1.1 = 137.5 -> 137. The old formula kept the .5 and returned 138.
+    it('positive nature at an odd stat total', () => {
+      expect(calculateBasicSpeed(base({ ev: 40, nature: 'positive' }))).toBe(137);
+    });
+
+    // (200 + 31 + 2) * 0.5 = 116.5 -> 116, +5 = 121; 121 * 0.9 = 108.9 -> 108 (old: 109)
+    it('negative nature at an odd stat total', () => {
+      expect(calculateBasicSpeed(base({ ev: 8, nature: 'negative' }))).toBe(108);
+    });
+
+    it('neutral nature is unaffected', () => {
+      expect(calculateBasicSpeed(base({ ev: 40 }))).toBe(125);
+    });
   });
 
   describe('field and item modifiers', () => {
@@ -105,13 +132,28 @@ describe('calculateBasicSpeed', () => {
       ).toBe(456);
     });
 
-    it('floors after each modifier', () => {
-      // base 101, 0 EVs, neutral = 121; 121 * 1.5 = 181.5 -> 181; * 2 = 362
+    it('rounds Choice Scarf half down', () => {
+      // base 101, 0 EVs, neutral = 121; 121 * 1.5 = 181.5 -> 181
+      expect(
+        calculateBasicSpeed(base({ baseSpeed: 101, ev: 0, choicescarf: true }))
+      ).toBe(181);
+    });
+
+    it('chains modifiers into one multiplier before rounding', () => {
+      // Scarf + Tailwind chain to x3: 121 * 3 = 363.
+      // (Flooring after each step would give 181 * 2 = 362.)
       expect(
         calculateBasicSpeed(
           base({ baseSpeed: 101, ev: 0, choicescarf: true, tailwind: true })
         )
-      ).toBe(362);
+      ).toBe(363);
+    });
+
+    it('applies the stage before modifiers', () => {
+      // 152 at +1 = 228; with Scarf 228 * 1.5 = 342
+      expect(
+        calculateBasicSpeed(base({ boosts: 1, choicescarf: true }))
+      ).toBe(342);
     });
   });
 });
@@ -196,7 +238,13 @@ describe('returnCompleteSpeed', () => {
     expect(pokemon.choicescarf).toBe(false);
   });
 
-  it.todo(
-    'matches in-game speed for positive/negative natures at odd stat totals (#23)'
-  );
+  it('recommends enough EVs to actually outspeed (#23)', () => {
+    // Base 100 positive vs. max-speed base 100 neutral (152).
+    // 152 EVs: (200+31+38)*0.5 = 134.5 -> 134, +5 = 139, *1.1 = 152 (a tie).
+    // 156 EVs: (200+31+39)*0.5 = 135, +5 = 140, *1.1 = 154. Nothing in between helps.
+    const out = returnCompleteSpeed(base({ ev: 0 }), base());
+    const positive = out.results.find((r) => r.label === 'positive');
+
+    expect(positive).toMatchObject({ ev: 156, speed: 154, win: true });
+  });
 });
