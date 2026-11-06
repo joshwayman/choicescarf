@@ -231,6 +231,7 @@ button:hover {
 }
 
 .radio-group {
+  position: relative;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
@@ -255,8 +256,25 @@ button:hover {
 }
 */
 
+/* Visually hidden but still focusable and announced. */
 .radio-group input[type="radio"] {
-  display: none;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.radio-group input[type="radio"]:focus-visible + label {
+  outline: 2px solid var(--highlight);
+  outline-offset: -4px;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--highlight);
+  outline-offset: 2px;
 }
 
 .radio-group input[type="radio"]:checked + label {
@@ -703,9 +721,15 @@ button.btn-side-up svg {
   top: 0;
   right: 0;
   display: block;
+  width: auto;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
   cursor: pointer;
 }
-.side-notification h4 {
+.side-notification .close:hover { background: none; color: inherit; }
+.side-notification h2 {
   margin-bottom: 1rem;
   font-size: 1.25rem;
   line-height: 1.15;

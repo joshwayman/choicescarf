@@ -16,12 +16,14 @@ function App() {
 
   return (
     <Layout>
-      <ChoiceScarfContextProvider>
-        <Form handleResultsVisibility={handleResultsVisibility} resultsVisible={resultsDisplayed}>
-          <Header />
-        </Form>
-        <Results visible={resultsDisplayed} />
-      </ChoiceScarfContextProvider>
+      <main>
+        <ChoiceScarfContextProvider>
+          <Form handleResultsVisibility={handleResultsVisibility} resultsVisible={resultsDisplayed}>
+            <Header />
+          </Form>
+          <Results visible={resultsDisplayed} />
+        </ChoiceScarfContextProvider>
+      </main>
       <Footer />
       <SideNotification 
         messageId="updatedMessage" 

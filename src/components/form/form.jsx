@@ -11,11 +11,11 @@ export default function Form({children, handleResultsVisibility, resultsVisible}
     const [showAdvanced, setShowAdvanced ] = useState(false);
 
     const handlePokemonChange = (e) => {
-        setPokemon({ [e.target.id]: readNumber(e) });
+        setPokemon({ [e.target.name]: readNumber(e) });
     }
 
     const handlePokemonBlur = (e) => {
-        setPokemon({ [e.target.id]: clampStat(e.target.id, e.target.value, pokemonTemplate[e.target.id]) });
+        setPokemon({ [e.target.name]: clampStat(e.target.name, e.target.value, pokemonTemplate[e.target.name]) });
     }
 
     const handleNatureChange = (e) => {
@@ -27,23 +27,23 @@ export default function Form({children, handleResultsVisibility, resultsVisible}
 
     const handlePokemonCheckboxChange = (e) => {
         const obj = {};
-        obj[e.target.id] = e.target.checked;
+        obj[e.target.name] = e.target.checked;
 
         setPokemon(obj);     
     }
 
     const handlePokemonToBeatChange = (e) => {
-        setPokemonToBeat({ [e.target.id]: readNumber(e) });
+        setPokemonToBeat({ [e.target.name]: readNumber(e) });
     }
 
     const handlePokemonToBeatBlur = (e) => {
-        setPokemonToBeat({ [e.target.id]: clampStat(e.target.id, e.target.value, pokemonToBeatTemplate[e.target.id]) });
+        setPokemonToBeat({ [e.target.name]: clampStat(e.target.name, e.target.value, pokemonToBeatTemplate[e.target.name]) });
     }
 
     const handlePokemonToBeatCheckboxChange = (e) => {
         const obj = {};
 
-        obj[e.target.id] = e.target.checked;
+        obj[e.target.name] = e.target.checked;
 
         setPokemonToBeat(obj);     
     }
@@ -69,19 +69,19 @@ export default function Form({children, handleResultsVisibility, resultsVisible}
                         <h2>Pokemon speed to beat</h2>
                         <div className="row">
                             <label>Base Speed
-                                <input type='number' id='baseSpeed' placeholder="100" value={pokemonToBeat.baseSpeed} onChange={handlePokemonToBeatChange} min={LIMITS.baseSpeed.min} max={LIMITS.baseSpeed.max} onBlur={handlePokemonToBeatBlur} />
+                                <input type='number' id='target-baseSpeed' name='baseSpeed' placeholder="100" value={pokemonToBeat.baseSpeed} onChange={handlePokemonToBeatChange} min={LIMITS.baseSpeed.min} max={LIMITS.baseSpeed.max} onBlur={handlePokemonToBeatBlur} />
                             </label>
                             <label>IVs
-                                <input id='iv' type='number' placeholder="31" value={pokemonToBeat.iv} onChange={handlePokemonToBeatChange} min={LIMITS.iv.min} max={LIMITS.iv.max} onBlur={handlePokemonToBeatBlur} />
+                                <input id='target-iv' name='iv' type='number' placeholder="31" value={pokemonToBeat.iv} onChange={handlePokemonToBeatChange} min={LIMITS.iv.min} max={LIMITS.iv.max} onBlur={handlePokemonToBeatBlur} />
                             </label>
                             <label>EVs
-                                <input id='ev' type='number' placeholder="252" value={pokemonToBeat.ev} onChange={handlePokemonToBeatChange} min={LIMITS.ev.min} max={LIMITS.ev.max} onBlur={handlePokemonToBeatBlur} />
+                                <input id='target-ev' name='ev' type='number' placeholder="252" value={pokemonToBeat.ev} onChange={handlePokemonToBeatChange} min={LIMITS.ev.min} max={LIMITS.ev.max} onBlur={handlePokemonToBeatBlur} />
                             </label>
                         </div>
                         <div className="row">
                             <div className="radio-group-wrapper">
-                                Nature
-                                <div className="radio-group">
+                                <span id="target-nature-label">Nature</span>
+                                <div className="radio-group" role="radiogroup" aria-labelledby="target-nature-label">
                                     <input type='radio' name="nature" id="nature1" value='negative' onChange={handleNatureToBeatChange}  />
                                     <label htmlFor="nature1" >
                                         Negative
@@ -100,23 +100,23 @@ export default function Form({children, handleResultsVisibility, resultsVisible}
 
                         <div className={`row advanced ${showAdvanced ? 'show': 'hidden'} checkboxes`}>
                             <label>Choicescarf
-                                <input type='checkbox' id='choicescarf' checked={pokemonToBeat.choicescarf} onChange={handlePokemonToBeatCheckboxChange} />
+                                <input type='checkbox' id='target-choicescarf' name='choicescarf' checked={pokemonToBeat.choicescarf} onChange={handlePokemonToBeatCheckboxChange} />
                             </label>
                             <label>Tailwind
-                                <input type='checkbox' id='tailwind' checked={pokemonToBeat.tailwind} onChange={handlePokemonToBeatCheckboxChange} />
+                                <input type='checkbox' id='target-tailwind' name='tailwind' checked={pokemonToBeat.tailwind} onChange={handlePokemonToBeatCheckboxChange} />
                             </label>
                             <label>Weather
-                                <input type='checkbox' id='weather' checked={pokemonToBeat.weather} onChange={handlePokemonToBeatCheckboxChange} />
+                                <input type='checkbox' id='target-weather' name='weather' checked={pokemonToBeat.weather} onChange={handlePokemonToBeatCheckboxChange} />
                             </label>
                         </div>
 
                         <div className={`row advanced ${showAdvanced ? 'show': 'hidden'}`}>
                             <label className='narrow'>Level
-                                <input type='number' id='lvl' placeholder="100" value={pokemonToBeat.lvl} onChange={handlePokemonToBeatChange} min={LIMITS.lvl.min} max={LIMITS.lvl.max} onBlur={handlePokemonToBeatBlur} />
+                                <input type='number' id='target-lvl' name='lvl' placeholder="100" value={pokemonToBeat.lvl} onChange={handlePokemonToBeatChange} min={LIMITS.lvl.min} max={LIMITS.lvl.max} onBlur={handlePokemonToBeatBlur} />
                             </label>
                             <label className='wide'>Boosts
                                 <div>
-                                    <input id='boosts' type='range' min='-6' max='6' placeholder="0" value={pokemonToBeat.boosts} onChange={handlePokemonToBeatChange} />
+                                    <input id='target-boosts' name='boosts' type='range' min='-6' max='6' placeholder="0" value={pokemonToBeat.boosts} onChange={handlePokemonToBeatChange} />
                                     <small>{pokemonToBeat.boosts}</small>
                                 </div>
                             </label>
@@ -127,18 +127,18 @@ export default function Form({children, handleResultsVisibility, resultsVisible}
                         <div className="row">
                             <label>
                                 Base Speed
-                                <input type='number' placeholder='100' id='baseSpeed' onChange={handlePokemonChange} value={pokemon.baseSpeed} min={LIMITS.baseSpeed.min} max={LIMITS.baseSpeed.max} onBlur={handlePokemonBlur} />
+                                <input type='number' placeholder='100' id='yours-baseSpeed' name='baseSpeed' onChange={handlePokemonChange} value={pokemon.baseSpeed} min={LIMITS.baseSpeed.min} max={LIMITS.baseSpeed.max} onBlur={handlePokemonBlur} />
                             </label>
                             <label>
                                 IVs
-                                <input type='number' placeholder='31' id='iv' onChange={handlePokemonChange} value={pokemon.iv} min={LIMITS.iv.min} max={LIMITS.iv.max} onBlur={handlePokemonBlur} />
+                                <input type='number' placeholder='31' id='yours-iv' name='iv' onChange={handlePokemonChange} value={pokemon.iv} min={LIMITS.iv.min} max={LIMITS.iv.max} onBlur={handlePokemonBlur} />
                             </label>
                         </div>
 
                         <div className={`row advanced ${showAdvanced ? 'show': 'hidden'}`}>
                             <div className="radio-group-wrapper">
-                                Nature
-                                <div className="radio-group">
+                                <span id="yours-nature-label">Nature</span>
+                                <div className="radio-group" role="radiogroup" aria-labelledby="yours-nature-label">
                                     <input type='radio' name="nature2" id="nature4" value='negative' onChange={handleNatureChange}  />
                                     <label htmlFor="nature4" >
                                         Negative
@@ -157,30 +157,30 @@ export default function Form({children, handleResultsVisibility, resultsVisible}
 
                         <div className={`row advanced ${showAdvanced ? 'show': 'hidden'} checkboxes`}>
                             <label>Choicescarf
-                                <input type='checkbox' id='choicescarf' checked={pokemon.choicescarf} onChange={handlePokemonCheckboxChange} />
+                                <input type='checkbox' id='yours-choicescarf' name='choicescarf' checked={pokemon.choicescarf} onChange={handlePokemonCheckboxChange} />
                             </label>
                             <label>Tailwind
-                                <input type='checkbox' id='tailwind' checked={pokemon.tailwind} onChange={handlePokemonCheckboxChange} />
+                                <input type='checkbox' id='yours-tailwind' name='tailwind' checked={pokemon.tailwind} onChange={handlePokemonCheckboxChange} />
                             </label>
                             <label>Weather
-                                <input type='checkbox' id='weather' checked={pokemon.weather} onChange={handlePokemonCheckboxChange} />
+                                <input type='checkbox' id='yours-weather' name='weather' checked={pokemon.weather} onChange={handlePokemonCheckboxChange} />
                             </label>
                         </div>
 
                         <div className={`row advanced ${showAdvanced ? 'show': 'hidden'}`}>
                             <label className='narrow'>Level
-                                <input type='number' id='lvl' placeholder="100" value={pokemon.lvl} onChange={handlePokemonChange} min={LIMITS.lvl.min} max={LIMITS.lvl.max} onBlur={handlePokemonBlur} />
+                                <input type='number' id='yours-lvl' name='lvl' placeholder="100" value={pokemon.lvl} onChange={handlePokemonChange} min={LIMITS.lvl.min} max={LIMITS.lvl.max} onBlur={handlePokemonBlur} />
                             </label>
                             <label className='wide'>Boosts
                                 <div>
-                                    <input id='boosts' type='range' min='-6' max='6' placeholder="0" value={pokemon.boosts} onChange={handlePokemonChange} />
+                                    <input id='yours-boosts' name='boosts' type='range' min='-6' max='6' placeholder="0" value={pokemon.boosts} onChange={handlePokemonChange} />
                                     <small>{pokemon.boosts}</small>
                                 </div>
                             </label>
                         </div>
                     </div>
-                    <button onClick={handleReturnResults}>Go</button>
-                    <button onClick={() => { setShowAdvanced( showAdvanced ? false : true ) }} className='btn-subtle'>{showAdvanced ? 'Hide' : 'Show'} advanced</button>
+                    <button type='button' onClick={handleReturnResults}>Go</button>
+                    <button type='button' onClick={() => setShowAdvanced(!showAdvanced)} className='btn-subtle' aria-expanded={showAdvanced}>{showAdvanced ? 'Hide' : 'Show'} advanced</button>
                 </div>
             </div>
         </section>

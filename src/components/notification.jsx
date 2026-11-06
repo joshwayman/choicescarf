@@ -35,12 +35,10 @@ export function SideNotification( {title, text, messageId} ) {
     return(
         <div className={`side-notification ${notificationClass}`}>
             <div className="inner">
-                <h4>{title}</h4>
+                <h2>{title}</h2>
                 <p>{text}</p>
-                {/* TODO(#18): make this a <button> with an aria-label. */}
-                {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
-                <div className="close" onClick={dismissMessage}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                <button type="button" className="close" onClick={dismissMessage} aria-label="Dismiss notification">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                         <g id="Group_511" data-name="Group 511" transform="translate(-910 -907)">
                             <circle id="Ellipse_10" data-name="Ellipse 10" cx="12" cy="12" r="12" transform="translate(910 907)" fill="var(--icon--accent)"></circle>
                             <g id="Group_510" data-name="Group 510" transform="translate(-286.623 822.944)">
@@ -49,7 +47,7 @@ export function SideNotification( {title, text, messageId} ) {
                             </g>
                         </g>
                     </svg>
-                </div>
+                </button>
             </div>
         </div>
     )
