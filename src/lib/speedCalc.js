@@ -1,73 +1,36 @@
+const NATURES = ['negative', 'neutral', 'positive'];
+
+/*
+ * For each nature, find the minimum EVs that outspeed pokemonToBeat.
+ * If no nature can outspeed it, also try every nature with a Choice Scarf.
+ * Pure: the inputs are React state and are never modified.
+ */
 export function returnCompleteSpeed( pokemon = {}, pokemonToBeat = {} ) {
-    // Destruction all of our variables.
-    //const { iv = 31, lvl = 50, baseSpeed = 50, boosts = 0, choicescarf = false, tailwind = false, weather = false } = pokemon;
-    
-    //let ev = 0;
-    const output = {};
-    const initialChoicescarf = pokemon.choicescarf;
-
     const speedToBeat = calculateBasicSpeed(pokemonToBeat);
-    //const rawSpeed = calculateBasicSpeed(pokemon);
 
-    output.speedToBeat = speedToBeat;
-    output.results = [];
-    output.choicescarf = false;
+    const tryNatures = (overrides, choicescarf) => NATURES.map(nature => {
+        const stats = { ...pokemon, nature, ...overrides };
 
-    const natures = ['negative', 'neutral', 'positive'];
-
-    let win = false;
-
-    natures.map( nature => {
-        pokemon.nature = nature;
-
-        const calc = bruteForceSpeedEVs( pokemon, speedToBeat );
-
-        const obj = { 
-            label : nature,
+        return {
+            label: nature,
             group: 'nature',
-            choicescarf: false,
-            ...calc,
-            stats: { ...pokemon }
+            choicescarf,
+            ...bruteForceSpeedEVs(stats, speedToBeat),
+            stats,
         };
-
-        if(calc.win) win = true;   
-
-        return output.results.push(obj);
     });
 
-    if(win === true) return output;
+    const results = tryNatures({}, false);
 
+    if (results.some(result => result.win)) {
+        return { speedToBeat, results, choicescarf: false };
+    }
 
-    natures.map( nature => {
-        pokemon.nature = nature;
-        pokemon.choicescarf = true;
-
-        const calc = bruteForceSpeedEVs( pokemon, speedToBeat );
-
-        const obj = { 
-            label : nature,
-            group: 'nature',
-            choicescarf: true,
-            ...calc,
-            stats: { ...pokemon }
-        };
-
-        if(calc.win) win = true;  
-
-        return output.results.push(obj);
-    });
-
-    output.choicescarf = true;
-
-    // Cases
-    //const cases = ['choicescarf','tailwind', 'boosts'];
-
-    console.log(output);
-
-    
-    pokemon.choicescarf = initialChoicescarf ? true : false;
-
-    return output;
+    return {
+        speedToBeat,
+        results: [...results, ...tryNatures({ choicescarf: true }, true)],
+        choicescarf: true,
+    };
 }
 
 /*
@@ -118,36 +81,17 @@ function applyModifier( value, modifier ) {
     return Math.floor((value * modifier + 2047) / 4096);
 }
 export function bruteForceSpeedEVs( { iv, lvl, nature, baseSpeed, boosts, choicescarf, tailwind, weather }, speedToBeat = 0 ) {
-    const pokemon = { iv, lvl, baseSpeed, boosts, choicescarf, tailwind, weather, nature};
+    const pokemon = { iv, lvl, baseSpeed, boosts, choicescarf, tailwind, weather, nature };
 
-    //console.warn('bruteForceSpeedEVs: ', speedToBeat);
+    let speed = 0;
 
-    let calcdSpeed = 0;
+    for (let ev = 0; ev <= 252; ev++) {
+        speed = calculateBasicSpeed({ ...pokemon, ev });
 
-    //console.log('Brute: ', pokemon);
-    // return
-
-    let ev = 0;
-    //console.groupCollapsed('Brute forcing:');
-
-    while (ev <= 252 ) {
-        pokemon.ev = ev;
-
-        calcdSpeed = calculateBasicSpeed(pokemon);
-
-        //console.log('Brute: ev ', ev, calcdSpeed);
-
-        if(calcdSpeed > speedToBeat) {
-            //console.warn(calcdSpeed, speedToBeat, ev)
-            return { ev, speed : calcdSpeed, win : true, speedToBeat };
-        } 
-
-        if( ev === 252) break;
-        ev++;
+        if (speed > speedToBeat) {
+            return { ev, speed, win: true, speedToBeat };
+        }
     }
-    //console.groupEnd();
-    
-    //console.log('Brute: after for ev ', ev);
 
-    return { ev, speed : calcdSpeed, win : false, speedToBeat };
+    return { ev: 252, speed, win: false, speedToBeat };
 }
