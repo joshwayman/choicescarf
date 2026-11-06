@@ -8,6 +8,8 @@ export default defineConfig({
   },
   test: {
     environment: 'jsdom',
+    // Provides requestAnimationFrame, used by the results count-up animation.
+    environmentOptions: { jsdom: { pretendToBeVisual: true } },
     globals: true,
     setupFiles: './src/setupTests.js',
     css: true,
