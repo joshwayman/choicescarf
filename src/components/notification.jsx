@@ -33,7 +33,7 @@ export function SideNotification( {title, text, messageId} ) {
     }
 
     return(
-        <div className={`side-notification ${notificationClass}`}>
+        <aside className={`side-notification ${notificationClass}`} aria-label="Site update">
             <div className="inner">
                 <h2>{title}</h2>
                 <p>{text}</p>
@@ -49,6 +49,6 @@ export function SideNotification( {title, text, messageId} ) {
                     </svg>
                 </button>
             </div>
-        </div>
+        </aside>
     )
 }
