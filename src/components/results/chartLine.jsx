@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react"
 import { ImgScarf } from './';
-//import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 export default function ChartLine( {label, evs, speed, choicescarf, speedToBeat} ) {
     const [speedInc, setSpeedInc] = useState(0);
