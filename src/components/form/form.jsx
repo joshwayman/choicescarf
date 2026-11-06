@@ -1,11 +1,9 @@
-import { useState, useContext, useEffect } from "react"
+import { useState, useContext } from "react"
 import ChoiceScarfContext from "../../context/choicescarfContext";
 
 export default function Form({children, handleResultsVisibility, resultsVisible}) {
     const {  pokemonState : pokemon,  pokemonToBeatState : pokemonToBeat, setPokemon, setPokemonToBeat, returnResults } = useContext(ChoiceScarfContext);
 
-    const [natureToBeat, setNatureToBeat ] = useState('neutral');
-    const [nature, setNature ] = useState('neutral');
     const [showAdvanced, setShowAdvanced ] = useState(false);
 
     const handlePokemonChange = (e) => {
@@ -19,7 +17,6 @@ export default function Form({children, handleResultsVisibility, resultsVisible}
         const obj = {};
         obj.nature = e.target.value;
 
-        setNature(e.target.value);
         setPokemon(obj);
     }
 
@@ -49,7 +46,6 @@ export default function Form({children, handleResultsVisibility, resultsVisible}
         const obj = {};
         obj.nature = e.target.value;
 
-        setNatureToBeat(e.target.value);
         setPokemonToBeat(obj);
     }
 
