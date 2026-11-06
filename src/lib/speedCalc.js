@@ -70,7 +70,7 @@ export function returnCompleteSpeed( pokemon = {}, pokemonToBeat = {} ) {
     return output;
 }
 
-function calculateBasicSpeed(pokemon) {
+export function calculateBasicSpeed(pokemon) {
     const { ev = 252, iv = 31, lvl = 50, baseSpeed = 50, nature = 'neutral', boosts = 0, choicescarf = false, tailwind = false, weather = false } = pokemon;
     
     const natureModifer = returnNatureModifer(nature);
@@ -138,7 +138,7 @@ function returnTailwindModifer( speed ) {
 function returnWeatherModifier( speed ) {
     return Math.floor(speed * 2);
 }
-function bruteForceSpeedEVs( { iv, lvl, nature, baseSpeed, boosts, choicescarf, tailwind, weather }, speedToBeat = 0 ) {
+export function bruteForceSpeedEVs( { iv, lvl, nature, baseSpeed, boosts, choicescarf, tailwind, weather }, speedToBeat = 0 ) {
     const pokemon = { iv, lvl, baseSpeed, boosts, choicescarf, tailwind, weather, nature};
 
     //console.warn('bruteForceSpeedEVs: ', speedToBeat);
