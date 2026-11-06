@@ -22,11 +22,11 @@ const base = (overrides = {}) => ({
 
 beforeEach(() => {
   // returnCompleteSpeed logs its output; keep test output clean.
-  jest.spyOn(console, 'log').mockImplementation(() => {});
+  vi.spyOn(console, 'log').mockImplementation(() => {});
 });
 
 afterEach(() => {
-  jest.restoreAllMocks();
+  vi.restoreAllMocks();
 });
 
 describe('calculateBasicSpeed', () => {

@@ -17,13 +17,15 @@ export default function Results( { visible } ) {
     }, [visible, setDislay]);
 
     useEffect(() => {
+        // TODO(#16): derive this instead of syncing state in an effect.
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setHeightToggle(true);
     }, [results])
 
     return(
         <section className={`results-wrapper ${visible ? 'is-visible' : ''} ${display ? 'is-displayed' : ''} ${heightToggle ? 'is-tall' : 'is-short'}`}>
             <div className="results-inner">
-                <button onClick={e => { setHeightToggle(heightToggle ? false : true ) }} className='btn-side-up'>
+                <button onClick={() => { setHeightToggle(heightToggle ? false : true ) }} className='btn-side-up'>
                     {arrowDown}
                 </button>
                 {results.speedToBeat ? <h2>Speed to beat is {results.speedToBeat}. {results.choicescarf ? <span>{'A ChoiceScarf is required to outspeed.'}</span> :''}</h2> : ''}
