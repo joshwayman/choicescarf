@@ -54,10 +54,11 @@
     --body-bg-alt : var(--blue-light);
     --body-text : var(--black);
 
-    --highlight-alt : var(--blue-mid);
+    /* blue-dark rather than blue-mid: text in these colours needs 4.5:1 contrast. */
+    --highlight-alt : var(--blue-dark);
     --highlight-subtle : var(--blue-light);
 
-    --footer-bg: var(--blue-mid);
+    --footer-bg: var(--blue-dark);
 
     --win : var(--yellow);
     --lose : var(--blue-mid);
