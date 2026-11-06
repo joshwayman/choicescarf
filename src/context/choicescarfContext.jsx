@@ -1,21 +1,13 @@
 import { createContext, useState } from "react";
 import { returnCompleteSpeed } from '../lib/speedCalc';
+import { DEFAULT_POKEMON, sanitizePokemon } from '../lib/validation';
 
-const pokemonTemplate = {
-    ev : 0,
-    iv : 31,
-    lvl : 50,
-    baseSpeed : 50,
-    nature : 'neutral',
-    boosts : 0,
-    choicescarf : false,
-    tailwind : false,
-    weather : false
-};
+const pokemonTemplate = DEFAULT_POKEMON;
+const pokemonToBeatTemplate = { ...DEFAULT_POKEMON, ev : 252 };
 
 const ChoiceScarfContext = createContext({
     pokemonState : pokemonTemplate,
-    pokemonToBeatState : { ...pokemonTemplate, ev : 252 },
+    pokemonToBeatState : pokemonToBeatTemplate,
     setPokemon : () => {},
     setPokemonToBeat : () => {},
     returnResults : () => {},
@@ -24,7 +16,7 @@ const ChoiceScarfContext = createContext({
 
 const ChoiceScarfContextProvider = ({ children }) => {
     const [ pokemonState, setPokemonState ] = useState({ ...pokemonTemplate });
-    const [ pokemonToBeatState, setPokemonToBeatState ] = useState({ ...pokemonTemplate, ev : 252 });
+    const [ pokemonToBeatState, setPokemonToBeatState ] = useState(pokemonToBeatTemplate);
     const [ results, setResults ] = useState({});
 
     const setPokemon = ( obj ) => {
@@ -35,7 +27,13 @@ const ChoiceScarfContextProvider = ({ children }) => {
     }
 
     const returnResults = () => {
-        const results = returnCompleteSpeed(pokemonState, pokemonToBeatState);
+        // Clamp anything out of range and show the values actually used.
+        const pokemon = sanitizePokemon(pokemonState, pokemonTemplate);
+        const pokemonToBeat = sanitizePokemon(pokemonToBeatState, pokemonToBeatTemplate);
+        setPokemonState(pokemon);
+        setPokemonToBeatState(pokemonToBeat);
+
+        const results = returnCompleteSpeed(pokemon, pokemonToBeat);
 
         setResults(results);
 
@@ -52,4 +50,4 @@ const ChoiceScarfContextProvider = ({ children }) => {
 }
 
 export default ChoiceScarfContext;
-export { ChoiceScarfContextProvider };
+export { ChoiceScarfContextProvider, pokemonTemplate, pokemonToBeatTemplate };

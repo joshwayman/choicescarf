@@ -1,5 +1,9 @@
 import { useState, useContext } from "react"
-import ChoiceScarfContext from "../../context/choicescarfContext";
+import ChoiceScarfContext, { pokemonTemplate, pokemonToBeatTemplate } from "../../context/choicescarfContext";
+import { LIMITS, clampStat } from "../../lib/validation";
+
+// Keep what is typed (including an empty box) while editing; clamp on blur and on Go.
+const readNumber = (e) => e.target.value === '' ? '' : Number(e.target.value);
 
 export default function Form({children, handleResultsVisibility, resultsVisible}) {
     const {  pokemonState : pokemon,  pokemonToBeatState : pokemonToBeat, setPokemon, setPokemonToBeat, returnResults } = useContext(ChoiceScarfContext);
@@ -7,10 +11,11 @@ export default function Form({children, handleResultsVisibility, resultsVisible}
     const [showAdvanced, setShowAdvanced ] = useState(false);
 
     const handlePokemonChange = (e) => {
-        const obj = {};
-        obj[e.target.id] = Number(e.target.value);
+        setPokemon({ [e.target.id]: readNumber(e) });
+    }
 
-        setPokemon(obj);     
+    const handlePokemonBlur = (e) => {
+        setPokemon({ [e.target.id]: clampStat(e.target.id, e.target.value, pokemonTemplate[e.target.id]) });
     }
 
     const handleNatureChange = (e) => {
@@ -28,10 +33,11 @@ export default function Form({children, handleResultsVisibility, resultsVisible}
     }
 
     const handlePokemonToBeatChange = (e) => {
-        const obj = {};
-        obj[e.target.id] = Number(e.target.value);
+        setPokemonToBeat({ [e.target.id]: readNumber(e) });
+    }
 
-        setPokemonToBeat(obj);     
+    const handlePokemonToBeatBlur = (e) => {
+        setPokemonToBeat({ [e.target.id]: clampStat(e.target.id, e.target.value, pokemonToBeatTemplate[e.target.id]) });
     }
 
     const handlePokemonToBeatCheckboxChange = (e) => {
@@ -63,13 +69,13 @@ export default function Form({children, handleResultsVisibility, resultsVisible}
                         <h2>Pokemon speed to beat</h2>
                         <div className="row">
                             <label>Base Speed
-                                <input type='number' id='baseSpeed' placeholder="100" value={pokemonToBeat.baseSpeed} onChange={handlePokemonToBeatChange} />
+                                <input type='number' id='baseSpeed' placeholder="100" value={pokemonToBeat.baseSpeed} onChange={handlePokemonToBeatChange} min={LIMITS.baseSpeed.min} max={LIMITS.baseSpeed.max} onBlur={handlePokemonToBeatBlur} />
                             </label>
                             <label>IVs
-                                <input id='iv' type='number' placeholder="31" value={pokemonToBeat.iv} onChange={handlePokemonToBeatChange} />
+                                <input id='iv' type='number' placeholder="31" value={pokemonToBeat.iv} onChange={handlePokemonToBeatChange} min={LIMITS.iv.min} max={LIMITS.iv.max} onBlur={handlePokemonToBeatBlur} />
                             </label>
                             <label>EVs
-                                <input id='ev' type='number' placeholder="252" value={pokemonToBeat.ev} onChange={handlePokemonToBeatChange} />
+                                <input id='ev' type='number' placeholder="252" value={pokemonToBeat.ev} onChange={handlePokemonToBeatChange} min={LIMITS.ev.min} max={LIMITS.ev.max} onBlur={handlePokemonToBeatBlur} />
                             </label>
                         </div>
                         <div className="row">
@@ -106,7 +112,7 @@ export default function Form({children, handleResultsVisibility, resultsVisible}
 
                         <div className={`row advanced ${showAdvanced ? 'show': 'hidden'}`}>
                             <label className='narrow'>Level
-                                <input type='number' id='lvl' placeholder="100" value={pokemonToBeat.lvl} onChange={handlePokemonToBeatChange} />
+                                <input type='number' id='lvl' placeholder="100" value={pokemonToBeat.lvl} onChange={handlePokemonToBeatChange} min={LIMITS.lvl.min} max={LIMITS.lvl.max} onBlur={handlePokemonToBeatBlur} />
                             </label>
                             <label className='wide'>Boosts
                                 <div>
@@ -121,11 +127,11 @@ export default function Form({children, handleResultsVisibility, resultsVisible}
                         <div className="row">
                             <label>
                                 Base Speed
-                                <input type='number' placeholder='100' id='baseSpeed' onChange={handlePokemonChange} value={pokemon.baseSpeed} />
+                                <input type='number' placeholder='100' id='baseSpeed' onChange={handlePokemonChange} value={pokemon.baseSpeed} min={LIMITS.baseSpeed.min} max={LIMITS.baseSpeed.max} onBlur={handlePokemonBlur} />
                             </label>
                             <label>
                                 IVs
-                                <input type='number' placeholder='31' id='iv' onChange={handlePokemonChange} value={pokemon.iv} />
+                                <input type='number' placeholder='31' id='iv' onChange={handlePokemonChange} value={pokemon.iv} min={LIMITS.iv.min} max={LIMITS.iv.max} onBlur={handlePokemonBlur} />
                             </label>
                         </div>
 
@@ -163,7 +169,7 @@ export default function Form({children, handleResultsVisibility, resultsVisible}
 
                         <div className={`row advanced ${showAdvanced ? 'show': 'hidden'}`}>
                             <label className='narrow'>Level
-                                <input type='number' id='lvl' placeholder="100" value={pokemon.lvl} onChange={handlePokemonChange} />
+                                <input type='number' id='lvl' placeholder="100" value={pokemon.lvl} onChange={handlePokemonChange} min={LIMITS.lvl.min} max={LIMITS.lvl.max} onBlur={handlePokemonBlur} />
                             </label>
                             <label className='wide'>Boosts
                                 <div>
