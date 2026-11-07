@@ -1,70 +1,76 @@
-# Getting Started with Create React App
+# ChoiceScarf
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+**Stop wasting Speed EVs.** ChoiceScarf works out the *minimum* Speed EVs your Pokémon needs to outspeed a target, for each nature, and tells you when only a Choice Scarf will do.
 
-## Available Scripts
+**Live at [choicescarf.com](https://choicescarf.com)**
 
-In the project directory, you can run:
+![ChoiceScarf: base 100 vs. a max-speed base 100. Negative nature can't outspeed, neutral ties at 152, positive needs 156 EVs for 154.](docs/screenshot.png)
 
-### `npm start`
+## How it works
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+1. Enter the **Pokémon to beat**: base Speed, IVs, EVs, nature, and (under *Show advanced*) level, stat boosts, Choice Scarf, Tailwind and weather.
+2. Enter **your Pokémon**: base Speed, IVs and the same advanced options.
+3. Press **Go**. For each nature, ChoiceScarf finds the fewest EVs that make you strictly faster. A tie counts as a loss. If no nature can outspeed, it tries again with a Choice Scarf.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Speed is calculated the way the games do it (Gen 3+ stats, Gen 5+ battle modifiers), flooring at each step:
 
-### `npm test`
+```
+stat  = floor((floor((2 × Base + IV + floor(EV / 4)) × Level / 100) + 5) × Nature)
+speed = floor(stat × boost stage)
+speed = Scarf (×1.5), Tailwind (×2) and weather abilities (×2), chained into one
+        4096-based modifier and rounded half down
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+The maths lives in [`src/lib/speedCalc.js`](src/lib/speedCalc.js) and is covered by [`src/lib/speedCalc.test.js`](src/lib/speedCalc.test.js).
 
-### `npm run build`
+## Development
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Requires **Node 22** (see [`.nvmrc`](.nvmrc)).
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+nvm use
+npm ci
+npm run dev        # http://localhost:3000
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+| Command | What it does |
+|---|---|
+| `npm run dev` | Start the dev server |
+| `npm test` | Run the tests once (Vitest) |
+| `npm run test:watch` | Run the tests in watch mode |
+| `npm run lint` | ESLint, zero warnings allowed |
+| `npm run build` | Production build into `dist/` |
+| `npm run preview` | Serve the production build locally |
 
-### `npm run eject`
+### Stack
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- [React 19](https://react.dev), built with [Vite](https://vite.dev)
+- [Vitest](https://vitest.dev) + [Testing Library](https://testing-library.com) for tests
+- ESLint 9 with the React, React Hooks and jsx-a11y plugins
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Project layout
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```
+src/
+  lib/speedCalc.js        Speed maths (the important bit)
+  lib/validation.js       Input ranges and clamping
+  context/                State for both Pokémon and the results
+  components/form/        The two input forms
+  components/results/     Results chart and count-up animation
+  hooks/                  useCountUp, useStickyState
+index.html                Vite entry; also loads Google Tag Manager
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Deployment
 
-## Learn More
+- **GitHub Actions** runs lint, tests and a production build on every pull request and on pushes to `v4`.
+- **Vercel** deploys `v4` to [choicescarf.com](https://choicescarf.com) and builds a preview for every pull request. Build settings are in [`vercel.json`](vercel.json).
+- **Dependabot** opens dependency update PRs every Monday. Minor and patch updates are grouped into one PR.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Contributing
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+All changes go through a pull request into `v4`. See [CONTRIBUTING.md](CONTRIBUTING.md) for the workflow and labels. Coding agents should read [AGENTS.md](AGENTS.md).
 
-### Code Splitting
+## Credits
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Made by [Josh Wayman](https://joshwayman.com). Pokémon and its terms are trademarks of Nintendo, Game Freak and The Pokémon Company; ChoiceScarf is an unofficial fan tool.
