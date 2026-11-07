@@ -5,27 +5,25 @@ import ChoiceScarfContext from "../../context/choicescarfContext";
 export default function Results( { visible } ) {
     const { results } = useContext(ChoiceScarfContext);
 
-    const [display, setDislay] = useState(false);
-
-
+    const [display, setDisplay] = useState(false);
     const [heightToggle, setHeightToggle] = useState(true);
 
-    useEffect(()=> {
-        setTimeout(() => {
-            setDislay(visible ? true : false);
-        }, 500)
-    }, [visible, setDislay]);
+    // Expand the panel again whenever a new set of results arrives.
+    const [shownResults, setShownResults] = useState(results);
+    if (results !== shownResults) {
+        setShownResults(results);
+        setHeightToggle(true);
+    }
 
     useEffect(() => {
-        // TODO(#16): derive this instead of syncing state in an effect.
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setHeightToggle(true);
-    }, [results])
+        const timeout = setTimeout(() => setDisplay(visible), 500);
+        return () => clearTimeout(timeout);
+    }, [visible]);
 
     return(
         <section className={`results-wrapper ${visible ? 'is-visible' : ''} ${display ? 'is-displayed' : ''} ${heightToggle ? 'is-tall' : 'is-short'}`}>
             <div className="results-inner">
-                <button onClick={() => { setHeightToggle(heightToggle ? false : true ) }} className='btn-side-up'>
+                <button onClick={() => setHeightToggle(!heightToggle)} className='btn-side-up'>
                     {arrowDown}
                 </button>
                 {results.speedToBeat ? <h2>Speed to beat is {results.speedToBeat}. {results.choicescarf ? <span>{'A ChoiceScarf is required to outspeed.'}</span> :''}</h2> : ''}
