@@ -75,7 +75,6 @@ Short imperative summary (`Fix speed flooring for positive natures`), blank line
 ## Gotchas
 
 - **The speed formula must floor where the games do** (fixed in #23): floor the stat before nature, floor after the boost stage, then apply Scarf/Tailwind/weather as one chained 4096-based modifier. Check new expected values against the in-game formula, not the current output.
-- `returnCompleteSpeed` mutates the object passed to it (#15).
-- Both forms reuse the same element IDs (`baseSpeed`, `iv`, ...) (#18). In tests, use `getAllByLabelText` or scope with `within`.
+- Form inputs use `name` for the stat field (`baseSpeed`, `iv`, ...) and a unique `id` prefixed `target-` or `yours-`. Handlers read `e.target.name`. Labels repeat across the two forms, so in tests use `getAllByLabelText` or scope with `within`.
 - GTM (`GTM-W7XHSG`) is loaded by the snippet in `index.html`. Don't remove it without the maintainer agreeing.
 - Tests use Vitest globals (`describe`, `it`, `expect`, `vi`). Use `vi.fn()` / `vi.spyOn()`, not `jest.*`.
