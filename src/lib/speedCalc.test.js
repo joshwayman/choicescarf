@@ -21,7 +21,6 @@ const base = (overrides = {}) => ({
 });
 
 beforeEach(() => {
-  // returnCompleteSpeed logs its output; keep test output clean.
   vi.spyOn(console, 'log').mockImplementation(() => {});
 });
 
@@ -236,6 +235,42 @@ describe('returnCompleteSpeed', () => {
     const pokemon = base({ baseSpeed: 60, ev: 0, choicescarf: false });
     returnCompleteSpeed(pokemon, base({ baseSpeed: 100 }));
     expect(pokemon.choicescarf).toBe(false);
+  });
+
+  // #15: the inputs are React state, so they must not be modified.
+  it.each([
+    ['without Scarf', base({ ev: 0, nature: 'neutral' }), base({ baseSpeed: 95 })],
+    ['with Scarf', base({ baseSpeed: 60, ev: 0, nature: 'neutral' }), base()],
+  ])('does not modify its inputs (%s)', (_, pokemon, pokemonToBeat) => {
+    const pokemonBefore = structuredClone(pokemon);
+    const toBeatBefore = structuredClone(pokemonToBeat);
+
+    returnCompleteSpeed(pokemon, pokemonToBeat);
+
+    expect(pokemon).toEqual(pokemonBefore);
+    expect(pokemonToBeat).toEqual(toBeatBefore);
+  });
+
+  it('records the stats used for each result', () => {
+    const out = returnCompleteSpeed(
+      base({ baseSpeed: 60, ev: 0 }),
+      base({ baseSpeed: 100 })
+    );
+
+    expect(out.results.map((r) => [r.stats.nature, r.stats.choicescarf])).toEqual([
+      ['negative', false],
+      ['neutral', false],
+      ['positive', false],
+      ['negative', true],
+      ['neutral', true],
+      ['positive', true],
+    ]);
+  });
+
+  it('does not log to the console', () => {
+    // The Scarf path is the one that used to log.
+    returnCompleteSpeed(base({ baseSpeed: 60, ev: 0 }), base());
+    expect(console.log).not.toHaveBeenCalled();
   });
 
   it('recommends enough EVs to actually outspeed (#23)', () => {
