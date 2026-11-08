@@ -2,33 +2,34 @@ const NATURES = ['negative', 'neutral', 'positive'];
 
 /*
  * For each nature, find the minimum EVs that outspeed pokemonToBeat.
- * If no nature can outspeed it, also try every nature with a Choice Scarf.
+ * If no nature can outspeed it, and your Pokémon isn't already holding one,
+ * also try every nature with a Choice Scarf.
  * Pure: the inputs are React state and are never modified.
  */
 export function returnCompleteSpeed( pokemon = {}, pokemonToBeat = {} ) {
     const speedToBeat = calculateBasicSpeed(pokemonToBeat);
 
-    const tryNatures = (overrides, choicescarf) => NATURES.map(nature => {
+    const tryNatures = (overrides = {}) => NATURES.map(nature => {
         const stats = { ...pokemon, nature, ...overrides };
 
         return {
             label: nature,
             group: 'nature',
-            choicescarf,
+            choicescarf: stats.choicescarf === true,
             ...bruteForceSpeedEVs(stats, speedToBeat),
             stats,
         };
     });
 
-    const results = tryNatures({}, false);
+    const results = tryNatures();
 
-    if (results.some(result => result.win)) {
+    if (pokemon.choicescarf === true || results.some(result => result.win)) {
         return { speedToBeat, results, choicescarf: false };
     }
 
     return {
         speedToBeat,
-        results: [...results, ...tryNatures({ choicescarf: true }, true)],
+        results: [...results, ...tryNatures({ choicescarf: true })],
         choicescarf: true,
     };
 }

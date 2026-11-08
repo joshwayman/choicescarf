@@ -282,4 +282,41 @@ describe('returnCompleteSpeed', () => {
 
     expect(positive).toMatchObject({ ev: 156, speed: 154, win: true });
   });
+
+  describe('when your Pokémon already holds a Choice Scarf (#48)', () => {
+    // Base 60 with Scarf vs. max-speed base 100 neutral (152).
+    // Neutral:  (120+31+43)/2 = 97, +5 = 102, x1.5 = 153 -> 172 EVs.
+    // Positive: (120+31+25)/2 = 88, +5 = 93, x1.1 = 102, x1.5 = 153 -> 100 EVs.
+    // Negative: (120+31+63)/2 = 107, +5 = 112, x0.9 = 100, x1.5 = 150 -> can't win.
+    const scarfed = () => base({ baseSpeed: 60, ev: 0, choicescarf: true });
+
+    it('marks every result as using a Scarf', () => {
+      const out = returnCompleteSpeed(scarfed(), base());
+      expect(out.results.map((r) => r.choicescarf)).toEqual([true, true, true]);
+    });
+
+    it('calculates with the Scarf', () => {
+      const out = returnCompleteSpeed(scarfed(), base());
+      expect(out.results.map(({ label, ev, speed, win }) => ({ label, ev, speed, win }))).toEqual([
+        { label: 'negative', ev: 252, speed: 150, win: false },
+        { label: 'neutral', ev: 172, speed: 153, win: true },
+        { label: 'positive', ev: 100, speed: 153, win: true },
+      ]);
+      expect(out.choicescarf).toBe(false);
+    });
+
+    it('does not add duplicate Scarf rows or say a Scarf is required when it still loses', () => {
+      // Base 30 with Scarf vs. max-speed base 150 (202): best case is
+      // (60+31+63)/2 = 77, +5 = 82, x1.1 = 90, x1.5 = 135.
+      const out = returnCompleteSpeed(
+        base({ baseSpeed: 30, ev: 0, choicescarf: true }),
+        base({ baseSpeed: 150 })
+      );
+
+      expect(out.speedToBeat).toBe(202);
+      expect(out.results).toHaveLength(3);
+      expect(out.results.every((r) => !r.win && r.choicescarf)).toBe(true);
+      expect(out.choicescarf).toBe(false);
+    });
+  });
 });
