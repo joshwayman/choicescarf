@@ -63,13 +63,13 @@ index.html                Vite entry; also loads Google Tag Manager
 
 ## Deployment
 
-- **GitHub Actions** runs lint, tests and a production build on every pull request and on pushes to `v4`.
-- **Vercel** deploys `v4` to [choicescarf.com](https://choicescarf.com) and builds a preview for every pull request. Build settings are in [`vercel.json`](vercel.json).
+- **GitHub Actions** runs lint, tests and a production build on every pull request and on pushes to `main`.
+- **Vercel** deploys `main` to [choicescarf.com](https://choicescarf.com) and builds a preview for every pull request. Build settings are in [`vercel.json`](vercel.json).
 - **Dependabot** opens dependency update PRs every Monday. Minor and patch updates are grouped into one PR.
 
 ## Contributing
 
-All changes go through a pull request into `v4`. See [CONTRIBUTING.md](CONTRIBUTING.md) for the workflow and labels. Coding agents should read [AGENTS.md](AGENTS.md).
+All changes go through a pull request into `main`. See [CONTRIBUTING.md](CONTRIBUTING.md) for the workflow and labels. Coding agents should read [AGENTS.md](AGENTS.md).
 
 ## Credits
 
