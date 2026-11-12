@@ -12,10 +12,10 @@ npm run dev    # http://localhost:3000
 
 ## How changes get made
 
-**Everything goes through a pull request.** Nobody pushes to `v4` directly, maintainer included. `v4` is what Vercel deploys to choicescarf.com.
+**Everything goes through a pull request.** Nobody pushes to `main` directly, maintainer included. `main` is what Vercel deploys to choicescarf.com.
 
 1. **Start from an issue.** Find one in the [roadmap (#1)](https://github.com/joshwayman/choicescarf/issues/1) or open a new one.
-2. **Branch from `v4`:** `git checkout -b fix/short-description origin/v4`
+2. **Branch from `main`:** `git checkout -b fix/short-description origin/main`
 3. **Make the change.** Keep it focused on one issue.
 4. **Check it:**
    ```bash
@@ -24,7 +24,7 @@ npm run dev    # http://localhost:3000
    npm run build
    ```
    GitHub Actions runs the same checks on every PR and they must pass.
-5. **Open a PR into `v4`** using the template. In the PR:
+5. **Open a PR into `main`** using the template. In the PR:
    - put `Closes #<issue>` in the description
    - assign **@joshwayman**
    - add one **type label** and, for roadmap work, a **phase label** (below)

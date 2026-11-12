@@ -7,8 +7,8 @@ Guidance for coding agents (Claude Code, Codex, Copilot, etc.) working in this r
 ChoiceScarf is a Pokémon speed EV calculator, live at **choicescarf.com**. It works out the minimum Speed EVs your Pokémon needs to outspeed a target, for each nature, and whether a Choice Scarf is needed.
 
 - React 19 single-page app built with **Vite**, tested with **Vitest** + Testing Library, linted with ESLint 9 (flat config)
-- Deployed on **Vercel** from the `v4` branch. Every PR gets a Vercel preview deployment.
-- Default branch: `v4`
+- Deployed on **Vercel** from the `main` branch. Every PR gets a Vercel preview deployment.
+- Default branch: `main`
 
 ### Layout
 
@@ -38,7 +38,7 @@ npm run preview              # serve the production build
 
 ## Rules
 
-1. **Never push to `v4` directly.** Every change goes on a branch and through a pull request into `v4`.
+1. **Never push to `main` directly.** Every change goes on a branch and through a pull request into `main`.
 2. **One issue per PR** where possible. Put `Closes #<n>` in the PR body.
 3. **Assign the PR to `joshwayman`** (sole maintainer and reviewer).
 4. **Label the PR** with one type label and, for roadmap work, its phase label (see below).
