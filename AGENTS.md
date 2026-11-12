@@ -9,6 +9,7 @@ ChoiceScarf is a Pokémon speed EV calculator, live at **choicescarf.com**. It w
 - React 19 single-page app built with **Vite**, tested with **Vitest** + Testing Library, linted with ESLint 9 (flat config)
 - Deployed on **Vercel** from the `main` branch. Every PR gets a Vercel preview deployment.
 - Default branch: `main`
+- **v5 rewrite** is built on the long-lived `v5` branch (see roadmap #59). `main` stays the live v4 site until v5 launches.
 
 ### Layout
 
@@ -47,6 +48,15 @@ npm run preview              # serve the production build
 7. Don't skip, delete or weaken a test to make CI pass.
 8. Keep PRs small and focused. Don't mix refactors with behaviour changes.
 9. Never merge your own PR. Merging is the maintainer's call.
+
+### Which branch to target
+
+| Change | Branch from / PR into |
+|---|---|
+| v5 rewrite work (roadmap #59) | `v5` |
+| Hotfixes, Dependabot, anything that must reach choicescarf.com now | `main` |
+
+Merge `main` into `v5` regularly so hotfixes and dependency bumps don't drift. Don't merge `v5` into `main` until the v5 launch.
 
 ### Branch names
 
