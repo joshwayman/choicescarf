@@ -10,24 +10,30 @@ npm ci
 npm run dev    # http://localhost:3000
 ```
 
+## Branches
+
+- **`main`** is v4, the JavaScript app that Vercel deploys to choicescarf.com. Only v4 fixes go here until v5 launches.
+- **`v5`** is the TypeScript rewrite ([roadmap #59](https://github.com/joshwayman/choicescarf/issues/59)). It has its own Vercel preview and replaces `main` at launch (#89).
+
 ## How changes get made
 
-**Everything goes through a pull request.** Nobody pushes to `main` directly, maintainer included. `main` is what Vercel deploys to choicescarf.com.
+**Everything goes through a pull request.** Nobody pushes to `main` or `v5` directly, maintainer included.
 
-1. **Start from an issue.** Find one in the [roadmap (#1)](https://github.com/joshwayman/choicescarf/issues/1) or open a new one.
-2. **Branch from `main`:** `git checkout -b fix/short-description origin/main`
+1. **Start from an issue.** Find one in the [v5 roadmap (#59)](https://github.com/joshwayman/choicescarf/issues/59) or open a new one.
+2. **Branch from `v5`:** `git checkout -b chore/short-description origin/v5` (or from `main` for a v4 fix)
 3. **Make the change.** Keep it focused on one issue.
 4. **Check it:**
    ```bash
    npm run lint
+   npm run typecheck
    npm test
    npm run build
    ```
    GitHub Actions runs the same checks on every PR and they must pass.
-5. **Open a PR into `main`** using the template. In the PR:
+5. **Open a PR into `v5`** (or `main` for a v4 fix) using the template. In the PR:
    - put `Closes #<issue>` in the description
    - assign **@joshwayman**
-   - add one **type label** and, for roadmap work, a **phase label** (below)
+   - add one **type label**, the **phase label** and `v5` (below)
 6. **Check the Vercel preview** linked on the PR before asking for review.
 7. @joshwayman reviews and merges. Squash merge is preferred.
 
@@ -35,14 +41,25 @@ npm run dev    # http://localhost:3000
 
 **Type** (pick one): `bug`, `enhancement`, `documentation`, `testing`, `ci`, `dependencies`, `chore`, `security`, `accessibility`
 
-**Phase** (roadmap work only): `phase-0` … `phase-5`, matching #1
+**Phase** (roadmap work only): `phase-0` … `phase-5`, matching #59
+
+**Release:** `v5` on every v5 issue and PR
+
+## Project layout
+
+| Folder | What goes there |
+|---|---|
+| `src/engine` | The speed engine. Pure TypeScript: no React and no browser APIs (lint and the type check both enforce this). |
+| `src/data` | Species and modifier data generated at build time |
+| `src/ui` | Tokens, themes, fonts and shared components |
+| `src/app` | Entry point, shell, routes and screens |
 
 ## Changing the speed maths
 
-`src/lib/speedCalc.js` is the heart of the app and people rely on its numbers.
+`src/engine` is the heart of the app and people rely on its numbers. The rules are in [`docs/specs/rulesets.md`](docs/specs/rulesets.md).
 
-- Add or update tests in `src/lib/speedCalc.test.js` for any change.
-- Work out the expected values from the in-game formula (e.g. [Bulbapedia: Stat](https://bulbapedia.bulbagarden.net/wiki/Stat)), not from the current code's output.
+- Write the tests first, for any change.
+- Work out the expected values from the in-game formula (the spec has worked examples), then check them against Pokémon Showdown. Never take them from the current code's output.
 - Include a before/after example in the PR description.
 
 ## Dependencies

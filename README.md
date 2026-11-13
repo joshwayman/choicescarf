@@ -1,5 +1,7 @@
 # ChoiceScarf
 
+> **This is the `v5` branch**, a TypeScript rewrite in progress ([roadmap #59](https://github.com/joshwayman/choicescarf/issues/59)). The rest of this README describes v4, which lives on `main` and runs choicescarf.com; its source is not on this branch. For the v5 layout and commands, see [AGENTS.md](AGENTS.md). This README is rewritten when v5 launches (#89).
+
 **Stop wasting Speed EVs.** ChoiceScarf works out the *minimum* Speed EVs your Pokémon needs to outspeed a target, for each nature, and tells you when only a Choice Scarf will do.
 
 **Live at [choicescarf.com](https://choicescarf.com)**

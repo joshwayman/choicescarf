@@ -7,6 +7,7 @@ Closes #
 ## How I checked it
 
 - [ ] `npm run lint` passes
+- [ ] `npm run typecheck` passes
 - [ ] `npm test` passes
 - [ ] `npm run build` passes
 - [ ] Checked the Vercel preview
@@ -17,4 +18,4 @@ Closes #
 
 - [ ] Assigned to @joshwayman
 - [ ] Type label added (`bug`, `enhancement`, `documentation`, `testing`, `ci`, `dependencies`, `chore`, `security`, `accessibility`)
-- [ ] Phase label added if this is roadmap work (`phase-0` … `phase-5`)
+- [ ] Phase label added if this is roadmap work (`phase-0` … `phase-5`), and `v5` for v5 work
