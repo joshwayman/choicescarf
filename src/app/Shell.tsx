@@ -23,19 +23,21 @@ import styles from './Shell.module.css';
 export function Shell() {
   const router = useRouter();
   return (
-    // Lets React Aria links and menu items navigate through the router.
+    // Lets React Aria links and menu items navigate through the router. Every link
+    // keeps the calculation in the query (`search`), so going to More or About and
+    // coming back keeps it (#65).
     <AriaRouterProvider
       navigate={(href) => {
-        void router.navigate({ to: href });
+        void router.navigate({ to: href, search: true });
       }}
-      useHref={(href) => router.buildLocation({ to: href }).href}
+      useHref={(href) => router.buildLocation({ to: href, search: true }).href}
     >
       <div className={styles.shell}>
         <a href="#main" className={styles.skip}>
           Skip to content
         </a>
         <header className={styles.header}>
-          <Link to="/" aria-label="ChoiceScarf home" className={styles.home}>
+          <Link to="/" search aria-label="ChoiceScarf home" className={styles.home}>
             <img src="/logo.png" alt="" width={30} height={30} className={styles.logo} />
             <span className={styles.wordmark}>ChoiceScarf</span>
           </Link>
@@ -43,7 +45,7 @@ export function Shell() {
             {/* Generation 9 is the only ruleset in v5.0, so the pill is a label for now (#54). */}
             <HeaderBadge label="Gen 9" />
             <PhoneOnly>
-              <Link to="/more" aria-label="More" className={styles.iconLink}>
+              <Link to="/more" search aria-label="More" className={styles.iconLink}>
                 <MenuIcon size={18} />
               </Link>
             </PhoneOnly>

@@ -63,6 +63,27 @@ describe('routes', () => {
   });
 });
 
+describe('the calculation in the URL', () => {
+  it('loads a hand-broken link without crashing', async () => {
+    renderAt('/?t.ev=abc&t=missingno&%%%=1&tr=maybe&v=999&t.lv=-4&weather=%E0%A4%A');
+    expect(await heading('Calculator')).toBeInTheDocument();
+  });
+
+  it('keeps the calculation through the header and the More page', async () => {
+    const user = userEvent.setup();
+    const { router } = renderAt('/?v=1&t=garchomp&y=dragapult');
+    await heading('Calculator');
+    await user.click(screen.getByRole('link', { name: 'More' }));
+    await heading('More');
+    await user.click(screen.getByRole('link', { name: 'About ChoiceScarf' }));
+    await heading('About ChoiceScarf');
+    expect(router.state.location.searchStr).toBe('?v=1&t=garchomp&y=dragapult');
+    await user.click(screen.getByRole('link', { name: 'ChoiceScarf home' }));
+    await heading('Calculator');
+    expect(router.state.location.searchStr).toBe('?v=1&t=garchomp&y=dragapult');
+  });
+});
+
 describe('the back button', () => {
   it('works across every route', async () => {
     const user = userEvent.setup();

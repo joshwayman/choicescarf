@@ -3,6 +3,8 @@ export { Button, IconButton, TextButton, TextLink } from './Button.tsx';
 export type { ButtonProps, ButtonVariant, IconButtonProps, TextButtonProps, TextLinkProps } from './Button.tsx';
 export { Chip, ChipGroup, ChipToggle } from './Chip.tsx';
 export type { ChipGroupProps, ChipProps, ChipToggleProps, ChipVariant } from './Chip.tsx';
+export { CopyLinkButton } from './CopyLinkButton.tsx';
+export type { CopyLinkButtonProps } from './CopyLinkButton.tsx';
 export { HeaderBadge, HeaderPill } from './HeaderPill.tsx';
 export type { HeaderBadgeProps, HeaderPillProps } from './HeaderPill.tsx';
 export { NumberField } from './NumberField.tsx';
