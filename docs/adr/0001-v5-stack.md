@@ -93,7 +93,7 @@ The third is what makes Battle mode cheap. A Speed range is the minimum and maxi
 
 - **Rulesets are data.** Each ruleset declares its investment system (EVs or Stat Points), its modifiers and their multipliers. Paralysis being ×0.25 before Generation 7 and ×0.5 after is a table entry, not a branch in the code.
 - **Flooring follows the games.** The rule from v4 carries over: floor the stat before nature, floor after the stage, then apply item, Tailwind and weather as one chained 4096-based modifier.
-- **Tests come first.** Expected values are worked out from the in-game formula, then cross-checked against Pokémon Showdown.
+- **Tests come first.** Expected values are worked out from the in-game formula, then cross-checked against Pokémon Showdown. The oracle is `@smogon/calc`, as a development dependency. The rules and test values are in `docs/specs/rulesets.md`.
 
 ### 5. Data is generated at build time
 
@@ -195,7 +195,6 @@ Vercel's Hobby plan is free for personal, non-commercial projects and includes a
 
 ## Open questions
 
-- **Cross-checking against Showdown.** `@smogon/calc` computes final Speed internally. Whether it exposes it in a way tests can call needs checking before it is relied on as the oracle.
 - **Sprites.** Permission, licence and hosting, as described in decision 6.
 
 ## Versions checked
