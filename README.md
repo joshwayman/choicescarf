@@ -76,3 +76,5 @@ All changes go through a pull request into `main`. See [CONTRIBUTING.md](CONTRIB
 ## Credits
 
 Made by [Josh Wayman](https://joshwayman.com). Pokémon and its terms are trademarks of Nintendo, Game Freak and The Pokémon Company; ChoiceScarf is an unofficial fan tool.
+
+Species data (names, base Speed and abilities) comes from [`@pkmn/dex`](https://github.com/pkmn/ps/tree/main/dex) and [`@pkmn/data`](https://github.com/pkmn/ps/tree/main/data) by the [pkmn](https://github.com/pkmn) project, which is built from [Pokémon Showdown](https://github.com/smogon/pokemon-showdown) by Smogon. Both are MIT licensed. The speed maths is checked against Pokémon Showdown's simulator and [`@smogon/calc`](https://github.com/smogon/damage-calc).

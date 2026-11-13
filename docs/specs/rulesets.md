@@ -103,9 +103,9 @@ Flutter Mane with Protosynthesis, Choice Scarf and Tailwind is 405 before modifi
 |---|---|---|---|
 | Choice Scarf | Item | ×1.5 | Always |
 | Iron Ball | Item | ×0.5 | Always |
-| Macho Brace | Item | ×0.5 | Always |
+| Macho Brace | Item | ×0.5 | Always. National Dex only: not in Scarlet and Violet (#80) |
 | Power Anklet, Band, Belt, Bracer, Lens, Weight | Item | ×0.5 | Always |
-| Quick Powder | Item | ×2 | Holder is an untransformed Ditto |
+| Quick Powder | Item | ×2 | Holder is an untransformed Ditto. National Dex only (#80) |
 | Swift Swim | Ability | ×2 | Rain |
 | Chlorophyll | Ability | ×2 | Sun |
 | Sand Rush | Ability | ×2 | Sandstorm |
@@ -183,8 +183,8 @@ Worked from the formula by hand, then checked against `@smogon/calc`. All at lev
 | Barraskewda, Swift Swim, rain | 371×2 | **742** |
 | Barraskewda, +Spe, Swift Swim, rain, Choice Scarf | 371×1.1 = 408; chain ×3 | **1224** |
 | Gardevoir (80), +Spe, 252 EVs, paralysed | 254; 259; ×1.1 = 284.9 → 284; ×0.5 | **142** |
-| Ursaluna (50), −Spe, 0 EVs, Quick Feet, burned | 131; 136; ×0.9 = 122.4 → 122; ×1.5 | **183** |
-| Ursaluna, neutral, 252 EVs, Quick Feet, paralysed | 199; ×1.5 = 298.5, no paralysis drop | **298** |
+| Base 50 with Quick Feet (Ursaluna's Speed; Ursaluna itself has Guts, #80), −Spe, 0 EVs, burned | 131; 136; ×0.9 = 122.4 → 122; ×1.5 | **183** |
+| The same base 50 with Quick Feet, neutral, 252 EVs, paralysed | 199; ×1.5 = 298.5, no paralysis drop | **298** |
 | Flutter Mane (135), +Spe, 252 EVs, Protosynthesis on | 364; 369; ×1.1 = 405.9 → 405; ×1.5 = 607.5 | **607** |
 | Flutter Mane, Protosynthesis, Choice Scarf, Tailwind | 405 × 4.5 = 1822.5 | **1822** |
 | Regigigas (100), +Spe, 252 EVs, Slow Start on | 294; 299; ×1.1 = 328.9 → 328; ×0.5 | **164** |
