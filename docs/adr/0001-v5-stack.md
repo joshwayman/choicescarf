@@ -1,7 +1,7 @@
 # ADR 0001: The v5 stack
 
-- **Status:** Proposed, awaiting the maintainer's agreement
-- **Date:** 13 November 2026
+- **Status:** Accepted
+- **Date:** 13 November 2026. Amended the same day with the analytics, error reporting and release order decisions.
 - **Issue:** #61 (part of the v5 roadmap, #59)
 - **Supersedes:** #21
 
@@ -22,6 +22,9 @@ v5 is a client-rendered single-page app in TypeScript, built with Vite and deplo
 | Styling | CSS variables for tokens, CSS Modules for components |
 | Offline | Service worker via `vite-plugin-pwa` |
 | Tests | Vitest for the engine, Playwright with axe for the flows |
+| Analytics | Google Analytics 4, loaded directly (no Tag Manager) |
+| Error reporting | Sentry |
+| Release order | Calculator first, then rulesets and formats, then Quick, then Teams and Battle |
 
 ## Context
 
@@ -39,6 +42,8 @@ Two things were decided before this record: the rewrite is in TypeScript, and ho
 ### What the maintainer wants from it
 
 - **Fun and easy to use** is the goal.
+- **Shipped in pieces.** Calculator mode goes out first so the engine is proven before anything is built on it.
+- **Usage has to be measurable,** and errors reported.
 - **Search traffic is not a goal.** A page per Pokémon for people searching "garchomp speed tiers" was the strongest argument for pre-rendering in #61. The maintainer does not want it: more traffic means the site costs money to run.
 
 That second point removes the only reason to pre-render, and it makes low running cost a requirement in its own right.
@@ -95,14 +100,14 @@ The third is what makes Battle mode cheap. A Speed range is the minimum and maxi
 - **Species, abilities and items** come from `@pkmn/dex` and `@pkmn/data`. A build script writes one compact file per ruleset holding only what the app uses: name, base Speed, the abilities that affect Speed, legality and an icon reference. The full dex never ships to the browser.
 - **Usage data** stays a monthly snapshot committed by pull request (#58), one file per format, loaded when that format is chosen.
 - **Team import and export** use `@pkmn/sets`, which parses and writes Showdown's set format.
-- **Nothing is fetched from a third party at runtime.** `@pkmn/smogon` can fetch live analysis data from `data.pkmn.cc`, but using it in the browser would break offline use and add a dependency on someone else's server. It may be useful inside the snapshot script.
+- **No data is fetched from a third party at runtime.** `@pkmn/smogon` can fetch live analysis data from `data.pkmn.cc`, but using it in the browser would break offline use and add a dependency on someone else's server. It may be useful inside the snapshot script.
 
 ### 6. Images sit behind one component
 
-`@pkmn/img` returns addresses on Pokémon Showdown's servers plus a position within a sprite sheet. Whether v5 may use those images, and whether it hosts copies, depends on permission that has not been requested yet.
+`@pkmn/img` returns addresses on Pokémon Showdown's servers plus a position within a sprite sheet. Whether v5 may use those images, and whether it hosts copies, depends on permission. The maintainer will ask Smogon once a text-only v5.0 is live to show them.
 
 - **One `PokemonIcon` component and one `ItemIcon` component** own that decision. Everything else asks for an icon by name.
-- **Both have a text-only fallback.** Quick and Calculator must work with no images. Battle and Teams depend on them.
+- **Both have a text-only fallback, and v5.0 ships with it.** Quick and Calculator must work with no images. Battle and Teams depend on them.
 - **Offline needs local copies.** If permission is granted, the sheets are stored with the app and cached by the service worker.
 
 ### 7. React 19 with React Aria Components
@@ -135,6 +140,29 @@ The designs are built from sheets, a search combobox, tab bars, radio lists, ste
 - **axe on every route in CI,** in both themes and at phone and desktop sizes. The quality bar is zero issues.
 - **A layout check in CI.** The design review found screens that overran a phone by a few pixels. The same measurement (no content past the bottom of a 390 × 844 screen, no tap target under 44 px) runs as a Playwright test.
 
+### 11. Google Analytics 4 and Sentry
+
+v4 loads Google Tag Manager. v5 replaces it with two direct integrations.
+
+- **Google Analytics 4,** loaded with its own tag, so the maintainer can see how much the app is used. Tag Manager goes: nothing else needs it.
+- **Sentry** for error reporting, with source maps uploaded at build time so reports point at real code.
+- **Neither may block the app.** Both load after the first render, and the app must behave the same when they are blocked or the device is offline.
+- **No personal data.** Teams, sets and anything typed stay on the device. Error reports must not carry them.
+- **The Privacy page names both.**
+
+### 12. Release order
+
+v5 ships in pieces, not all at once. Each release proves the layer the next one stands on.
+
+| Release | Contains | What it proves |
+|---|---|---|
+| v5.0 | Calculator mode with Trick Room, Generation 9 rules, a text-only species picker, light and dark themes, share links, offline | Engine, URL state, tokens, components, data build |
+| v5.1 | Rulesets for Generations 3 to 8 and Champions, and the formats built on them | Rulesets as data |
+| v5.2 | Quick mode | Formats, defaults, the chip components |
+| Later | Teams and Battle, usage data, sprites | Library, candidate sets |
+
+The numbers are a guide to order, not a commitment. v5.0 replaces v4 on choicescarf.com once it does everything v4 does.
+
 ## Running cost
 
 The maintainer wants the site to stay cheap to run. This stack keeps it to static file transfer:
@@ -162,14 +190,13 @@ Vercel's Hobby plan is free for personal, non-commercial projects and includes a
 - **Every calculation is a link.** That is a feature (#53), and it means the URL format is a public contract that needs versioning from the first release.
 - **First load carries the app and one ruleset's data.** Bundle size needs a budget, and data files must stay split.
 - **No server means no shared state.** Teams do not sync between devices. Export and import through Showdown's format is the workaround.
+- **Two third-party requests per visit,** for analytics and error reporting. Everything else is served from the site itself.
 - **Two more dependencies to keep current:** TanStack Router and React Aria Components. Both are actively maintained and Dependabot already covers the repo.
 
 ## Open questions
 
-- **Analytics.** v4 loads Google Tag Manager. Whether v5 keeps it affects the Privacy page and adds a third-party request on every visit.
 - **Cross-checking against Showdown.** `@smogon/calc` computes final Speed internally. Whether it exposes it in a way tests can call needs checking before it is relied on as the oracle.
 - **Sprites.** Permission, licence and hosting, as described in decision 6.
-- **Which formats ship in v5.0.** This sets how many data files exist at launch (#62).
 
 ## Versions checked
 
@@ -186,6 +213,7 @@ Checked against the npm registry on 13 November 2026. These show that each choic
 | `@pkmn/dex`, `@pkmn/data` | 0.11.0 | |
 | `@pkmn/sets` | 7.0.0 | |
 | `@pkmn/img` | 0.3.5 | |
+| `@sentry/react` | 11.12.0 | Supports React 19 |
 | `@playwright/test` | 1.65.0 | |
 | `@axe-core/playwright` | 4.14.0 | |
 | `typescript` | 7.0.2 | |
