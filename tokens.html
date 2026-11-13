@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Design tokens | ChoiceScarf</title>
+    <meta name="robots" content="noindex" />
+    <link rel="icon" href="/favicon.ico" sizes="16x16" />
+    <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+    <meta name="theme-color" content="#10111c" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f3f8fb" media="(prefers-color-scheme: light)" />
+    <!-- Apply a remembered theme before the first paint (see src/ui/theme.ts). -->
+    <script>
+      try {
+        var t = localStorage.getItem('choicescarf:theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to see the design tokens.</noscript>
+    <div id="root"></div>
+    <script type="module" src="/src/app/tokens/main.tsx"></script>
+  </body>
+</html>

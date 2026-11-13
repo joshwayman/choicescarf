@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 
@@ -5,6 +6,15 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 3000,
+  },
+  build: {
+    rolldownOptions: {
+      input: {
+        main: fileURLToPath(new URL('index.html', import.meta.url)),
+        // The design token page (#81), at /tokens.html.
+        tokens: fileURLToPath(new URL('tokens.html', import.meta.url)),
+      },
+    },
   },
   test: {
     projects: [
@@ -23,6 +33,8 @@ export default defineConfig({
           name: 'ui',
           include: ['src/app/**/*.test.{ts,tsx}', 'src/ui/**/*.test.{ts,tsx}'],
           environment: 'jsdom',
+          // Vitest blanks CSS in tests. The token tests read tokens.css as text.
+          css: { include: [/src\/ui\/tokens\.css/] },
           setupFiles: ['./src/app/setupTests.ts'],
         },
       },
