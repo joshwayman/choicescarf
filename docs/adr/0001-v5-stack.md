@@ -72,13 +72,14 @@ React Router is the alternative. It is a sound choice and more widely known, but
 | Layer | What it holds | Where it lives |
 |---|---|---|
 | Calculation | Both Pokémon, their sets and modifiers, the field, the format or ruleset | The URL |
-| Library | Teams, recents, theme, last format | IndexedDB |
+| Library | Teams, recents, last format (the theme is an exception, below) | IndexedDB |
 | Battle session | Both teams in play, who is active, recorded turns and deductions | In memory, mirrored to IndexedDB so a refresh does not lose a battle |
 
 - **The URL is the single source of truth for a calculation.** Share links (#53), the back button and switching between Quick and Calculator all come from this one mechanism. Changing mode changes the path and keeps the query.
 - **The URL format is versioned** so old links keep working.
 - **Zustand** holds the library and battle stores. It is small, has no provider tree, and works outside React, which keeps the stores testable.
 - **IndexedDB, through the `idb` wrapper,** because teams with full sets outgrow `localStorage` and need to be read without blocking.
+- **The theme is the exception: it lives in `localStorage`** (#96). It has to be read synchronously, before the first paint, or the page flashes the system theme before the chosen one, and IndexedDB can only be read asynchronously. It is one word, so `localStorage`'s size limit doesn't matter, and both work offline. If the library is ever backed up or exported, the theme can be copied into it then.
 - **Local first, no accounts, no sync.**
 
 ### 4. A framework-free speed engine built on candidate sets
