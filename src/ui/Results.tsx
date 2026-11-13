@@ -81,6 +81,8 @@ export interface ResultRow {
   answer: string;
   /** The resulting Speed. */
   stat: ReactNode;
+  /** No answer for this row ("Can't reach", "Too fast"): quieter, not yellow. */
+  muted?: boolean;
 }
 
 export interface ResultsCardProps {
@@ -126,7 +128,7 @@ export function ResultsCard({ heading, rows, calc, defaultCalcOpen = false, leve
               <th scope="row" className={classes(styles.rowLabel)}>
                 {row.label}
               </th>
-              <td className={classes(styles.rowAnswer)}>{row.answer}</td>
+              <td className={classes(row.muted ? styles.rowMuted : styles.rowAnswer)}>{row.answer}</td>
               <td className={classes(styles.rowStat)}>{row.stat}</td>
             </tr>
           ))}

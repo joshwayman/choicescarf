@@ -12,6 +12,17 @@
   max-width: 1200px;
 }
 
+.fill {
+  flex-grow: 1;
+}
+
+/* A full-height screen (Calculator) uses the board's tighter phone padding, so it fits one screen. */
+@media (max-width: 719px) {
+  .fill {
+    padding: var(--space-4) var(--space-16) var(--space-12);
+  }
+}
+
 .prose {
   max-width: 640px;
 }
