@@ -3,8 +3,8 @@ export { Button, IconButton, TextButton, TextLink } from './Button.tsx';
 export type { ButtonProps, ButtonVariant, IconButtonProps, TextButtonProps, TextLinkProps } from './Button.tsx';
 export { Chip, ChipGroup, ChipToggle } from './Chip.tsx';
 export type { ChipGroupProps, ChipProps, ChipToggleProps, ChipVariant } from './Chip.tsx';
-export { HeaderPill } from './HeaderPill.tsx';
-export type { HeaderPillProps } from './HeaderPill.tsx';
+export { HeaderBadge, HeaderPill } from './HeaderPill.tsx';
+export type { HeaderBadgeProps, HeaderPillProps } from './HeaderPill.tsx';
 export { NumberField } from './NumberField.tsx';
 export type { NumberFieldProps } from './NumberField.tsx';
 export { RadioList } from './RadioList.tsx';
@@ -18,6 +18,7 @@ export type { SegmentedControlProps, SegmentedOption } from './SegmentedControl.
 export { Sheet, SheetNote, SheetSection } from './Sheet.tsx';
 export type { SheetProps, SheetSectionProps } from './Sheet.tsx';
 export { SideSwitcher } from './SideSwitcher.tsx';
+export { ThemeSwitch } from './ThemeSwitch.tsx';
 export type { Side, SideSwitcherProps } from './SideSwitcher.tsx';
 export { DialogTrigger } from 'react-aria-components';
 export * from './icons.tsx';

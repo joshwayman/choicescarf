@@ -10,6 +10,25 @@ export interface HeaderPillProps extends Omit<ButtonProps, 'className' | 'style'
   detail?: string;
 }
 
+export interface HeaderBadgeProps {
+  label: string;
+  detail?: string;
+}
+
+/**
+ * The same pill when there is nothing to choose yet (v5.0 has only the
+ * Generation 9 ruleset): plain text, with no chevron and nothing to press.
+ */
+export function HeaderBadge({ label, detail }: HeaderBadgeProps) {
+  return (
+    <span className={classes(styles.pill, styles.badge)}>
+      {label}
+      {detail ? ' ' : null}
+      {detail ? <span className={classes(styles.detail)}>{detail}</span> : null}
+    </span>
+  );
+}
+
 /**
  * The pill in the header that shows the format or ruleset and opens the
  * menu to change it. Chip-sized (36 px), like the chips it sits above.
