@@ -97,6 +97,7 @@
   --color-display-text: #f4f7fb;
   --color-display-text-2: #b9c6dc;
   --color-shimmer: rgba(200, 231, 241, 0.3);
+  --color-scrim: rgba(6, 7, 14, 0.62);
 }
 
 /* Light, chosen. Keep identical to the block below. */
@@ -121,6 +122,7 @@
   --color-display-text: #f4f7fb;
   --color-display-text-2: #b9c6dc;
   --color-shimmer: rgba(255, 255, 255, 0.85);
+  --color-scrim: rgba(21, 22, 35, 0.42);
 }
 
 /* Light, from the system, until a theme is chosen. Keep identical to the block above. */
@@ -146,6 +148,8 @@
     --color-display-text: #f4f7fb;
     --color-display-text-2: #b9c6dc;
     --color-shimmer: rgba(255, 255, 255, 0.85);
+    --color-scrim: rgba(21, 22, 35, 0.42);
+  --color-scrim: rgba(21, 22, 35, 0.42);
   }
 }
 

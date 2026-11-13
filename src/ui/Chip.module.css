@@ -1,0 +1,137 @@
+.group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-chip);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: var(--size-chip);
+  padding: 0 var(--space-12);
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-control-line);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-size: var(--type-label-size);
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Pokémon chips are a size up. */
+.suggestion,
+.recent {
+  font-size: 0.875rem;
+  padding: 0 14px;
+}
+
+.recent {
+  border-color: var(--color-hairline);
+  background: transparent;
+  color: var(--color-text-2);
+}
+
+.assumed,
+.changed,
+.added {
+  gap: 4px;
+  padding-right: var(--space-8);
+}
+
+.changed,
+.added,
+.toggle[data-selected] {
+  border-color: var(--color-accent);
+  background-color: var(--color-tint);
+  color: var(--color-accent-text);
+  font-weight: 600;
+}
+
+.add {
+  border-style: dashed;
+  background: transparent;
+  color: var(--color-text-2);
+}
+
+.waiting {
+  border-style: dashed;
+  border-color: var(--color-hairline);
+  color: var(--color-text-3);
+}
+
+.detail {
+  font-weight: 400;
+}
+
+.detailNumber {
+  font-family: var(--font-mono);
+  font-weight: 400;
+}
+
+.trailing {
+  display: flex;
+  color: var(--color-text-3);
+}
+
+.changed .trailing,
+.added .trailing {
+  color: inherit;
+}
+
+/* An image before the label: a sprite (Pokémon chips) or an item icon. */
+.chip[data-has-icon] {
+  padding-left: 4px;
+}
+
+.icon {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.icon :is(img, svg) {
+  display: block;
+  image-rendering: pixelated;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  55%,
+  100% {
+    background-position: 0% 0;
+  }
+}
+
+/* A weather chip and the ability it powers share one shimmer and a ring. */
+.chip[data-linked] {
+  background-image: linear-gradient(110deg, transparent 35%, var(--color-shimmer) 50%, transparent 65%);
+  background-size: 250% 100%;
+  background-repeat: no-repeat;
+  background-position: 100% 0;
+  box-shadow: var(--focus-ring);
+  animation: shimmer var(--duration-shimmer) ease-in-out infinite;
+}
+
+:is(.suggestion, .recent, .assumed, .add, .waiting, .toggle)[data-hovered]:not([data-selected]) {
+  background-color: var(--color-raised);
+}
+
+:is(.changed, .added)[data-hovered],
+.toggle[data-selected][data-hovered] {
+  border-color: var(--color-accent-text);
+}
+
+.chip[data-pressed] {
+  translate: 0 1px;
+}
+
+.chip[data-disabled] {
+  cursor: default;
+  opacity: 0.5;
+}

@@ -47,6 +47,7 @@ describe('TokenSheet', () => {
   it('switches and remembers the theme', () => {
     render(<TokenSheet />);
 
+    expect(screen.getByRole('radiogroup', { name: 'Theme' })).toBeInTheDocument();
     expect(screen.getByRole('radio', { name: 'System' })).toBeChecked();
 
     fireEvent.click(screen.getByRole('radio', { name: 'Light' }));

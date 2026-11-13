@@ -1,0 +1,80 @@
+.group {
+  display: grid;
+  gap: var(--space-8);
+}
+
+.field {
+  display: flex;
+  min-width: 0;
+}
+
+.plain,
+.answer {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-field);
+  border: 1px solid var(--color-control-line);
+  color: var(--color-text);
+  font: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.plain {
+  min-height: var(--size-control-min);
+  padding: 0 var(--space-8);
+  background: transparent;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.plain[data-selected] {
+  border-color: var(--color-accent);
+  box-shadow: inset 0 0 0 1px var(--color-accent);
+  background: var(--color-tint);
+  color: var(--color-accent-text);
+  font-weight: 600;
+}
+
+.answer {
+  min-height: 64px;
+  flex-direction: column;
+  gap: 2px;
+  background: var(--color-surface);
+}
+
+.answer[data-selected] {
+  border-color: var(--color-primary-edge);
+  box-shadow: inset 0 0 0 1px var(--color-primary-edge);
+  background: var(--color-answer);
+  color: var(--color-on-answer);
+}
+
+.answerLabel {
+  font-size: var(--type-caption-size);
+  font-weight: 500;
+  color: var(--color-text-2);
+}
+
+.answer[data-selected] .answerLabel {
+  color: inherit;
+}
+
+.answerValue {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.plain[data-hovered]:not([data-selected]),
+.answer[data-hovered]:not([data-selected]) {
+  background: var(--color-raised);
+}
+
+.plain[data-focus-visible],
+.answer[data-focus-visible] {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}

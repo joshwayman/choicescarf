@@ -7,7 +7,7 @@ import {
   TYPE_STYLES,
   type ThemeName,
 } from '../../ui/tokens.ts';
-import { useTheme, type ThemePreference } from '../../ui/theme.ts';
+import { ThemeSwitch } from '../../ui/ThemeSwitch.tsx';
 import styles from './TokenSheet.module.css';
 
 /**
@@ -24,7 +24,9 @@ export function TokenSheet() {
           <img src="/logo.png" alt="" width={48} height={48} className={styles.logo} />
           <h1 className={styles.title}>ChoiceScarf v5 visual system</h1>
         </div>
-        <ThemeSwitch />
+        <div className={styles.switch}>
+          <ThemeSwitch />
+        </div>
       </header>
 
       <section aria-labelledby="t-logo" className={styles.section}>
@@ -159,39 +161,5 @@ function ThemePanel({ theme }: { theme: ThemeName }) {
         </button>
       </div>
     </section>
-  );
-}
-
-const PREFERENCES: readonly { value: ThemePreference; label: string }[] = [
-  { value: 'system', label: 'System' },
-  { value: 'dark', label: 'Dark' },
-  { value: 'light', label: 'Light' },
-];
-
-function ThemeSwitch() {
-  const { preference, theme, setPreference } = useTheme();
-  return (
-    <fieldset className={styles.switch}>
-      <legend className={styles.switchLegend}>
-        Theme{preference === 'system' ? ` (following the system: ${THEME_LABEL[theme].toLowerCase()})` : ''}
-      </legend>
-      <div className={styles.switchOptions}>
-        {PREFERENCES.map((option) => (
-          <label key={option.value} className={styles.switchOption}>
-            <input
-              type="radio"
-              name="theme"
-              value={option.value}
-              checked={preference === option.value}
-              onChange={() => {
-                setPreference(option.value);
-              }}
-              className={styles.switchInput}
-            />
-            {option.label}
-          </label>
-        ))}
-      </div>
-    </fieldset>
   );
 }

@@ -1,0 +1,128 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.label {
+  font-size: var(--type-caption-size);
+  font-weight: 500;
+  color: var(--color-text-3);
+}
+
+.input,
+.stepperInput {
+  min-width: 0;
+  font: inherit;
+  font-family: var(--font-mono);
+  font-size: var(--type-body-size);
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.input {
+  width: 100%;
+  height: var(--size-control-min);
+  padding: 0 10px;
+  border-radius: 10px;
+  border: 1px solid var(--color-control-line);
+  background: var(--color-surface);
+}
+
+.input[data-focused] {
+  border-color: var(--color-primary-edge);
+  box-shadow: inset 0 0 0 1px var(--color-primary-edge);
+  outline: none;
+}
+
+.stepper,
+.rowStepper {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  border: 1px solid var(--color-control-line);
+}
+
+.stepper {
+  justify-content: space-between;
+  border-radius: 10px;
+  background: var(--color-surface);
+}
+
+.rowStepper {
+  flex-shrink: 0;
+  border-radius: var(--radius-field);
+  background: var(--color-ground);
+}
+
+.stepper[data-focus-within],
+.rowStepper[data-focus-within] {
+  border-color: var(--color-primary-edge);
+  box-shadow: inset 0 0 0 1px var(--color-primary-edge);
+}
+
+/* The buttons and input are a full 44 px; the 1 px border sits outside them. */
+.stepperInput {
+  width: 56px;
+  min-width: 40px;
+  flex: 1 1 56px;
+  height: var(--size-control-min);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: center;
+  font-size: 1rem;
+  outline: none;
+}
+
+.step {
+  flex-shrink: 0;
+  width: var(--size-control-min);
+  height: var(--size-control-min);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
+  font-size: 1.25rem;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.step[data-hovered] {
+  background: var(--color-raised);
+}
+
+.step[data-pressed] {
+  background: var(--color-tint);
+}
+
+.step[data-disabled] {
+  color: var(--color-text-3);
+  cursor: default;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-12);
+  min-height: 52px;
+}
+
+.rowText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.rowLabel {
+  font-size: var(--type-body-size);
+  font-weight: 600;
+}
+
+.description {
+  font-size: var(--type-caption-size);
+  color: var(--color-text-2);
+}
