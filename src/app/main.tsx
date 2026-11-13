@@ -1,6 +1,10 @@
+import '../ui/styles.ts';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import { applyThemePreference, readThemePreference } from '../ui/theme.ts';
 import { App } from './App.tsx';
+
+applyThemePreference(readThemePreference());
 
 const root = document.getElementById('root');
 if (!root) {

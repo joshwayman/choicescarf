@@ -14,8 +14,15 @@
     <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/manifest.json" />
-    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
-    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#10111c" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f3f8fb" media="(prefers-color-scheme: light)" />
+    <!-- Apply a remembered theme before the first paint (see src/ui/theme.ts). -->
+    <script>
+      try {
+        var t = localStorage.getItem('choicescarf:theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) {}
+    </script>
 
     <!-- Link previews (Open Graph / Twitter / Discord / Slack) -->
     <meta property="og:type" content="website" />

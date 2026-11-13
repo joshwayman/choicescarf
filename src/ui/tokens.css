@@ -1,0 +1,157 @@
+/*
+ * ChoiceScarf v5 design tokens (#81), from the design canvas token sheet and
+ * the colour table in #69. tokens.ts holds the same values as data; a test
+ * checks the two match, so change both together.
+ *
+ * Themes: dark is the default. Light applies when the system prefers it and
+ * nothing has been chosen, or when data-theme="light" is set. data-theme
+ * works on any element, so a part of the page can show the other theme.
+ */
+
+:root {
+  /* Type */
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-display: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+  --font-mono: 'Space Mono', ui-monospace, monospace;
+
+  --type-answer-size: 6.5rem;
+  --type-answer-line: 0.95;
+  --type-answer-tracking: -0.04em;
+  --type-answer-weight: 700;
+
+  --type-title-size: 2rem;
+  --type-title-line: 1.1;
+  --type-title-tracking: -0.02em;
+  --type-title-weight: 700;
+
+  --type-name-size: 1.0625rem;
+  --type-name-weight: 700;
+
+  --type-stat-size: 1.25rem;
+  --type-stat-weight: 700;
+
+  --type-body-size: 0.9375rem;
+  --type-body-line: 1.35;
+  --type-body-weight: 400;
+
+  --type-label-size: 0.8125rem;
+  --type-label-weight: 500;
+
+  --type-caption-size: 0.75rem;
+  --type-caption-weight: 500;
+
+  /* Spacing */
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-40: 40px;
+  --gutter-phone: 20px;
+
+  /* Sizes: chips are 36 tall and 8 apart, keeping a 44 tap pitch. Every other control is at least 44. */
+  --size-chip: 36px;
+  --gap-chip: 8px;
+  --size-control-min: 44px;
+
+  /* Radius */
+  --radius-field: 12px;
+  --radius-list: 16px;
+  --radius-card: 20px;
+  --radius-pill: 999px;
+
+  /* Motion. Reduced motion zeroes these (see below and base.css). */
+  --duration-sheet: 200ms;
+  --duration-shimmer: 3s;
+  --ease-sheet: cubic-bezier(0.2, 0, 0, 1);
+
+  /* Colours that don't change with the theme */
+  --color-answer: #fff45c;
+  --color-on-answer: #151623;
+  --color-on-answer-rule: rgba(21, 22, 35, 0.3);
+  --focus-ring: 0 0 0 2px rgba(70, 150, 208, 0.35);
+}
+
+/* Dark (the default) */
+:root,
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --color-ground: #10111c;
+  --color-surface: #191b2b;
+  --color-raised: #222539;
+  --color-hairline: #2b2f48;
+  --color-control-line: #3b6b90;
+  --color-accent: #4696d0;
+  --color-accent-text: #9fd0f2;
+  --color-tint: #1b2c44;
+  --color-text: #f4f7fb;
+  --color-text-2: #b9c6dc;
+  --color-text-3: #8a97b4;
+  --color-primary-edge: #fff45c;
+
+  --color-display: #191b2b;
+  --color-display-line: #2b2f48;
+  --color-display-text: #f4f7fb;
+  --color-display-text-2: #b9c6dc;
+  --color-shimmer: rgba(200, 231, 241, 0.3);
+}
+
+/* Light, chosen. Keep identical to the block below. */
+[data-theme='light'] {
+  color-scheme: light;
+
+  --color-ground: #f3f8fb;
+  --color-surface: #ffffff;
+  --color-raised: #e4eff6;
+  --color-hairline: #cfdee9;
+  --color-control-line: #3b6b90;
+  --color-accent: #4696d0;
+  --color-accent-text: #2d5f86;
+  --color-tint: #dcedf7;
+  --color-text: #151623;
+  --color-text-2: #3a4660;
+  --color-text-3: #586580;
+  --color-primary-edge: #151623;
+
+  --color-display: #151623;
+  --color-display-line: #2f3350;
+  --color-display-text: #f4f7fb;
+  --color-display-text-2: #b9c6dc;
+  --color-shimmer: rgba(255, 255, 255, 0.85);
+}
+
+/* Light, from the system, until a theme is chosen. Keep identical to the block above. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    color-scheme: light;
+
+    --color-ground: #f3f8fb;
+    --color-surface: #ffffff;
+    --color-raised: #e4eff6;
+    --color-hairline: #cfdee9;
+    --color-control-line: #3b6b90;
+    --color-accent: #4696d0;
+    --color-accent-text: #2d5f86;
+    --color-tint: #dcedf7;
+    --color-text: #151623;
+    --color-text-2: #3a4660;
+    --color-text-3: #586580;
+    --color-primary-edge: #151623;
+
+    --color-display: #151623;
+    --color-display-line: #2f3350;
+    --color-display-text: #f4f7fb;
+    --color-display-text-2: #b9c6dc;
+    --color-shimmer: rgba(255, 255, 255, 0.85);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-sheet: 0ms;
+    --duration-shimmer: 0ms;
+  }
+}
