@@ -154,7 +154,10 @@ These change who moves first without changing Speed, or switch other effects off
 
 - **EVs are searched in steps of 4,** from 0 to 252.
 - **`solveUnderspeed` uses the IV you give it.** The Calculator suggests 0 IVs in Trick Room; the engine does not choose it.
-- **The Scarf fallback is skipped** if you already hold an item.
+- **The Scarf fallback is skipped** if you already hold an item, or if an active ability would remove it (Unburden) (#82).
+- **"Outspeeds" and "underspeeds" mean "moves first"** (#82), outside and inside Trick Room respectively, using the move-order rules above. They match "strictly greater" and "strictly less" except above 1809 in Trick Room and 8192 outside it. Each solver sets Trick Room itself and ignores `field.trickRoom`.
+- **The target** is a Speed or a Pokémon (`SpeedInput`), worked out on the same field.
+- **When there is no answer,** the row still carries a Speed: your best (252 EVs) for "cannot reach", your slowest (0 EVs) for "too fast".
 - **Enumerating candidate sets** for Battle mode is a later function on the same `speed`.
 
 ## Test values

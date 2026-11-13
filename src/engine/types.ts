@@ -131,3 +131,35 @@ export interface SpeedResult {
    */
   modifiers: AppliedModifier[];
 }
+
+/** Your Pokémon when solving: everything but the EVs and nature, which the solver chooses. */
+export type SolverInput = Omit<SpeedInput, 'ev' | 'nature'>;
+
+/** One nature's answer when outspeeding. */
+export type OutspeedRow =
+  | { nature: Nature; result: 'reaches'; /** The fewest EVs that move first. */ ev: number; speed: number }
+  | { nature: Nature; result: 'cannot-reach'; /** Your Speed at 252 EVs, the best you can do. */ speed: number };
+
+/** One nature's answer when underspeeding in Trick Room. */
+export type UnderspeedRow =
+  | { nature: Nature; result: 'reaches'; /** The most EVs that still move first. */ ev: number; speed: number }
+  | { nature: Nature; result: 'too-fast'; /** Your Speed at 0 EVs, the slowest you can be. */ speed: number };
+
+export interface OutspeedResult {
+  /** The target's Speed. */
+  target: number;
+  /** +Spe, neutral, −Spe. */
+  rows: OutspeedRow[];
+  /**
+   * The same again holding a Choice Scarf, when no nature reaches without one.
+   * Null when some nature reaches, when you already hold an item, or when an
+   * active ability (Unburden) would remove the Scarf.
+   */
+  scarf: OutspeedRow[] | null;
+}
+
+export interface UnderspeedResult {
+  target: number;
+  /** +Spe, neutral, −Spe. */
+  rows: UnderspeedRow[];
+}
