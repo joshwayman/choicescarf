@@ -1,0 +1,10 @@
+{
+  // Solution file: each part of the app is type-checked as its own project.
+  // `npm run typecheck` runs `tsc -b`, which checks all of them.
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.engine.json" },
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
+}

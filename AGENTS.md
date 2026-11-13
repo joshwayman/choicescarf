@@ -4,24 +4,30 @@ Guidance for coding agents (Claude Code, Codex, Copilot, etc.) working in this r
 
 ## Project
 
-ChoiceScarf is a Pokémon speed EV calculator, live at **choicescarf.com**. It works out the minimum Speed EVs your Pokémon needs to outspeed a target, for each nature, and whether a Choice Scarf is needed.
+ChoiceScarf is a Pokémon speed EV calculator, live at **choicescarf.com**. It works out the minimum Speed EVs your Pokémon needs to outspeed a target (or, under Trick Room, the most it can have and still underspeed), for each nature, and whether a Choice Scarf is needed.
 
-- React 19 single-page app built with **Vite**, tested with **Vitest** + Testing Library, linted with ESLint 9 (flat config)
-- Deployed on **Vercel** from the `main` branch. Every PR gets a Vercel preview deployment.
-- Default branch: `main`
+**This is the `v5` branch:** a TypeScript rewrite, tracked in the [v5 roadmap (#59)](https://github.com/joshwayman/choicescarf/issues/59). v4 stays on `main` and keeps running choicescarf.com until v5.0 launches (#89).
+
+- Client-rendered single-page app: **TypeScript (strict)**, **React 19**, built with **Vite**. No server.
+- Tested with **Vitest** (+ Testing Library for components), linted with **ESLint 9** and type-aware **typescript-eslint**.
+- Deployed on **Vercel**. The `v5` branch has its own Vercel preview; every PR gets one too.
+- The stack and why: [`docs/adr/0001-v5-stack.md`](docs/adr/0001-v5-stack.md). The speed rules and test values: [`docs/specs/rulesets.md`](docs/specs/rulesets.md).
+- The design is on the [design canvas](https://claude.ai/artifact/L6FSGDhLmeAebnJcx7QKnu) (private to the maintainer; Claude sessions started by the maintainer can read it). Each front-end issue lists the boards it is built from.
 
 ### Layout
 
 | Path | What it is |
 |---|---|
-| `src/lib/speedCalc.js` | All the speed maths. The important file. |
-| `src/lib/speedCalc.test.js` | Unit tests for the maths |
-| `src/context/choicescarfContext.jsx` | State for both Pokémon and the results |
-| `src/components/form/` | Input form |
-| `src/components/results/` | Results chart |
+| `src/engine/` | The speed engine. Pure TypeScript: **no React, no browser APIs.** The important part. |
+| `src/data/` | Species and modifier data generated from `@pkmn/dex` / `@pkmn/data` (#80) |
+| `src/ui/` | Tokens, themes, fonts and shared components |
+| `src/app/` | Entry point (`main.tsx`), shell, routes and screens |
+| `tests/` | Tests that aren't about one module (e.g. the engine import boundary) |
+| `docs/adr/`, `docs/specs/` | Decision records and specs |
 | `index.html` | Vite entry; also holds the GTM snippet |
-| `vite.config.js` | Vite + Vitest config |
-| `eslint.config.js` | ESLint flat config |
+| `vite.config.ts` | Vite + Vitest config (two test projects: `engine` in Node, `ui` in jsdom) |
+| `eslint.config.js` | ESLint flat config, including the engine boundary rule |
+| `tsconfig.json` | Solution file referencing `tsconfig.engine.json`, `tsconfig.app.json` and `tsconfig.node.json` |
 | `vercel.json` | Tells Vercel to build with Vite into `dist/` |
 
 ## Commands
@@ -31,6 +37,7 @@ nvm use                      # Node 22 (see .nvmrc)
 npm ci
 npm run dev                  # dev server on :3000
 npm run lint                 # zero warnings allowed
+npm run typecheck            # tsc -b across every tsconfig
 npm test                     # vitest run (npm run test:watch to watch)
 npm run build                # outputs to dist/
 npm run preview              # serve the production build
@@ -38,19 +45,19 @@ npm run preview              # serve the production build
 
 ## Rules
 
-1. **Never push to `main` directly.** Every change goes on a branch and through a pull request into `main`.
+1. **Never push to `main` or `v5` directly.** v5 work goes on a branch and through a pull request into **`v5`**. v4 fixes go into `main`.
 2. **One issue per PR** where possible. Put `Closes #<n>` in the PR body.
 3. **Assign the PR to `joshwayman`** (sole maintainer and reviewer).
-4. **Label the PR** with one type label and, for roadmap work, its phase label (see below).
-5. **Run lint, tests and build before opening or updating a PR** (CI runs the same steps and must be green), and say in the PR what you ran and the result.
-6. **Don't change the speed maths without tests.** Any change to `speedCalc.js` needs a test showing the before/after values. Check numbers against the in-game formula, not against the current code.
+4. **Label the PR** with one type label, its phase label and `v5` (see below).
+5. **Run lint, type check, tests and build before opening or updating a PR** (CI runs the same steps and must be green), and say in the PR what you ran and the result.
+6. **Don't change the speed maths without tests.** Any change in `src/engine` needs tests, with expected values worked out from the in-game formula and checked against Pokémon Showdown (`@smogon/calc`), not against the current code. Write the tests first.
 7. Don't skip, delete or weaken a test to make CI pass.
 8. Keep PRs small and focused. Don't mix refactors with behaviour changes.
 9. Never merge your own PR. Merging is the maintainer's call.
 
 ### Branch names
 
-`<type>/<short-description>`, e.g. `fix/speed-formula-flooring`, `chore/pin-node`, `phase-0/safety-net`.
+`<type>/<short-description>`, e.g. `fix/speed-formula-flooring`, `chore/v5-project-setup`, `phase-3/calculator-mode`.
 
 ### Labels
 
@@ -66,15 +73,19 @@ npm run preview              # serve the production build
 | `security` | Vulnerabilities, `npm audit` |
 | `accessibility` | a11y fixes |
 
-Phase labels: `phase-0` to `phase-5`, matching the roadmap in #1. `roadmap` is only for the tracking issue.
+Phase labels: `phase-0` to `phase-5`, matching the v5 roadmap in #59. Add `v5` to every v5 issue and PR. `roadmap` is only for tracking issues.
 
 ### Commit messages
 
-Short imperative summary (`Fix speed flooring for positive natures`), blank line, then why if it isn't obvious. Reference the issue (`Refs #23`).
+Short imperative summary (`Add the Generation 9 ruleset`), blank line, then why if it isn't obvious. Reference the issue (`Refs #79`).
 
 ## Gotchas
 
-- **The speed formula must floor where the games do** (fixed in #23): floor the stat before nature, floor after the boost stage, then apply Scarf/Tailwind/weather as one chained 4096-based modifier. Check new expected values against the in-game formula, not the current output.
-- Form inputs use `name` for the stat field (`baseSpeed`, `iv`, ...) and a unique `id` prefixed `target-` or `yours-`. Handlers read `e.target.name`. Labels repeat across the two forms, so in tests use `getAllByLabelText` or scope with `within`.
-- GTM (`GTM-W7XHSG`) is loaded by the snippet in `index.html`. Don't remove it without the maintainer agreeing.
-- Tests use Vitest globals (`describe`, `it`, `expect`, `vi`). Use `vi.fn()` / `vi.spyOn()`, not `jest.*`.
+- **`src/engine` is walled off.** Importing `react`, `react-dom` or anything from `src/app`, `src/ui` or `src/data` fails lint, and `tsconfig.engine.json` has no DOM types, so `window` or `document` fails the type check. Because of the lint rule, don't name a folder inside `src/engine` `app`, `ui` or `data`.
+- **The speed formula must floor where the games do:** floor the stat before nature, floor after the boost stage, then apply every modifier as one chained 4096-based modifier rounded half down, then paralysis. Full rules and test values in `docs/specs/rulesets.md`.
+- **TypeScript is pinned to 6.0.x.** typescript-eslint doesn't support TypeScript 7 yet (its peer range is `<6.1.0`). Move up when it does.
+- **ESLint stays on 9** until the React and jsx-a11y plugins support ESLint 10 (#27).
+- **Tests import from `vitest` explicitly** (`import { describe, expect, it, vi } from 'vitest'`); there are no globals. Use `vi.fn()` / `vi.spyOn()`, not `jest.*`.
+- **Relative imports include the extension** (`./App.tsx`), as `verbatimModuleSyntax` and `allowImportingTsExtensions` expect.
+- **The strict compiler options bite:** `noUncheckedIndexedAccess` makes `array[i]` possibly `undefined`, and `exactOptionalPropertyTypes` means an optional property can't be set to `undefined` unless its type says so.
+- GTM (`GTM-W7XHSG`) is loaded by the snippet in `index.html`. It is replaced by GA4 and removed at launch (#86, #89); don't remove it before then without the maintainer agreeing.

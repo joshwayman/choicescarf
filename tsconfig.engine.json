@@ -1,0 +1,11 @@
+{
+  // The speed engine: plain TypeScript with no DOM types, so any use of
+  // window, document or other browser APIs fails the type check.
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.engine.tsbuildinfo",
+    "lib": ["ES2023"],
+    "types": []
+  },
+  "include": ["src/engine"]
+}
