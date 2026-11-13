@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import tokensCss from './tokens.css?raw';
 import indexHtml from '../../index.html?raw';
 import tokensHtml from '../../tokens.html?raw';
+import componentsHtml from '../../components.html?raw';
 import { COLOR_ROLES, DISPLAY_ROLES, FIXED_COLORS, type ThemeName } from './tokens.ts';
 import { THEME_COLOR, THEME_STORAGE_KEY } from './theme.ts';
 
@@ -127,6 +128,7 @@ describe('the HTML entry points', () => {
   it.each([
     ['index.html', indexHtml],
     ['tokens.html', tokensHtml],
+    ['components.html', componentsHtml],
   ])('%s applies the remembered theme before the first paint', (_name, html) => {
     expect(html).toContain(`localStorage.getItem('${THEME_STORAGE_KEY}')`);
     expect(html).toContain('document.documentElement.dataset.theme');
@@ -135,6 +137,7 @@ describe('the HTML entry points', () => {
   it.each([
     ['index.html', indexHtml],
     ['tokens.html', tokensHtml],
+    ['components.html', componentsHtml],
   ])("%s sets the browser chrome to each theme's ground", (_name, html) => {
     expect(html).toContain(`content="${THEME_COLOR.dark}" media="(prefers-color-scheme: dark)"`);
     expect(html).toContain(`content="${THEME_COLOR.light}" media="(prefers-color-scheme: light)"`);

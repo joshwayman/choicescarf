@@ -1,0 +1,165 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: var(--color-scrim);
+}
+
+.modal {
+  width: 100%;
+  max-height: calc(100dvh - var(--space-40));
+  display: flex;
+  outline: none;
+}
+
+.dialog {
+  flex: 1;
+  min-width: 0;
+  max-height: inherit;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 10px var(--gutter-phone) calc(var(--space-24) + env(safe-area-inset-bottom, 0px));
+  border-radius: 24px 24px 0 0;
+  border-top: 1px solid var(--color-hairline);
+  background: var(--color-surface);
+  color: var(--color-text);
+  outline: none;
+}
+
+/* Phone: slide up. Reduced motion zeroes --duration-sheet, so it just appears. */
+.overlay[data-entering] {
+  animation: fade var(--duration-sheet) ease-out;
+}
+
+.overlay[data-exiting] {
+  animation: fade var(--duration-sheet) ease-in reverse;
+}
+
+.modal[data-entering] {
+  animation: slide-up var(--duration-sheet) var(--ease-sheet);
+}
+
+.modal[data-exiting] {
+  animation: slide-up var(--duration-sheet) var(--ease-sheet) reverse;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+  }
+}
+
+.grabber {
+  align-self: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--color-control-line);
+}
+
+/* Wider screens: a centred dialog. */
+@media (min-width: 720px) {
+  .overlay {
+    align-items: center;
+    padding: var(--space-24);
+  }
+
+  .modal {
+    width: min(100%, 440px);
+  }
+
+  .dialog {
+    padding: var(--space-20) var(--space-24) var(--space-24);
+    border-radius: var(--radius-card);
+    border: 1px solid var(--color-hairline);
+  }
+
+  .grabber {
+    display: none;
+  }
+
+  .modal[data-entering] {
+    animation: pop var(--duration-sheet) var(--ease-sheet);
+  }
+
+  .modal[data-exiting] {
+    animation: pop var(--duration-sheet) var(--ease-sheet) reverse;
+  }
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-12);
+}
+
+.titles {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--type-stat-size);
+  font-weight: 700;
+}
+
+.subtitle {
+  margin: 0;
+  font-size: var(--type-caption-size);
+  color: var(--color-text-2);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.footer {
+  display: flex;
+  gap: var(--space-8);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sectionLabel {
+  padding: 0 var(--space-4) var(--space-4);
+  font-size: var(--type-caption-size);
+  font-weight: 500;
+  color: var(--color-text-3);
+}
+
+.note {
+  margin: 0;
+  padding-top: var(--space-12);
+  border-top: 1px solid var(--color-hairline);
+  font-size: var(--type-caption-size);
+  color: var(--color-text-2);
+}

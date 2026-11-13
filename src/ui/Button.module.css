@@ -1,0 +1,135 @@
+.primary,
+.secondary,
+.quiet {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-8);
+  min-height: var(--size-control-min);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.primary[data-grow],
+.secondary[data-grow] {
+  flex: 1 1 0;
+}
+
+.primary {
+  min-height: 52px;
+  padding: 0 var(--space-20);
+  border-radius: var(--radius-field);
+  border: 2px solid var(--color-primary-edge);
+  background: var(--color-answer);
+  color: var(--color-on-answer);
+  font-size: var(--type-body-size);
+}
+
+.secondary {
+  min-height: 48px;
+  padding: 0 var(--space-16);
+  border-radius: var(--radius-field);
+  border: 1px solid var(--color-control-line);
+  background: transparent;
+  color: var(--color-text);
+  font-size: 0.875rem;
+}
+
+.quiet {
+  padding: 0 14px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-hairline);
+  background: transparent;
+  color: var(--color-text-2);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.secondary[data-hovered],
+.quiet[data-hovered] {
+  background: var(--color-raised);
+}
+
+.primary[data-pressed] {
+  filter: brightness(0.94);
+}
+
+.secondary[data-pressed],
+.quiet[data-pressed] {
+  background: var(--color-tint);
+}
+
+.iconRaised,
+.iconQuiet {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: var(--size-control-min);
+  height: var(--size-control-min);
+  padding: 0;
+  border-radius: var(--radius-pill);
+  color: var(--color-text-2);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.iconRaised {
+  border: 1px solid var(--color-control-line);
+  background: var(--color-surface);
+}
+
+.iconQuiet {
+  border: 1px solid var(--color-hairline);
+  background: transparent;
+}
+
+.iconRaised[data-hovered],
+.iconQuiet[data-hovered] {
+  background: var(--color-raised);
+  color: var(--color-text);
+}
+
+.textButton {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  min-height: var(--size-control-min);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-text-2);
+  font: inherit;
+  font-size: var(--type-label-size);
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.textButton[data-hovered] {
+  color: var(--color-text);
+}
+
+.link {
+  color: var(--color-accent-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.link[data-hovered] {
+  text-decoration-thickness: 2px;
+}
+
+.primary[data-disabled],
+.secondary[data-disabled],
+.quiet[data-disabled],
+.iconRaised[data-disabled],
+.iconQuiet[data-disabled],
+.textButton[data-disabled] {
+  cursor: default;
+  opacity: 0.5;
+}

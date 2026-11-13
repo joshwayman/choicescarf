@@ -1,0 +1,211 @@
+/* Answer display: on the display card, which is navy in both themes. */
+
+.answer,
+.answerTrickRoom,
+.card {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-card);
+}
+
+.answer,
+.card {
+  border: 1px solid var(--color-display-line);
+  background: var(--color-display);
+  color: var(--color-display-text);
+}
+
+.answer {
+  padding: var(--space-20) var(--space-20) var(--space-16);
+}
+
+.answerTrickRoom {
+  padding: var(--space-16) var(--space-20);
+  border: 2px solid var(--color-primary-edge);
+  background: var(--color-answer);
+  color: var(--color-on-answer);
+}
+
+.trickRoom {
+  margin: 0;
+  padding-bottom: 10px;
+  font-size: var(--type-label-size);
+  font-weight: 600;
+}
+
+.trickRoomNote {
+  font-weight: 400;
+}
+
+.answerHeading,
+.cardHeading {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--color-display-text-2);
+}
+
+.answerTrickRoom .answerHeading {
+  color: inherit;
+}
+
+.answerValue {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0;
+  padding-top: 6px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--color-answer);
+}
+
+.answerTrickRoom .answerValue {
+  color: inherit;
+}
+
+.answerNumber {
+  font-size: var(--type-answer-size);
+  line-height: var(--type-answer-line);
+  letter-spacing: var(--type-answer-tracking);
+}
+
+.answerUnit {
+  font-size: 1.5rem;
+}
+
+.answerFoot {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-12);
+  margin-top: 14px;
+  padding-top: var(--space-12);
+  border-top: 1px solid var(--color-display-line);
+  font-size: var(--type-label-size);
+  color: var(--color-display-text-2);
+}
+
+.answerTrickRoom .answerFoot {
+  border-top-color: var(--color-on-answer-rule);
+  color: inherit;
+}
+
+.comparison {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+}
+
+.comparison strong {
+  color: var(--color-display-text);
+}
+
+.answerTrickRoom .comparison strong {
+  color: inherit;
+}
+
+/* Results card */
+
+.card {
+  gap: 10px;
+  padding: 14px 18px;
+}
+
+.table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.hiddenHead {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.table td,
+.table th {
+  padding: 4px 0;
+}
+
+.rowLabel {
+  text-align: left;
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--color-display-text-2);
+}
+
+.rowAnswer {
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: var(--color-answer);
+}
+
+.rowStat {
+  width: 1%;
+  min-width: 36px;
+  padding-left: var(--space-16) !important;
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+}
+
+.disclosure {
+  display: flex;
+  flex-direction: column;
+}
+
+.calcToggle {
+  align-self: flex-start;
+  min-height: var(--size-control-min);
+  margin: -6px 0 -8px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-display-text-2);
+  font: inherit;
+  font-size: var(--type-label-size);
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.calcToggle[data-hovered] {
+  color: var(--color-display-text);
+}
+
+.calcPanel {
+  margin-top: 10px;
+}
+
+.calc {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding-top: var(--space-12);
+  border-top: 1px solid var(--color-display-line);
+  font-family: var(--font-mono);
+  font-size: var(--type-caption-size);
+  color: var(--color-display-text-2);
+}
+
+.calcLine {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-12);
+}
+
+.calcLabel {
+  font-family: var(--font-body);
+}
+
+.calcWorking {
+  margin: 0;
+  text-align: right;
+}

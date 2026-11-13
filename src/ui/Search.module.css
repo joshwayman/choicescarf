@@ -1,0 +1,121 @@
+.search {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 56px;
+  padding: 0 14px;
+  border-radius: 14px;
+  border: 1px solid var(--color-control-line);
+  background: var(--color-surface);
+}
+
+/* The focused search box gets the primary edge: yellow in dark, ink in light. */
+.field[data-focus-within] {
+  border-color: var(--color-primary-edge);
+  box-shadow: inset 0 0 0 1px var(--color-primary-edge);
+}
+
+.hiddenLabel {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.icon {
+  display: flex;
+  color: var(--color-text-3);
+}
+
+.input {
+  flex-grow: 1;
+  min-width: 0;
+  height: 48px;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
+  font-size: 1.0625rem;
+}
+
+.input::placeholder {
+  color: var(--color-text-3);
+}
+
+/* Hide the browser's own clear button; Escape clears the field. */
+.input::-webkit-search-cancel-button {
+  appearance: none;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  padding: 6px;
+  border-radius: 14px;
+  border: 1px solid var(--color-hairline);
+  background: var(--color-surface);
+  outline: none;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-12);
+  min-height: var(--size-control-min);
+  padding: 0 var(--space-12);
+  border-radius: 10px;
+  color: var(--color-text);
+  cursor: pointer;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.option[data-hovered],
+.option[data-focused] {
+  background: var(--color-tint);
+}
+
+.option[data-focus-visible] {
+  box-shadow: inset 0 0 0 2px var(--color-accent);
+}
+
+.label {
+  display: contents;
+}
+
+.name {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  min-width: 0;
+  font-size: var(--type-body-size);
+  font-weight: 600;
+}
+
+.sprite {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.value {
+  font-family: var(--font-mono);
+  font-size: var(--type-label-size);
+  color: var(--color-text-2);
+}
+
+.empty {
+  margin: 0;
+  padding: var(--space-12);
+  font-size: var(--type-label-size);
+  color: var(--color-text-2);
+}

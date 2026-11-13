@@ -34,7 +34,7 @@ export const COLOR_ROLES = [
 ] as const satisfies readonly ColorRole[];
 
 /**
- * Roles used by the component sheets that aren't swatches on the token sheet.
+ * Roles used by the component sheets and sheet boards that aren't swatches on the token sheet.
  * The answer sits on a navy display card in both themes, because yellow text
  * fails on a pale ground (#69): in dark that card is the surface, in light
  * it is the logo's outline ink.
@@ -45,6 +45,7 @@ export const DISPLAY_ROLES = [
   { token: 'display-text', label: 'Display card text', dark: '#f4f7fb', light: '#f4f7fb' },
   { token: 'display-text-2', label: 'Display card text 2', dark: '#b9c6dc', light: '#b9c6dc' },
   { token: 'shimmer', label: 'Shimmer highlight', dark: 'rgba(200, 231, 241, 0.3)', light: 'rgba(255, 255, 255, 0.85)' },
+  { token: 'scrim', label: 'Scrim behind a sheet', dark: 'rgba(6, 7, 14, 0.62)', light: 'rgba(21, 22, 35, 0.42)' },
 ] as const satisfies readonly ColorRole[];
 
 /** Colours that are the same in both themes. */

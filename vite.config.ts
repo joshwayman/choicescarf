@@ -13,6 +13,8 @@ export default defineConfig({
         main: fileURLToPath(new URL('index.html', import.meta.url)),
         // The design token page (#81), at /tokens.html.
         tokens: fileURLToPath(new URL('tokens.html', import.meta.url)),
+        // The component set (#83), at /components.html.
+        components: fileURLToPath(new URL('components.html', import.meta.url)),
       },
     },
   },
