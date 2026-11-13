@@ -24,7 +24,7 @@ ChoiceScarf is a Pokémon speed EV calculator, live at **choicescarf.com**. It w
 | `src/app/` | Entry point (`main.tsx`), shell, routes and screens |
 | `tests/` | Tests that aren't about one module (e.g. the engine import boundary) |
 | `docs/adr/`, `docs/specs/` | Decision records and specs |
-| `index.html` | Vite entry; also holds the GTM snippet |
+| `index.html` | Vite entry: meta tags, icons and the `#root` element |
 | `vite.config.ts` | Vite + Vitest config (two test projects: `engine` in Node, `ui` in jsdom) |
 | `eslint.config.js` | ESLint flat config, including the engine boundary rule |
 | `tsconfig.json` | Solution file referencing `tsconfig.engine.json`, `tsconfig.app.json` and `tsconfig.node.json` |
@@ -88,4 +88,4 @@ Short imperative summary (`Add the Generation 9 ruleset`), blank line, then why 
 - **Tests import from `vitest` explicitly** (`import { describe, expect, it, vi } from 'vitest'`); there are no globals. Use `vi.fn()` / `vi.spyOn()`, not `jest.*`.
 - **Relative imports include the extension** (`./App.tsx`), as `verbatimModuleSyntax` and `allowImportingTsExtensions` expect.
 - **The strict compiler options bite:** `noUncheckedIndexedAccess` makes `array[i]` possibly `undefined`, and `exactOptionalPropertyTypes` means an optional property can't be set to `undefined` unless its type says so.
-- GTM (`GTM-W7XHSG`) is loaded by the snippet in `index.html`. It is replaced by GA4 and removed at launch (#86, #89); don't remove it before then without the maintainer agreeing.
+- **No analytics on `v5` yet.** v4's Tag Manager snippet was removed from this branch (#78), so previews don't send data to the live property. Google Analytics 4 is added directly in #86; don't bring Tag Manager back.
