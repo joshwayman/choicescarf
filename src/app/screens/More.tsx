@@ -14,13 +14,13 @@ export function More() {
   return (
     <Page title="More">
       <nav aria-label="More" className={styles.list}>
-        <Link to="/about" className={styles.row}>
+        <Link to="/about" search className={styles.row}>
           <span className={styles.rowLabel}>About ChoiceScarf</span>
           <span className={styles.chevron}>
             <ChevronRightIcon />
           </span>
         </Link>
-        <Link to="/privacy" className={styles.row}>
+        <Link to="/privacy" search className={styles.row}>
           <span className={styles.rowLabel}>Privacy</span>
           <span className={styles.chevron}>
             <ChevronRightIcon />
