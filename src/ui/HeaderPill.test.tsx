@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { DialogTrigger } from 'react-aria-components';
 import { describe, expect, it } from 'vitest';
-import { HeaderPill } from './HeaderPill.tsx';
+import { HeaderBadge, HeaderPill } from './HeaderPill.tsx';
 import { Sheet } from './Sheet.tsx';
 
 describe('HeaderPill', () => {
@@ -27,5 +27,11 @@ describe('HeaderPill', () => {
     await user.keyboard('{Enter}');
     expect(screen.getByRole('dialog', { name: 'Format' })).toBeInTheDocument();
     expect(pill).toHaveAttribute('aria-expanded', 'true');
+  });
+
+  it('has a static form that is plain text, not a control', () => {
+    render(<HeaderBadge label="Gen 9" />);
+    expect(screen.getByText('Gen 9')).toBeInTheDocument();
+    expect(screen.queryByRole('button')).not.toBeInTheDocument();
   });
 });

@@ -1,17 +1,14 @@
-import { RULESET_IDS } from '../engine/index.ts';
+import { RouterProvider } from '@tanstack/react-router';
+import { useState } from 'react';
+import { createAppRouter } from './router.tsx';
 
-/**
- * Placeholder while v5 is built. The app shell and routes arrive in #84,
- * and Calculator mode in #87.
- */
-export function App() {
-  return (
-    <main>
-      <h1>ChoiceScarf</h1>
-      <p>Version 5 is being built. Rulesets: {RULESET_IDS.join(', ')}.</p>
-      <p>
-        <a href="https://choicescarf.com/">Use the current calculator</a>
-      </p>
-    </main>
-  );
+export interface AppProps {
+  /** A router to use instead of the browser one, for tests. */
+  router?: ReturnType<typeof createAppRouter>;
+}
+
+/** The whole app: the router, which renders the shell around each screen. */
+export function App({ router: given }: AppProps) {
+  const [router] = useState(() => given ?? createAppRouter());
+  return <RouterProvider router={router} />;
 }

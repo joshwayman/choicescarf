@@ -1,0 +1,144 @@
+.shell {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.skip {
+  position: absolute;
+  left: var(--space-8);
+  top: var(--space-8);
+  z-index: 10;
+  padding: var(--space-8) var(--space-12);
+  border-radius: var(--radius-field);
+  background: var(--color-surface);
+  color: var(--color-text);
+  transform: translateY(-200%);
+}
+
+.skip:focus {
+  transform: none;
+}
+
+/* Phone header: logo left, ruleset and More right. */
+.header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-12);
+  min-height: 60px;
+  padding: 0 var(--space-16) 0 var(--gutter-phone);
+}
+
+.home {
+  min-height: var(--size-control-min);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.logo {
+  object-fit: contain;
+}
+
+.wordmark {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.phoneOnly,
+.desktopOnly {
+  display: contents;
+}
+
+.desktopOnly {
+  display: none;
+}
+
+.iconLink {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: var(--size-control-min);
+  height: var(--size-control-min);
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-hairline);
+  color: var(--color-text-2);
+}
+
+.iconLink:hover {
+  background: var(--color-raised);
+  color: var(--color-text);
+}
+
+.main {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  outline: none;
+}
+
+/* Desktop header: a full-width bar with a hairline under it. */
+@media (min-width: 720px) {
+  .header {
+    padding: var(--space-12) var(--space-32);
+    border-bottom: 1px solid var(--color-hairline);
+  }
+
+  .phoneOnly {
+    display: none;
+  }
+
+  .desktopOnly {
+    display: contents;
+  }
+}
+
+/* The desktop More menu */
+
+.popover {
+  min-width: 220px;
+  outline: none;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  padding: 6px;
+  border-radius: var(--radius-list);
+  border: 1px solid var(--color-hairline);
+  background: var(--color-surface);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+  outline: none;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  min-height: var(--size-control-min);
+  padding: 0 var(--space-12);
+  border-radius: 10px;
+  color: var(--color-text);
+  font-size: var(--type-body-size);
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  outline: none;
+}
+
+.menuItem[data-focused] {
+  background: var(--color-tint);
+  color: var(--color-accent-text);
+}
