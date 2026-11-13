@@ -15,7 +15,7 @@ npm run dev    # http://localhost:3000
 **Everything goes through a pull request.** Nobody pushes to `main` directly, maintainer included. `main` is what Vercel deploys to choicescarf.com. The v5 rewrite is built on the `v5` branch.
 
 1. **Start from an issue.** Find one in the [roadmap (#1)](https://github.com/joshwayman/choicescarf/issues/1) or open a new one.
-2. **Branch from `main`** (or from `v5` if the issue is v5 rewrite work, see below): `git checkout -b fix/short-description origin/main`
+2. **Branch from `main`** (or from `v5` if the issue is v5 rewrite work, see below): `git checkout -b fix/glittering-psyduck origin/main`. Branch names are `<type>/<adjective>-<pokemon>`; see [AGENTS.md](AGENTS.md#branch-names)
 3. **Make the change.** Keep it focused on one issue.
 4. **Check it:**
    ```bash
