@@ -50,6 +50,7 @@ interface Modifier {
   };
   only?: string;                      // species id, for Quick Powder
   removesItem?: true;                 // Unburden: active means no item
+  ignoresParalysis?: true;            // Quick Feet: no paralysis drop (#79)
 }
 
 interface SpeedInput {
@@ -66,6 +67,7 @@ interface SpeedInput {
   status?: 'par' | 'other';
   tailwind?: boolean;
   swamp?: boolean;
+  species?: string;                   // species id, for Quick Powder (#79)
 }
 
 interface Field {
@@ -84,7 +86,8 @@ Every division below rounds down unless it says otherwise.
 3. **Stage.** Multiply by `(2 + stage) / 2` for a positive stage, or `2 / (2 − stage)` for a negative one, then round down.
 4. **Modifiers.** Combine every active modifier into one number out of 4096, then apply it once.
    - Combining: start at 4096. For each modifier, `(running × modifier + 2048) >> 12`.
-   - Applying: `speed × combined / 4096`, **rounded half down** (499.5 becomes 499).
+   - Applying: `speed × combined / 4096`, **rounded half down** (499.5 becomes 499). Only an exact half rounds down; anything else rounds to the nearest (92.75 becomes 93).
+   - No clamp. `@smogon/calc` clamps the combined modifier to between 410 and 131172 out of 4096; the simulator does not. With Generation 9's multipliers only Swamp can take it below 410 (Swamp, Iron Ball and Slow Start make 256).
 5. **Paralysis.** `floor(speed × 50 / 100)`, after everything else. Skipped with Quick Feet.
 6. **Cap.** Speed cannot exceed 10000.
 
@@ -126,6 +129,8 @@ Flutter Mane with Protosynthesis, Choice Scarf and Tailwind is 405 before modifi
 
 Showdown orders Pokémon in Trick Room by `(10000 − speed) mod 8192`. So a Pokémon with Speed of **1809 or more** moves *before* slower Pokémon in Trick Room. This is reachable only with large boosts (for example Regieleki at +6). The engine uses the same rule so that the order it reports is right.
 
+The same 13-bit wrap applies **outside Trick Room** (#79): Showdown sorts by `speed mod 8192`, so a Speed of **8192 or more** moves as if it were 8192 lower. Barraskewda (+Spe, +6, Swift Swim in rain, Choice Scarf, Tailwind) reaches 9792 and moves as 1600. `actionSpeed` and `movesFirst` apply both rules.
+
 ### Ties
 
 A tie is not a win. "Outspeeds" means strictly greater, and "underspeeds" means strictly less.
@@ -142,7 +147,8 @@ These change who moves first without changing Speed, or switch other effects off
 
 | Function | Question | Returns |
 |---|---|---|
-| `speed(input, field)` | What is this Pokémon's Speed? | A number, plus the steps for "Show calc" |
+| `speed(input, field)` | What is this Pokémon's Speed? | A number, the steps for "Show calc", and each modifier with whether it counts and why not |
+| `movesFirst(a, b, field)` | Given two Speeds, who moves first? | `'a'`, `'b'` or `'tie'`, using the wrap rules above |
 | `solveOutspeed(you, target, field)` | Fewest EVs to outspeed the target | For each nature: EVs and resulting Speed, or "cannot reach". If no nature can, the same again with a Choice Scarf |
 | `solveUnderspeed(you, target, field)` | Most EVs that still underspeed the target (Trick Room) | For each nature: EVs and resulting Speed, or "too fast" |
 
@@ -182,6 +188,8 @@ Worked from the formula by hand, then checked against `@smogon/calc`. All at lev
 | Hawlucha (118), +Spe, 252 EVs, Unburden on | 330; 335; ×1.1 = 368.5 → 368; ×2 | **736** |
 | Great Tusk (87), +Spe, 252 EVs, level 50, Tailwind | 268×50/100 = 134; 139; ×1.1 = 152.9 → 152; ×2 | **304** |
 | Regieleki (200), +Spe, 252 EVs, +6, Choice Scarf, Tailwind | 494; 499; ×1.1 = 548.9 → 548; ×4 = 2192; ×3 | **6576** |
+| Barraskewda, neutral, 252 EVs, Swamp | 371×0.25 = 92.75, rounded to nearest | **93** |
+| Barraskewda, Swamp, Iron Ball, Slow Start on | chain = 256/4096; 371×256/4096 = 23.19 | **23** |
 
 ### Solving
 
