@@ -60,7 +60,11 @@ Merge `main` into `v5` regularly so hotfixes and dependency bumps don't drift. D
 
 ### Branch names
 
-`<type>/<short-description>`, e.g. `fix/speed-formula-flooring`, `chore/pin-node`, `phase-0/safety-net`.
+`<type>/<adjective>-<pokemon>`, e.g. `fix/glittering-psyduck`, `chore/fancy-mew`, `phase-2/sleepy-snorlax`.
+
+- The type says what kind of change it is. The rest is just for fun: any adjective and any Pokémon, lower case, joined with a hyphen.
+- The name does not need to describe the change. The PR title does that.
+- If a tool assigns the branch name for you (for example a cloud session that must push to a set branch), use the assigned name.
 
 ### Labels
 
