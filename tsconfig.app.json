@@ -8,5 +8,5 @@
     "types": ["vite/client"]
   },
   "include": ["src"],
-  "exclude": ["src/engine"]
+  "exclude": ["src/engine", "src/data/**/*.test.ts"]
 }

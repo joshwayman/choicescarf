@@ -13,7 +13,8 @@
     "typecheck": "tsc -b",
     "test": "vitest run",
     "test:watch": "vitest",
-    "lint": "eslint --max-warnings=0 ."
+    "lint": "eslint --max-warnings=0 .",
+    "data": "node scripts/build-data.ts"
   },
   "dependencies": {
     "react": "^19.3.1",
@@ -21,6 +22,8 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.5",
+    "@pkmn/data": "0.11.0",
+    "@pkmn/dex": "0.11.0",
     "@smogon/calc": "0.12.0",
     "@testing-library/dom": "^10.4.2",
     "@testing-library/jest-dom": "^7.0.1",

@@ -101,12 +101,12 @@ const cases: { name: string; input: SpeedInput; field?: Field; expected: number 
     expected: 142,
   },
   {
-    name: 'Ursaluna (50), −Spe, 0 EVs, Quick Feet, burned',
+    name: 'Base 50 with Quick Feet (Ursaluna’s Speed; Ursaluna has Guts), −Spe, 0 EVs, burned',
     input: input({ baseSpeed: 50, nature: 'minus', ev: 0, ability: 'quickfeet', status: 'other' }),
     expected: 183,
   },
   {
-    name: 'Ursaluna, neutral, 252 EVs, Quick Feet, paralysed (no paralysis drop)',
+    name: 'Base 50 with Quick Feet, neutral, 252 EVs, paralysed (no paralysis drop)',
     input: input({ baseSpeed: 50, ability: 'quickfeet', status: 'par' }),
     expected: 298,
   },

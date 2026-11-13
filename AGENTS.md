@@ -22,6 +22,7 @@ ChoiceScarf is a Pokémon speed EV calculator, live at **choicescarf.com**. It w
 | `src/data/` | Species and modifier data generated from `@pkmn/dex` / `@pkmn/data` (#80) |
 | `src/ui/` | Tokens, themes, fonts and shared components |
 | `src/app/` | Entry point (`main.tsx`), shell, routes and screens |
+| `scripts/` | Build-time scripts, run with Node: `build-data.ts` writes `src/data/gen9.json` |
 | `tests/` | Tests that aren't about one module (e.g. the engine import boundary) |
 | `docs/adr/`, `docs/specs/` | Decision records and specs |
 | `index.html` | Vite entry: meta tags, icons and the `#root` element |
@@ -40,6 +41,7 @@ npm run lint                 # zero warnings allowed
 npm run typecheck            # tsc -b across every tsconfig
 npm test                     # vitest run (npm run test:watch to watch)
 npm run build                # outputs to dist/
+npm run data                 # regenerate src/data/gen9.json from @pkmn/dex (commit the result)
 npm run preview              # serve the production build
 ```
 
@@ -88,4 +90,5 @@ Short imperative summary (`Add the Generation 9 ruleset`), blank line, then why 
 - **Tests import from `vitest` explicitly** (`import { describe, expect, it, vi } from 'vitest'`); there are no globals. Use `vi.fn()` / `vi.spyOn()`, not `jest.*`.
 - **Relative imports include the extension** (`./App.tsx`), as `verbatimModuleSyntax` and `allowImportingTsExtensions` expect.
 - **The strict compiler options bite:** `noUncheckedIndexedAccess` makes `array[i]` possibly `undefined`, and `exactOptionalPropertyTypes` means an optional property can't be set to `undefined` unless its type says so.
+- **`src/data/gen9.json` is generated.** Don't edit it by hand: change `scripts/build-data.ts` and run `npm run data`. A test fails if the committed file is out of date. It includes National Dex species (flagged `natdex`), because Calculator picks mechanics, not a format.
 - **No analytics on `v5` yet.** v4's Tag Manager snippet was removed from this branch (#78), so previews don't send data to the live property. Google Analytics 4 is added directly in #86; don't bring Tag Manager back.
