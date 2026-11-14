@@ -14,6 +14,8 @@ export interface PageProps {
   hideTitle?: boolean;
   /** Narrow, readable column for text pages. */
   prose?: boolean;
+  /** Grow to fill the screen's height, so a screen can pin things to the bottom. */
+  fill?: boolean;
   children: ReactNode;
 }
 
@@ -22,7 +24,7 @@ export interface PageProps {
  * navigation moves focus to the heading so screen readers announce the new
  * page. (A full page load starts at the top of the document as usual.)
  */
-export function Page({ title, documentTitle, hideTitle = false, prose = false, children }: PageProps) {
+export function Page({ title, documentTitle, hideTitle = false, prose = false, fill = false, children }: PageProps) {
   const heading = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
@@ -35,7 +37,7 @@ export function Page({ title, documentTitle, hideTitle = false, prose = false, c
   }, [title, documentTitle]);
 
   return (
-    <div className={prose ? styles.prose : styles.page}>
+    <div className={[prose ? styles.prose : styles.page, fill ? styles.fill : ''].join(' ')}>
       <h1 ref={heading} tabIndex={-1} className={hideTitle ? styles.hiddenTitle : styles.title}>
         {title}
       </h1>

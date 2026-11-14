@@ -6,6 +6,9 @@
 
 .skip {
   position: absolute;
+  min-height: var(--size-control-min);
+  display: flex;
+  align-items: center;
   left: var(--space-8);
   top: var(--space-8);
   z-index: 10;

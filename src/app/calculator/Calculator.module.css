@@ -1,0 +1,216 @@
+/* Phone: one Pokémon at a time, results at the bottom (V5Calc boards). */
+
+.phone {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-12);
+  border-radius: var(--radius-list);
+  border: 1px solid var(--color-hairline);
+  background: var(--color-raised);
+}
+
+.spacer {
+  flex-grow: 1;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.nameRow {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-8);
+}
+
+.name {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: var(--size-control-min);
+  display: flex;
+  align-items: center;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.baseField {
+  flex: 0 0 96px;
+}
+
+.numbers {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-8);
+}
+
+.fieldLabel {
+  font-size: var(--type-caption-size);
+  font-weight: 500;
+  color: var(--color-text-3);
+}
+
+.solved {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.solvedValue,
+.solvedNote {
+  min-height: var(--size-control-min);
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  border-radius: 10px;
+  border: 1px dashed var(--color-accent);
+  background: var(--color-tint);
+  color: var(--color-accent-text);
+  font-size: var(--type-label-size);
+  font-weight: 600;
+}
+
+.solvedNote {
+  margin: 0;
+  padding: 0 var(--space-12);
+}
+
+.modifiers {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fieldRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.eyebrow,
+.eyebrowYou {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-3);
+}
+
+.eyebrowYou {
+  color: var(--color-accent-text);
+}
+
+.actions {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-8);
+}
+
+/* Until both Pokémon have a base Speed */
+
+.prompt {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 18px;
+  border-radius: var(--radius-card);
+  border: 1px dashed var(--color-control-line);
+  background: var(--color-surface);
+}
+
+.promptHeading {
+  margin: 0;
+  font-size: var(--type-body-size);
+  font-weight: 600;
+}
+
+.promptText {
+  margin: 0;
+  font-size: var(--type-label-size);
+  color: var(--color-text-2);
+}
+
+/* Desktop: Target, You and the results side by side (V5DeskCalc boards). */
+
+.desktop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--space-24);
+}
+
+.card,
+.resultsColumn {
+  flex: 1 1 320px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.card {
+  gap: var(--space-16);
+  padding: var(--space-16);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--color-hairline);
+  background: var(--color-raised);
+}
+
+.resultsColumn {
+  gap: var(--space-12);
+}
+
+.cardHead {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.cardName {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-family: var(--font-display);
+  font-size: 1.875rem;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.cardSpeed {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin: 0;
+}
+
+.cardSpeedValue {
+  font-family: var(--font-mono);
+  font-size: 1.625rem;
+  font-weight: 700;
+}
+
+.cardSpeedLabel {
+  font-size: var(--type-caption-size);
+  color: var(--color-text-3);
+}
+
+.stageRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-8);
+}

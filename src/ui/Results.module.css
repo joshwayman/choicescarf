@@ -145,6 +145,12 @@
   color: var(--color-answer);
 }
 
+.rowMuted {
+  text-align: right;
+  font-size: 0.875rem;
+  color: var(--color-display-text-2);
+}
+
 .rowStat {
   width: 1%;
   min-width: 36px;
