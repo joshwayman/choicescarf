@@ -16,10 +16,10 @@ interface Props {
 }
 
 /**
- * A side's modifiers: one chip for its item (a Choice Scarf toggle until it
- * holds something else), Tailwind as a toggle (as v4's two switches), a chip
- * for each other modifier it has, and "+ Modifier" for the rest. Every chip
- * opens the Modifiers sheet on this Pokémon's tab.
+ * A side's modifiers: one chip for its item ("+ Item" until it holds one), a
+ * chip for each other modifier it has, and "+ Modifier" for the rest. Every
+ * chip opens the Modifiers sheet on this Pokémon's tab, where the items and
+ * Tailwind are.
  */
 export function ModifierChips({ calc, which, onChange }: Props) {
   const side: Side = calc[which];
@@ -36,13 +36,12 @@ export function ModifierChips({ calc, which, onChange }: Props) {
     openModifiers(which);
   };
 
-  // A Pokémon holds one item, so one chip stands for it (#118). With no item,
-  // it is a toggle for the useful one: Choice Scarf, or Iron Ball under
-  // Trick Room (#52). Holding either shows that toggle switched on; holding
-  // anything else shows that item's chip instead.
+  // A Pokémon holds one item, so one chip stands for it (#118): "+ Item"
+  // until it holds one, with the useful item's icon (Choice Scarf, or Iron
+  // Ball under Trick Room, #52), then that item's chip. Tailwind is in the
+  // sheet too, so it only gets a chip once it is on.
   const suggested = trickRoom ? 'ironball' : 'choicescarf';
-  const toggleItem = side.item === undefined ? suggested : side.item === 'choicescarf' || (trickRoom && side.item === 'ironball') ? side.item : undefined;
-  const item = side.item !== undefined && toggleItem === undefined ? state(side.item) : undefined;
+  const item = state(side.item);
   const ability = state(side.ability);
   const abilityModifier = modifiersIn(calc, 'ability').find((m) => m.id === side.ability);
   // Linked to the field when the weather or terrain is what switches it on.
@@ -55,16 +54,6 @@ export function ModifierChips({ calc, which, onChange }: Props) {
         Modifiers
       </span>
       <ChipGroup>
-        {toggleItem ? (
-          <ChipToggle
-            label={toggleItem === 'ironball' ? 'Iron Ball' : 'Choice Scarf'}
-            icon={<ItemSpriteFor id={toggleItem} />}
-            isSelected={side.item === toggleItem}
-            onChange={(on) => {
-              set({ item: on ? toggleItem : undefined });
-            }}
-          />
-        ) : null}
         {item ? (
           <StateChip
             label={isPowerItem(item.id) ? 'Power item' : item.name}
@@ -73,9 +62,11 @@ export function ModifierChips({ calc, which, onChange }: Props) {
             detail={item.active ? undefined : reasonText(item.reason)}
             onPress={openSheet}
           />
-        ) : null}
+        ) : (
+          <Chip variant="add" label="Item" icon={<ItemSpriteFor id={suggested} />} aria-haspopup="dialog" onPress={openSheet} />
+        )}
         {trickRoom ? (
-          // Under Trick Room slower is better, so 0 IVs is useful too (#52).
+          // Under Trick Room slower is better, so 0 IVs is one tap away (#52).
           <ChipToggle
             label="0 IVs"
             isSelected={side.iv === 0}
@@ -84,13 +75,7 @@ export function ModifierChips({ calc, which, onChange }: Props) {
             }}
           />
         ) : null}
-        <ChipToggle
-          label="Tailwind"
-          isSelected={side.tailwind}
-          onChange={(on) => {
-            set({ tailwind: on });
-          }}
-        />
+        {side.tailwind ? <StateChip label="Tailwind" active detail="×2" onPress={openSheet} /> : null}
         {ability && abilityModifier ? (
           <StateChip
             label={ability.name}

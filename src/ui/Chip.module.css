@@ -64,6 +64,7 @@
   gap: 4px;
 }
 
+.add .icon,
 .toggle:not([data-selected]) .icon {
   opacity: 0.55;
 }

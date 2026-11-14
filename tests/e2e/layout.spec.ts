@@ -11,8 +11,8 @@ const CALCULATOR: { name: string; path: string; overflows?: string }[] = [
   { name: 'empty', path: '/' },
   { name: 'solved', path: '/?v=1&t=garchomp&y=dragapult' },
   { name: 'Scarf fallback', path: '/?v=1&t=dragapult&y=garchomp' },
-  // Two rows of modifier chips on the side being edited don't fit yet.
-  { name: 'Trick Room', path: '/?v=1&t=kingambit&y=garganacl&tr=1', overflows: '#116' },
+  { name: 'Trick Room', path: '/?v=1&t=kingambit&y=garganacl&tr=1' },
+  // Several rows of modifier chips on the side being edited don't fit yet.
   {
     name: 'with modifiers',
     // Item, ability, paralysis and Swamp: several rows of chips in any browser.
