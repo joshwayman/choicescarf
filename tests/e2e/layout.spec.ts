@@ -15,7 +15,8 @@ const CALCULATOR: { name: string; path: string; overflows?: string }[] = [
   { name: 'Trick Room', path: '/?v=1&t=kingambit&y=garganacl&tr=1', overflows: '#116' },
   {
     name: 'with modifiers',
-    path: '/?v=1&t=garchomp&t.item=ironball&t.ability=sandrush&weather=sand&y=dragapult',
+    // Item, ability, paralysis and Swamp: several rows of chips in any browser.
+    path: '/?v=1&t=garchomp&t.item=ironball&t.ability=sandrush&t.status=par&t.swamp=1&weather=sand&y=dragapult',
     overflows: '#116',
   },
 ];
