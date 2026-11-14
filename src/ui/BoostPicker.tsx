@@ -52,7 +52,13 @@ export function BoostSteps({
       }}
       className={classes(styles.step)}
     >
-      {signed(by)}
+      {/* A big sign and a smaller digit, so − and + read as the action (#119). */}
+      <span aria-hidden="true" className={classes(styles.sign)}>
+        {by < 0 ? '−' : '+'}
+      </span>
+      <span aria-hidden="true" className={classes(styles.digit)}>
+        {Math.abs(by)}
+      </span>
     </Button>
   );
   const readout = (
