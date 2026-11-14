@@ -29,6 +29,14 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Trick Room (#52): a grid behind the page while the room is on. */
+html[data-trick-room] body {
+  background-image:
+    linear-gradient(var(--color-room-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-room-grid) 1px, transparent 1px);
+  background-size: 30px 30px;
+}
+
 :focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;

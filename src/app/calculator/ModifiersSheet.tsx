@@ -4,7 +4,7 @@ import { Button, Sheet, SheetNote, SheetOption, SheetSection } from '../../ui/in
 import { classes } from '../../ui/classes.ts';
 import { findSpecies } from '../../data/index.ts';
 import { modifiersIn, multiplierText } from '../calculation/derive.ts';
-import type { Calculation } from '../calculation/state.ts';
+import { withTrickRoom, type Calculation } from '../calculation/state.ts';
 import { editSide, WEATHER_NAME, type SideChange, type Which } from './edit.ts';
 import type { SheetSectionId } from './sheetContext.ts';
 import styles from './Calculator.module.css';
@@ -235,6 +235,17 @@ function FieldPanel({ calc, onChange }: { calc: Calculation; onChange: (next: Ca
               }}
             />
           ))}
+        </SheetSection>
+        <SheetSection label="Room">
+          <SheetOption
+            label="Trick Room"
+            description="Slower moves first. Flips the whole answer."
+            value="Reverses"
+            isSelected={calc.field.trickRoom}
+            onChange={(on) => {
+              onChange(withTrickRoom(calc, on));
+            }}
+          />
         </SheetSection>
       </div>
       <div className={styles.sheetNote}>

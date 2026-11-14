@@ -119,3 +119,13 @@ export function CheckIcon(props: IconProps) {
     </Icon>
   );
 }
+
+/** Two arrows chasing each other: Trick Room. */
+export function TrickRoomIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M4 8a6.2 6.2 0 0 1 11.2-2.6M16 12a6.2 6.2 0 0 1-11.2 2.6" />
+      <path d="M15.5 2v3.6h-3.6M4.5 18v-3.6h3.6" />
+    </Icon>
+  );
+}

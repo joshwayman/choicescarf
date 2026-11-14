@@ -45,6 +45,7 @@ export const DISPLAY_ROLES = [
   { token: 'display-text', label: 'Display card text', dark: '#f4f7fb', light: '#f4f7fb' },
   { token: 'display-text-2', label: 'Display card text 2', dark: '#b9c6dc', light: '#b9c6dc' },
   { token: 'shimmer', label: 'Shimmer highlight', dark: 'rgba(200, 231, 241, 0.3)', light: 'rgba(255, 255, 255, 0.85)' },
+  { token: 'room-grid', label: 'Trick Room background grid', dark: 'rgba(170, 120, 255, 0.16)', light: 'rgba(120, 70, 220, 0.14)' },
   { token: 'scrim', label: 'Scrim behind a sheet', dark: 'rgba(6, 7, 14, 0.62)', light: 'rgba(21, 22, 35, 0.42)' },
 ] as const satisfies readonly ColorRole[];
 

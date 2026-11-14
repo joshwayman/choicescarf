@@ -93,6 +93,8 @@ export type Answer =
       /** Your Pokémon in the row that "Show calc" explains: neutral. */
       shown: { label: string; result: SpeedResult };
       target: SpeedResult;
+      /** Under Trick Room when nothing is slow enough: how slow it gets, and whether an Iron Ball helps. */
+      tooFast?: { slowest: number; ironBall?: { speed: number; enough: boolean } };
     };
 
 /**
@@ -118,13 +120,23 @@ export function solve(calc: Calculation): Answer {
     const result = solveUnderspeed(you, target.speed, theField);
     const rows = result.rows.map((row) => underRow(row));
     const reaches = result.rows.some((row) => row.result === 'reaches');
-    return {
+    const answer: Answer = {
       kind: reaches ? 'underspeed' : 'too-fast',
       targetSpeed: result.target,
       rows,
       shown: shownRow(you, result.rows, theField, ''),
       target,
     };
+    if (!reaches) {
+      const slowest = Math.min(...rows.map((row) => row.speed));
+      answer.tooFast = { slowest };
+      if (you.item !== 'ironball') {
+        // The slowest spread there is, holding an Iron Ball.
+        const held = speed({ ...you, item: 'ironball', ev: 0, nature: 'minus' }, theField).speed;
+        answer.tooFast.ironBall = { speed: held, enough: held < result.target };
+      }
+    }
+    return answer;
   }
 
   const result = solveOutspeed(you, target.speed, theField);

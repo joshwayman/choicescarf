@@ -1,6 +1,7 @@
 import { useId, type ReactNode } from 'react';
 import { Disclosure, DisclosurePanel } from 'react-aria-components';
 import { Button as AriaButton } from 'react-aria-components';
+import { TrickRoomIcon } from './icons.tsx';
 import { classes } from './classes.ts';
 import styles from './Results.module.css';
 
@@ -96,13 +97,23 @@ export interface ResultsCardProps {
   level?: 2 | 3;
   /** Names the region instead of the heading, when the heading alone isn't unique. */
   label?: string;
+  /** Under Trick Room the card says so, because every answer is a maximum, not a minimum. */
+  trickRoom?: boolean;
 }
 
 /**
  * Every nature's answer at once, with the working behind "Show calc".
  * The toggle is a disclosure: it says whether the working is shown.
  */
-export function ResultsCard({ heading, rows, calc, defaultCalcOpen = false, level = 2, label }: ResultsCardProps) {
+export function ResultsCard({
+  heading,
+  rows,
+  calc,
+  defaultCalcOpen = false,
+  level = 2,
+  label,
+  trickRoom = false,
+}: ResultsCardProps) {
   const headingId = useId();
   const Heading = `h${String(level)}` as 'h2' | 'h3';
   return (
@@ -111,6 +122,12 @@ export function ResultsCard({ heading, rows, calc, defaultCalcOpen = false, leve
       aria-live="polite"
       className={classes(styles.card)}
     >
+      {trickRoom ? (
+        <p className={classes(styles.cardTrickRoom)}>
+          <TrickRoomIcon size={18} />
+          Trick Room <span className={classes(styles.trickRoomNote)}>slower moves first</span>
+        </p>
+      ) : null}
       <Heading id={headingId} className={classes(styles.cardHeading)}>
         {heading}
       </Heading>

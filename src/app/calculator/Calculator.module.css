@@ -365,3 +365,9 @@
     grid-column: 1 / -1;
   }
 }
+
+.tooFastNote {
+  margin: 0;
+  font-size: var(--type-label-size);
+  color: var(--color-text-2);
+}

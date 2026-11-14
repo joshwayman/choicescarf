@@ -38,13 +38,14 @@ export function AnswerCard({ calc, answer }: Props) {
     scarf: `${you} needs a Choice Scarf to outspeed ${t}`,
     'cannot-outspeed': `${you} can’t outspeed ${t}`,
     underspeed: `${you} underspeeds ${t} with up to`,
-    'too-fast': `${you} is too fast to underspeed ${t}`,
+    'too-fast': `${you} can’t underspeed ${t}`,
   }[answer.kind];
   const none = calc.field.trickRoom ? 'Too fast' : 'Can’t reach';
 
-  return (
+  const card = (
     <ResultsCard
       heading={heading}
+      trickRoom={calc.field.trickRoom}
       rows={answer.rows.map((row) =>
         row.ev === undefined
           ? { id: row.nature, label: row.label, answer: none, stat: '—', muted: true }
@@ -55,5 +56,22 @@ export function AnswerCard({ calc, answer }: Props) {
         { label: `${you}, ${answer.shown.label}`, working: working(answer.shown.result) },
       ]}
     />
+  );
+  if (!answer.tooFast) return card;
+
+  const { slowest, ironBall } = answer.tooFast;
+  const against = speciesOf(calc.target)?.name ?? 'the target';
+  return (
+    <>
+      {card}
+      <p className={styles.tooFastNote}>
+        Even its slowest spread ({slowest}) moves after {against} in Trick Room.
+        {ironBall
+          ? ironBall.enough
+            ? ` An Iron Ball brings it to ${String(ironBall.speed)}, which is slow enough.`
+            : ` An Iron Ball brings it to ${String(ironBall.speed)}, still too fast.`
+          : ''}
+      </p>
+    </>
   );
 }
