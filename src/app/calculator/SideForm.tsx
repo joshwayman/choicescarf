@@ -11,8 +11,6 @@ import styles from './Calculator.module.css';
 interface Props {
   calc: Calculation;
   which: Which;
-  /** What to call it in sheets and labels: "Garchomp", or "the target". */
-  name: string;
   layout: 'phone' | 'desktop';
   onChange: (next: Calculation) => void;
 }
@@ -27,7 +25,7 @@ function isNature(value: string): value is Nature {
  * One Pokémon's fields (#66): base Speed, then nature and EVs for the
  * target (yours are solved), IVs, level, stage, and its modifiers.
  */
-export function SideForm({ calc, which, name, layout, onChange }: Props) {
+export function SideForm({ calc, which, layout, onChange }: Props) {
   const ruleset = getRuleset(calc.ruleset);
   const side = calc[which];
   const solvedId = useId();
@@ -141,7 +139,7 @@ export function SideForm({ calc, which, name, layout, onChange }: Props) {
         </div>
       ) : null}
 
-      <ModifierChips calc={calc} which={which} name={name} onChange={onChange} />
+      <ModifierChips calc={calc} which={which} onChange={onChange} />
     </div>
   );
 }

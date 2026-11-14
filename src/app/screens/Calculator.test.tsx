@@ -148,31 +148,68 @@ describe('Calculator on a phone', () => {
     expect(router.state.location.searchStr).toBe('?v=1&t=garchomp&t.item=choicescarf&t.tw=1&y=dragapult');
   });
 
-  it('adds an ability that waits for rain, then rain from the Field sheet', async () => {
+  it('adds an ability, then rain from the Field tab of the same sheet', async () => {
     const user = userEvent.setup();
     open('/?v=1&t=barraskewda&t.nat=neutral&y=dragapult');
     expect(within(await results()).getByRole('heading')).toHaveTextContent('outspeeds 371 with');
 
     await user.click(screen.getByRole('button', { name: 'Add Modifier' }));
-    const sheet = await screen.findByRole('dialog', { name: 'Add to Barraskewda' });
+    const sheet = await screen.findByRole('dialog', { name: 'Modifiers' });
+    // It opens on the Pokémon whose chip was pressed.
+    expect(within(sheet).getByRole('tab', { name: 'Barraskewda' })).toHaveAttribute('aria-selected', 'true');
     // Its own ability is listed first.
     const abilityGroup = within(sheet).getByRole('group', { name: 'Ability' });
     expect(within(abilityGroup).getAllByRole('button')[0]).toHaveAccessibleName(/^Swift Swim Its ability/);
     await user.click(within(abilityGroup).getByRole('button', { name: /^Swift Swim/ }));
+    // The page behind the open sheet is hidden from assistive tech, so this looks past that.
+    expect(await screen.findByRole('button', { name: 'Swift Swim needs rain', hidden: true })).toBeInTheDocument();
+
+    // Rain without closing the sheet.
+    await user.click(within(sheet).getByRole('tab', { name: 'Field' }));
+    await user.click(within(sheet).getByRole('button', { name: /^Rain/ }));
     await user.click(within(sheet).getByRole('button', { name: 'Done' }));
-
-    expect(await screen.findByRole('button', { name: 'Swift Swim needs rain' })).toBeInTheDocument();
-
-    await user.click(screen.getByRole('button', { name: 'Add Field' }));
-    const field = await screen.findByRole('dialog', { name: 'Field' });
-    await user.click(within(field).getByRole('button', { name: /^Rain/ }));
-    await user.click(within(field).getByRole('button', { name: 'Done' }));
 
     // 371 × 2 = 742: past Dragapult's best even with a Scarf (631).
     expect(within(await results()).getByRole('heading')).toHaveTextContent('Dragapult can’t outspeed 742');
     const ability = await screen.findByRole('button', { name: 'Swift Swim ×2' });
     expect(ability).toHaveAttribute('data-linked', 'true');
     expect(screen.getByRole('button', { name: 'Remove Rain' })).toHaveAttribute('data-linked', 'true');
+  });
+
+  it('switches between the Pokémon and the field in one sheet', async () => {
+    const user = userEvent.setup();
+    const { router } = open('/?v=1&t=garchomp&y=dragapult');
+    await user.click(await screen.findByRole('button', { name: 'Add Field' }));
+    const sheet = await screen.findByRole('dialog', { name: 'Modifiers' });
+    expect(within(sheet).getByRole('tab', { name: 'Field' })).toHaveAttribute('aria-selected', 'true');
+
+    await user.click(within(sheet).getByRole('tab', { name: 'Dragapult' }));
+    await user.click(within(sheet).getByRole('button', { name: /^Paralysis/ }));
+    await user.click(within(sheet).getByRole('tab', { name: 'Garchomp' }));
+    await user.click(within(sheet).getByRole('button', { name: /^Iron Ball/ }));
+    expect(router.state.location.searchStr).toBe('?v=1&t=garchomp&t.item=ironball&y=dragapult&y.status=par');
+  });
+
+  it('offers the six Power items as one row', async () => {
+    const user = userEvent.setup();
+    const { router } = open('/?v=1&t=garchomp&y=dragapult');
+    await user.click(await screen.findByRole('button', { name: 'Add Modifier' }));
+    const items = within(await screen.findByRole('dialog', { name: 'Modifiers' })).getByRole('group', { name: 'Item' });
+    expect(within(items).queryByRole('button', { name: /^Power Band/ })).not.toBeInTheDocument();
+    const power = within(items).getByRole('button', {
+      name: 'Power item Power Anklet, Band, Belt, Bracer, Lens or Weight ×0.5',
+    });
+    await user.click(power);
+    expect(router.state.location.searchStr).toBe('?v=1&t=garchomp&t.item=poweranklet&y=dragapult');
+    await user.keyboard('{Escape}');
+    expect(await screen.findByRole('button', { name: 'Power item' })).toBeInTheDocument();
+  });
+
+  it('shows any Power item from a link as a Power item', async () => {
+    open('/?v=1&t=garchomp&t.item=powerbracer&y=dragapult');
+    expect(await screen.findByRole('button', { name: 'Power item' })).toBeInTheDocument();
+    // 333 × 0.5 = 166.5, rounded half down.
+    expect(within(await results()).getByRole('heading')).toHaveTextContent('outspeeds 166 with');
   });
 
   it('removes a weather from the FIELD row', async () => {

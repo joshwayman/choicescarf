@@ -18,6 +18,8 @@ export interface SheetProps extends Omit<ModalOverlayProps, 'className' | 'style
   subtitle?: string;
   /** The footer, usually the primary action ("Done"). */
   footer?: ReactNode;
+  /** wide: a bigger dialog on wider screens, for content laid out in columns. */
+  size?: 'default' | 'wide';
   children: ReactNode;
 }
 
@@ -30,10 +32,10 @@ export interface SheetProps extends Omit<ModalOverlayProps, 'className' | 'style
  * Escape, the close button and a tap on the scrim all close it. With
  * reduced motion on it appears without sliding.
  */
-export function Sheet({ title, subtitle, footer, children, isDismissable = true, ...props }: SheetProps) {
+export function Sheet({ title, subtitle, footer, size = 'default', children, isDismissable = true, ...props }: SheetProps) {
   return (
     <ModalOverlay {...props} isDismissable={isDismissable} className={classes(styles.overlay)}>
-      <Modal className={classes(styles.modal)}>
+      <Modal className={classes(styles.modal, size === 'wide' && styles.wide)}>
         <Dialog className={classes(styles.dialog)}>
           {({ close }) => (
             <>
