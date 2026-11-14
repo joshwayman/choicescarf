@@ -20,17 +20,23 @@ import styles from './Shell.module.css';
  * toggle and a More menu with About and Privacy. There are no mode tabs in
  * v5.0, as Calculator is the only mode; they arrive with Quick.
  */
+/** A link to another site, such as https://www.smogon.com/, rather than a route. */
+function isExternal(href: string): boolean {
+  return /^[a-z][a-z\d+.-]*:/i.test(href);
+}
+
 export function Shell() {
   const router = useRouter();
   return (
     // Lets React Aria links and menu items navigate through the router. Every link
     // keeps the calculation in the query (`search`), so going to More or About and
-    // coming back keeps it (#65).
+    // coming back keeps it (#65). Links to other sites (https://…) are left as
+    // they are (#112).
     <AriaRouterProvider
       navigate={(href) => {
         void router.navigate({ to: href, search: true });
       }}
-      useHref={(href) => router.buildLocation({ to: href, search: true }).href}
+      useHref={(href) => (isExternal(href) ? href : router.buildLocation({ to: href, search: true }).href)}
     >
       <div className={styles.shell}>
         <a href="#main" className={styles.skip}>
