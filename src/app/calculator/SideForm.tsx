@@ -1,6 +1,6 @@
 import { useId } from 'react';
 import { getRuleset, type Nature } from '../../engine/index.ts';
-import { BoostPicker, BoostSteps, NumberField, SegmentedControl } from '../../ui/index.ts';
+import { BoostPicker, NumberField, SegmentedControl } from '../../ui/index.ts';
 import { baseOf, NATURE_LABEL, speciesOf } from '../calculation/derive.ts';
 import type { Calculation } from '../calculation/state.ts';
 import { editSide, type Which } from './edit.ts';
@@ -70,7 +70,7 @@ export function SideForm({ calc, which, layout, onChange }: Props) {
         </p>
       )}
 
-      <div className={styles.numbers}>
+      <div className={layout === 'desktop' ? styles.numbersDesktop : styles.numbers}>
         {layout === 'desktop' ? base : null}
         {which === 'target' ? (
           <NumberField
@@ -111,33 +111,17 @@ export function SideForm({ calc, which, layout, onChange }: Props) {
             set({ level: whole(value) ?? ruleset.level.default });
           }}
         />
-        {layout === 'phone' ? (
-          <BoostPicker
-            label="Boost"
-            min={ruleset.stage.min}
-            max={ruleset.stage.max}
-            value={side.stage}
-            onChange={(value) => {
-              set({ stage: value });
-            }}
-          />
-        ) : null}
+        {/* The boost is picked, not typed (#119): the same picker on phones and desktop. */}
+        <BoostPicker
+          label="Boost"
+          min={ruleset.stage.min}
+          max={ruleset.stage.max}
+          value={side.stage}
+          onChange={(value) => {
+            set({ stage: value });
+          }}
+        />
       </div>
-
-      {layout === 'desktop' ? (
-        <div className={styles.stageRow}>
-          <BoostSteps
-            inline
-            label="Speed boost"
-            min={ruleset.stage.min}
-            max={ruleset.stage.max}
-            value={side.stage}
-            onChange={(value) => {
-              set({ stage: value });
-            }}
-          />
-        </div>
-      ) : null}
 
       <ModifierChips calc={calc} which={which} onChange={onChange} />
     </div>

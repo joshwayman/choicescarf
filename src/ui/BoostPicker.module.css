@@ -67,119 +67,6 @@
   outline: none;
 }
 
-/* Desktop: one row, the value between the steps like a stepper (#119). */
-.inline {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.row {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-/* The steps and the value joined in one bar, like the stepper it replaces. */
-.bar {
-  flex: 1 1 auto;
-  min-width: 0;
-  display: flex;
-  align-items: stretch;
-  /* The steps are a full 44 px; the 1 px border sits outside them, as on the stepper. */
-  height: calc(var(--size-control-min) + 2px);
-  border: 1px solid var(--color-control-line);
-  border-radius: 10px;
-  background: var(--color-surface);
-  overflow: hidden;
-}
-
-.bar > * + * {
-  border-left: 1px solid var(--color-hairline);
-}
-
-.bar .step {
-  flex-shrink: 0;
-  width: 44px;
-  height: auto;
-  align-items: center;
-  border-top: 0;
-  border-right: 0;
-  border-bottom: 0;
-  border-radius: 0;
-  background: var(--color-raised);
-}
-
-.bar .step[data-hovered] {
-  background: var(--color-tint);
-}
-
-.bar .step .sign {
-  font-size: 1.25rem;
-}
-
-.bar .step .digit {
-  font-size: 0.75rem;
-}
-
-.bar .step[data-pressed] {
-  translate: none;
-  background: var(--color-tint);
-  box-shadow: inset 0 0 0 1px var(--color-accent);
-}
-
-.bar .step[data-disabled] {
-  opacity: 1;
-  color: var(--color-text-3);
-}
-
-.bar .step[data-focus-visible] {
-  outline-offset: -2px;
-}
-
-/* The value cell: plain, like a field's value, so the steps around it read as the buttons. */
-.bar .readout {
-  flex: 1 1 auto;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  line-height: 1.1;
-  background: transparent;
-}
-
-.bar .readoutValue {
-  font-size: 1.0625rem;
-}
-
-.bar .readoutEffect {
-  font-size: 0.6875rem;
-}
-
-.resetInline {
-  flex-shrink: 0;
-  min-width: var(--size-control-min);
-  min-height: var(--size-control-min);
-  padding: 0 4px;
-  border: none;
-  background: transparent;
-  color: var(--color-text-2);
-  font: inherit;
-  font-size: var(--type-label-size);
-  font-weight: 600;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  cursor: pointer;
-  justify-self: start;
-}
-
-.resetInline[data-disabled] {
-  cursor: default;
-  opacity: 0.4;
-  text-decoration: none;
-}
-
 .top {
   display: flex;
   align-items: baseline;
@@ -300,7 +187,7 @@
   color: var(--color-accent-text);
 }
 
-:is(.step, .reset, .done, .resetInline)[data-focus-visible] {
+:is(.step, .reset, .done)[data-focus-visible] {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }

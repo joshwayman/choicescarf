@@ -1,7 +1,6 @@
 import { useId, useState, type ReactNode } from 'react';
 import {
   BoostPicker,
-  BoostSteps,
   AnswerDisplay,
   Button,
   Chip,
@@ -276,10 +275,9 @@ function Fields() {
         <NumberField label="IVs" defaultValue={31} minValue={0} maxValue={31} />
         <NumberField label="Level" defaultValue={100} minValue={1} maxValue={100} />
         <NumberField variant="stepper" label="Stepper" defaultValue={0} minValue={-6} maxValue={6} />
-        {/* The boost (#119): a picker on phones, the steps in place on desktop. */}
+        {/* The boost (#119): picked, not typed. */}
         <BoostPicker label="Boost" value={boost} onChange={setBoost} />
       </div>
-      <BoostSteps inline label="Speed boost" value={boost} onChange={setBoost} />
       <NumberField
         variant="row"
         label="EVs"

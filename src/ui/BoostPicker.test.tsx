@@ -32,7 +32,11 @@ describe('boostMultiplier', () => {
 
 function Steps({ start = 0 }: { start?: number }) {
   const [value, setValue] = useState(start);
-  return <BoostSteps inline label="Speed boost" value={value} onChange={setValue} />;
+  return (
+    <section aria-label="Panel">
+      <BoostSteps label="Speed boost" value={value} onChange={setValue} />
+    </section>
+  );
 }
 
 function Picker({ start = 0 }: { start?: number }) {
@@ -44,28 +48,26 @@ describe('BoostSteps', () => {
   it('steps by tapping as often as needed, and stops at +6', async () => {
     const user = userEvent.setup();
     render(<Steps />);
-    const group = screen.getByRole('group', { name: 'Speed boost' });
-    const up2 = within(group).getByRole('button', { name: 'Raise by 2' });
+    const panel = screen.getByRole('region', { name: 'Panel' });
+    const steps = within(panel).getByRole('group', { name: 'Change the boost' });
+    const up2 = within(steps).getByRole('button', { name: 'Raise by 2' });
     await user.click(up2);
     await user.click(up2);
     await user.click(up2);
-    expect(group).toHaveTextContent('+6 ×4');
+    expect(panel).toHaveTextContent('+6 ×4 Speed');
     expect(up2).toBeDisabled();
-    expect(within(group).getByRole('button', { name: 'Raise by 1' })).toBeDisabled();
-    await user.click(within(group).getByRole('button', { name: 'Lower by 1' }));
-    expect(group).toHaveTextContent('+5 ×3.5');
+    expect(within(steps).getByRole('button', { name: 'Raise by 1' })).toBeDisabled();
+    await user.click(within(steps).getByRole('button', { name: 'Lower by 1' }));
+    expect(panel).toHaveTextContent('+5 ×3.5 Speed');
   });
 
-  it('goes negative without a keyboard, stops at −6, and resets to 0', async () => {
+  it('goes negative without a keyboard and stops at −6', async () => {
     const user = userEvent.setup();
     render(<Steps start={-5} />);
-    const group = screen.getByRole('group', { name: 'Speed boost' });
-    await user.click(within(group).getByRole('button', { name: 'Lower by 2' }));
-    expect(group).toHaveTextContent('−6 ×0.25');
-    expect(within(group).getByRole('button', { name: 'Lower by 1' })).toBeDisabled();
-    await user.click(within(group).getByRole('button', { name: 'Reset to 0' }));
-    expect(group).toHaveTextContent('0 ×1');
-    expect(within(group).getByRole('button', { name: 'Reset to 0' })).toBeDisabled();
+    const panel = screen.getByRole('region', { name: 'Panel' });
+    await user.click(within(panel).getByRole('button', { name: 'Lower by 2' }));
+    expect(panel).toHaveTextContent('−6 ×0.25 Speed');
+    expect(within(panel).getByRole('button', { name: 'Lower by 1' })).toBeDisabled();
   });
 });
 
@@ -88,6 +90,16 @@ describe('BoostPicker', () => {
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });
     expect(screen.getByRole('button', { name: 'Boost +2' })).toBeInTheDocument();
+  });
+
+  it('resets to 0 from the panel', async () => {
+    const user = userEvent.setup();
+    render(<Picker start={-3} />);
+    await user.click(screen.getByRole('button', { name: 'Boost −3' }));
+    const dialog = await screen.findByRole('dialog', { name: 'Speed boost' });
+    await user.click(within(dialog).getByRole('button', { name: 'Reset to 0' }));
+    expect(dialog).toHaveTextContent('0 ×1 Speed');
+    expect(within(dialog).getByRole('button', { name: 'Reset to 0' })).toBeDisabled();
   });
 
   it('has no axe violations, closed or open', async () => {
