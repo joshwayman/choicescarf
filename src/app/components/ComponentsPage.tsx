@@ -1,5 +1,6 @@
 import { useId, useState, type ReactNode } from 'react';
 import {
+  BoostPicker,
   AnswerDisplay,
   Button,
   Chip,
@@ -267,12 +268,15 @@ function Sides() {
 }
 
 function Fields() {
+  const [boost, setBoost] = useState(1);
   return (
     <Group title="Number fields and steppers">
       <div className={styles.fields}>
         <NumberField label="IVs" defaultValue={31} minValue={0} maxValue={31} />
         <NumberField label="Level" defaultValue={100} minValue={1} maxValue={100} />
-        <NumberField variant="stepper" label="Speed stage" defaultValue={0} minValue={-6} maxValue={6} />
+        <NumberField variant="stepper" label="Stepper" defaultValue={0} minValue={-6} maxValue={6} />
+        {/* The boost (#119): picked, not typed. */}
+        <BoostPicker label="Boost" value={boost} onChange={setBoost} />
       </div>
       <NumberField
         variant="row"

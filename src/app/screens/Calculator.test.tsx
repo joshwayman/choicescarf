@@ -110,7 +110,7 @@ describe('Calculator on a phone', () => {
     ]);
   });
 
-  it('follows the target’s nature, EVs, IVs, level and stage', async () => {
+  it('follows the target’s nature, EVs, IVs, level and boost', async () => {
     const user = userEvent.setup();
     const { router } = open('/?v=1&t=garchomp&y=dragapult');
     await results();
@@ -119,7 +119,15 @@ describe('Calculator on a phone', () => {
     await typeInto(user, screen.getByRole('textbox', { name: 'EVs' }), '0');
     await typeInto(user, screen.getByRole('textbox', { name: 'IVs' }), '0');
     await typeInto(user, screen.getByRole('textbox', { name: 'Level' }), '50');
-    await typeInto(user, screen.getByRole('textbox', { name: 'Stage' }), '1');
+    // The boost is picked, not typed, and shown signed (#119).
+    await user.click(screen.getByRole('button', { name: 'Boost 0' }));
+    const dialog = await screen.findByRole('dialog', { name: 'Speed boost' });
+    await user.click(within(dialog).getByRole('button', { name: 'Raise by 1' }));
+    await user.click(within(dialog).getByRole('button', { name: 'Done' }));
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
+    expect(screen.getByRole('button', { name: 'Boost +1' })).toBeInTheDocument();
     // Garchomp, neutral, 0 EVs, 0 IVs, level 50: floor(204×50/100)+5 = 107; +1 = 160
     expect(within(await results()).getByRole('heading')).toHaveTextContent('Dragapult outspeeds 160 with');
     expect(router.state.location.searchStr).toBe('?v=1&t=garchomp&t.lv=50&t.iv=0&t.ev=0&t.nat=neutral&t.stage=1&y=dragapult');
@@ -288,7 +296,8 @@ describe('Calculator on desktop', () => {
     expect(screen.queryByRole('tablist')).not.toBeInTheDocument();
     expect(await results()).toBeInTheDocument();
     expect(screen.getAllByRole('textbox', { name: 'Base Speed' })).toHaveLength(2);
-    expect(screen.getAllByRole('textbox', { name: 'Speed stage' })).toHaveLength(2);
+    // On desktop the boost is the same picker as on phones, in the number row (#119).
+    expect(screen.getAllByRole('button', { name: 'Boost 0' })).toHaveLength(2);
   });
 
   it('has no axe violations', async () => {

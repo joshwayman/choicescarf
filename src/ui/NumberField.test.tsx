@@ -60,3 +60,11 @@ describe('NumberField', () => {
     expect(input).toHaveValue('248');
   });
 });
+
+describe('NumberField description (#119)', () => {
+  it('shows the hint under the label, read as the description', () => {
+    render(<NumberField variant="stepper" label="Speed boost" description="−6 to +6" defaultValue={0} />);
+    expect(screen.getByRole('textbox', { name: 'Speed boost' })).toHaveAccessibleDescription('−6 to +6');
+    expect(screen.getByText('−6 to +6')).toBeVisible();
+  });
+});

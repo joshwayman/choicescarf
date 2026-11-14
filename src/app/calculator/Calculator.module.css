@@ -99,10 +99,21 @@
   flex: 0 0 96px;
 }
 
-.numbers {
+.numbers,
+.numbersDesktop {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: var(--space-8);
+}
+
+/*
+ * Desktop adds Base Speed, so five across: Base Speed, EVs, IVs, Level, Boost
+ * (#119). The fields line up along the bottom, so a label that wraps ("Base
+ * Speed" in a narrow card) doesn't push its box out of line.
+ */
+.numbersDesktop {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  align-items: end;
 }
 
 .fieldLabel {
@@ -286,12 +297,6 @@
 .cardSpeedLabel {
   font-size: var(--type-caption-size);
   color: var(--color-text-3);
-}
-
-.stageRow {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-8);
 }
 
 /* The Modifiers sheet: Target / You / Field tabs, two columns on wider screens (#102). */
