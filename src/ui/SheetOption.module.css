@@ -48,6 +48,8 @@
 }
 
 .value {
+  min-width: 3.5em;
+  text-align: right;
   font-family: var(--font-mono);
   font-size: var(--type-caption-size);
   color: var(--color-text-3);

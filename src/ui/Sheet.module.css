@@ -80,6 +80,10 @@
     width: min(100%, 440px);
   }
 
+  .modal.wide {
+    width: min(100%, 820px);
+  }
+
   .dialog {
     padding: var(--space-20) var(--space-24) var(--space-24);
     border-radius: var(--radius-card);

@@ -194,21 +194,40 @@
   color: var(--color-text-2);
 }
 
-/* Desktop: Target, You and the results side by side (V5DeskCalc boards). */
+/*
+ * Desktop: Target, You and the results side by side (V5DeskCalc boards).
+ * A grid, so the two Pokémon cards in a row stretch to the same height: adding
+ * modifiers to one side doesn't leave the other short (#102).
+ */
 
 .desktop {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
   gap: var(--space-24);
 }
 
 .card,
 .resultsColumn {
-  flex: 1 1 320px;
   min-width: 0;
   display: flex;
   flex-direction: column;
+}
+
+/* Under 1100 px the results take the full width below the two cards. */
+.resultsColumn {
+  grid-column: 1 / -1;
+  align-self: start;
+}
+
+@media (min-width: 1100px) {
+  .desktop {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .resultsColumn {
+    grid-column: auto;
+  }
 }
 
 .card {
@@ -262,4 +281,84 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-8);
+}
+
+/* The Modifiers sheet: Target / You / Field tabs, two columns on wider screens (#102). */
+
+.sheetTabs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+.sheetTabList {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4px;
+  padding: 4px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-hairline);
+  background: var(--color-ground);
+}
+
+.sheetTab {
+  min-width: 0;
+  min-height: var(--size-control-min);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--space-12);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-text-2);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sheetTab[data-selected] {
+  background: var(--color-tint);
+  color: var(--color-accent-text);
+  box-shadow: inset 0 0 0 1px var(--color-accent);
+}
+
+.sheetTab[data-hovered]:not([data-selected]) {
+  background: var(--color-raised);
+}
+
+.sheetTab[data-focus-visible] {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.sheetPanel {
+  outline: none;
+}
+
+.sheetColumns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+}
+
+.sheetColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+
+@media (min-width: 720px) {
+  .sheetColumns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--space-24);
+  }
+
+  .sheetNote {
+    grid-column: 1 / -1;
+  }
 }
