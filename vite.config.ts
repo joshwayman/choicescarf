@@ -2,6 +2,17 @@ import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
+import { sentryVitePlugin } from '@sentry/vite-plugin';
+
+// Analytics and error reporting (#86). Which deployment this is and which
+// commit it is, from Vercel, for Sentry's environment and release.
+process.env.VITE_DEPLOY_ENV ??= process.env.VERCEL_ENV ?? 'development';
+process.env.VITE_RELEASE ??= process.env.VERCEL_GIT_COMMIT_SHA ?? '';
+
+// Source maps go to Sentry only, and only when it is set up. They are
+// built hidden (no link from the code) and deleted after the upload, so
+// they are never served.
+const uploadSourceMaps = Boolean(process.env.SENTRY_AUTH_TOKEN && process.env.SENTRY_ORG && process.env.SENTRY_PROJECT);
 
 export default defineConfig({
   plugins: [
@@ -59,11 +70,22 @@ export default defineConfig({
         ],
       },
     }),
+    ...(uploadSourceMaps
+      ? sentryVitePlugin({
+          org: process.env.SENTRY_ORG ?? '',
+          project: process.env.SENTRY_PROJECT ?? '',
+          authToken: process.env.SENTRY_AUTH_TOKEN ?? '',
+          ...(process.env.VITE_RELEASE ? { release: { name: process.env.VITE_RELEASE } } : {}),
+          sourcemaps: { filesToDeleteAfterUpload: ['dist/**/*.map'] },
+          telemetry: false,
+        })
+      : []),
   ],
   server: {
     port: 3000,
   },
   build: {
+    sourcemap: uploadSourceMaps ? 'hidden' : false,
     rolldownOptions: {
       input: {
         main: fileURLToPath(new URL('index.html', import.meta.url)),
