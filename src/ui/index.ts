@@ -7,6 +7,8 @@ export { CopyLinkButton } from './CopyLinkButton.tsx';
 export type { CopyLinkButtonProps } from './CopyLinkButton.tsx';
 export { HeaderBadge, HeaderPill } from './HeaderPill.tsx';
 export type { HeaderBadgeProps, HeaderPillProps } from './HeaderPill.tsx';
+export { BoostPicker, BoostSteps, boostMultiplier, signed } from './BoostPicker.tsx';
+export type { BoostProps } from './BoostPicker.tsx';
 export { NumberField } from './NumberField.tsx';
 export type { NumberFieldProps } from './NumberField.tsx';
 export { ItemIcon, ItemSprite, PokemonBattleSprite, PokemonIcon, PokemonSprite } from './PokemonIcon.tsx';

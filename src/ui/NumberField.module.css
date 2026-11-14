@@ -127,15 +127,6 @@
   color: var(--color-text-2);
 }
 
-.hiddenDescription {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-}
-
 /* A stepper's hint sits beside it, where there is room, rather than wrapping under it (#119). */
 .field[data-variant='stepper']:has(.description) {
   display: grid;

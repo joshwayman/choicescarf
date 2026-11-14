@@ -1,0 +1,207 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.label {
+  font-size: var(--type-caption-size);
+  font-weight: 500;
+  color: var(--color-text-3);
+}
+
+/* A picker, not a number box (#119): value and a chevron, like "Change Pokémon". */
+.trigger {
+  width: 100%;
+  height: var(--size-control-min);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  padding: 0 8px 0 10px;
+  border-radius: 10px;
+  border: 1px solid var(--color-control-line);
+  background: var(--color-raised);
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  font-size: var(--type-body-size);
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.chevron {
+  display: flex;
+  flex-shrink: 0;
+  color: var(--color-text-3);
+}
+
+.trigger[data-focus-visible],
+.trigger[data-pressed] {
+  border-color: var(--color-primary-edge);
+  box-shadow: inset 0 0 0 1px var(--color-primary-edge);
+  outline: none;
+}
+
+.popover {
+  outline: none;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.dialog {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  padding: var(--space-12);
+  border-radius: var(--radius-list);
+  border: 1px solid var(--color-hairline);
+  background: var(--color-surface);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+  outline: none;
+}
+
+/* Desktop: label and readout on one line, the steps and Reset under them. */
+.inline {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.inline .steps {
+  grid-template-columns: repeat(4, 52px) auto;
+  gap: 6px;
+}
+
+.inline .step {
+  height: var(--size-control-min);
+  font-size: var(--type-body-size);
+}
+
+.resetInline {
+  min-height: var(--size-control-min);
+  padding: 0 var(--space-8);
+  border: none;
+  background: transparent;
+  color: var(--color-text-2);
+  font: inherit;
+  font-size: var(--type-label-size);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  justify-self: start;
+}
+
+.resetInline[data-disabled] {
+  cursor: default;
+  opacity: 0.4;
+  text-decoration: none;
+}
+
+.top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-12);
+}
+
+.heading {
+  margin: 0;
+  font-size: var(--type-caption-size);
+  font-weight: 600;
+  color: var(--color-text-2);
+}
+
+.readout {
+  margin: 0;
+}
+
+.readoutValue {
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.readoutEffect {
+  font-family: var(--font-mono);
+  font-size: var(--type-caption-size);
+  color: var(--color-text-2);
+}
+
+/* Four big steps, tapped as often as needed. */
+.steps {
+  display: grid;
+  grid-template-columns: repeat(4, 64px);
+  gap: var(--space-8);
+}
+
+.step {
+  height: 52px;
+  border-radius: 12px;
+  border: 1px solid var(--color-control-line);
+  background: var(--color-raised);
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  font-size: 1.125rem;
+  font-weight: 700;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.step[data-pressed] {
+  translate: 0 1px;
+  border-color: var(--color-accent);
+}
+
+.step[data-disabled] {
+  cursor: default;
+  opacity: 0.4;
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-8);
+}
+
+.reset,
+.done {
+  flex: 1 1 0;
+  min-height: var(--size-control-min);
+  border-radius: 12px;
+  font: inherit;
+  font-size: var(--type-label-size);
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.reset {
+  border: 1px solid var(--color-control-line);
+  background: transparent;
+  color: var(--color-text);
+}
+
+.reset[data-disabled] {
+  cursor: default;
+  opacity: 0.4;
+}
+
+.done {
+  border: 1px solid var(--color-accent);
+  background: var(--color-tint);
+  color: var(--color-accent-text);
+}
+
+:is(.step, .reset, .done, .resetInline)[data-focus-visible] {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}

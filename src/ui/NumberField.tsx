@@ -15,11 +15,6 @@ export interface NumberFieldProps extends Omit<AriaNumberFieldProps, 'className'
   /** A hint under the label, such as "0 to 252, in steps of 4". */
   description?: string;
   /**
-   * Keep the hint for screen readers only (read as the field's description),
-   * where there is no room to show it, such as the phone's four-up grid.
-   */
-  hideDescription?: boolean;
-  /**
    * field: a plain number input with its label above (IVs, Level).
    * stepper: the input between − and + buttons, label above (Stage).
    * row: label and hint on the left, stepper on the right, as in a sheet.
@@ -32,9 +27,9 @@ export interface NumberFieldProps extends Omit<AriaNumberFieldProps, 'className'
  * bigger steps). The stepper buttons are named "Lower <label>" and
  * "Raise <label>" and stay out of the tab order, as the arrow keys do the same.
  */
-export function NumberField({ label, description, hideDescription = false, variant = 'field', ...props }: NumberFieldProps) {
+export function NumberField({ label, description, variant = 'field', ...props }: NumberFieldProps) {
   const hint = description ? (
-    <Text slot="description" className={classes(hideDescription ? styles.hiddenDescription : styles.description)}>
+    <Text slot="description" className={classes(styles.description)}>
       {description}
     </Text>
   ) : null;

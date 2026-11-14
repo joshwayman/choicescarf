@@ -67,11 +67,4 @@ describe('NumberField description (#119)', () => {
     expect(screen.getByRole('textbox', { name: 'Speed boost' })).toHaveAccessibleDescription('−6 to +6');
     expect(screen.getByText('−6 to +6')).toBeVisible();
   });
-
-  it('can keep the hint for screen readers only', () => {
-    render(<NumberField label="Boost" description="−6 to +6" hideDescription defaultValue={1} formatOptions={{ signDisplay: 'exceptZero' }} />);
-    const input = screen.getByRole('textbox', { name: 'Boost' });
-    expect(input).toHaveAccessibleDescription('−6 to +6');
-    expect(input).toHaveValue('+1');
-  });
 });

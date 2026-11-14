@@ -1,6 +1,6 @@
 import { useId } from 'react';
 import { getRuleset, type Nature } from '../../engine/index.ts';
-import { NumberField, SegmentedControl } from '../../ui/index.ts';
+import { BoostPicker, BoostSteps, NumberField, SegmentedControl } from '../../ui/index.ts';
 import { baseOf, NATURE_LABEL, speciesOf } from '../calculation/derive.ts';
 import type { Calculation } from '../calculation/state.ts';
 import { editSide, type Which } from './edit.ts';
@@ -20,13 +20,6 @@ const NATURE_OPTIONS = (['plus', 'neutral', 'minus'] as const).map((id) => ({ id
 function isNature(value: string): value is Nature {
   return value === 'plus' || value === 'neutral' || value === 'minus';
 }
-
-/**
- * The Speed boost, the game's stat stage (#119): moves raise or lower it, and
- * it is shown signed, +1 or −1, so its direction is plain.
- */
-const BOOST_HINT = 'From moves like Dragon Dance (+1) or Icy Wind (−1), −6 to +6.';
-const SIGNED: Intl.NumberFormatOptions = { signDisplay: 'exceptZero' };
 
 /**
  * One Pokémon's fields (#66): base Speed, then nature and EVs for the
@@ -119,16 +112,13 @@ export function SideForm({ calc, which, layout, onChange }: Props) {
           }}
         />
         {layout === 'phone' ? (
-          <NumberField
+          <BoostPicker
             label="Boost"
-            description={BOOST_HINT}
-            hideDescription
-            formatOptions={SIGNED}
-            minValue={ruleset.stage.min}
-            maxValue={ruleset.stage.max}
+            min={ruleset.stage.min}
+            max={ruleset.stage.max}
             value={side.stage}
             onChange={(value) => {
-              set({ stage: whole(value) ?? 0 });
+              set({ stage: value });
             }}
           />
         ) : null}
@@ -136,16 +126,14 @@ export function SideForm({ calc, which, layout, onChange }: Props) {
 
       {layout === 'desktop' ? (
         <div className={styles.stageRow}>
-          <NumberField
-            variant="stepper"
+          <BoostSteps
+            inline
             label="Speed boost"
-            description={BOOST_HINT}
-            formatOptions={SIGNED}
-            minValue={ruleset.stage.min}
-            maxValue={ruleset.stage.max}
+            min={ruleset.stage.min}
+            max={ruleset.stage.max}
             value={side.stage}
             onChange={(value) => {
-              set({ stage: whole(value) ?? 0 });
+              set({ stage: value });
             }}
           />
         </div>
