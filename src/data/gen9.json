@@ -1,5 +1,6 @@
 {
   "ruleset": "gen9",
+  "items": {"choicescarf":69,"ironball":224,"machobrace":269,"poweranklet":354,"powerband":355,"powerbelt":356,"powerbracer":357,"powerlens":359,"powerweight":360,"quickpowder":374},
   "species": [
     {"name":"Bulbasaur","spe":45,"icon":1,"abilities":["chlorophyll"]},
     {"name":"Ivysaur","spe":60,"icon":2,"abilities":["chlorophyll"]},

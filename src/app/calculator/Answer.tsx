@@ -1,4 +1,5 @@
 import { ResultsCard } from '../../ui/index.ts';
+import { ItemSpriteFor } from './ItemSpriteFor.tsx';
 import { speciesOf, working, type Answer } from '../calculation/derive.ts';
 import type { Calculation } from '../calculation/state.ts';
 import styles from './Calculator.module.css';
@@ -48,7 +49,13 @@ export function AnswerCard({ calc, answer }: Props) {
       rows={answer.rows.map((row) =>
         row.ev === undefined
           ? { id: row.nature, label: row.label, answer: none, stat: '—', muted: true }
-          : { id: row.nature, label: row.label, answer: `${String(row.ev)} EVs`, stat: row.speed },
+          : {
+              id: row.nature,
+              label: row.label,
+              answer: `${String(row.ev)} EVs`,
+              stat: row.speed,
+              ...(answer.kind === 'scarf' ? { icon: <ItemSpriteFor id="choicescarf" /> } : {}),
+            },
       )}
       calc={[
         { label: target, working: working(answer.target) },

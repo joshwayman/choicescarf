@@ -7,6 +7,7 @@ import { modifiersIn, multiplierText } from '../calculation/derive.ts';
 import type { Calculation } from '../calculation/state.ts';
 import { editSide, WEATHER_NAME, type SideChange, type Which } from './edit.ts';
 import type { SheetSectionId } from './sheetContext.ts';
+import { ItemSpriteFor } from './ItemSpriteFor.tsx';
 import styles from './Calculator.module.css';
 
 /** The six Power items: ×0.5 each and rarely picked, so the sheet shows them as one row (#102). */
@@ -109,6 +110,7 @@ function SidePanel({ calc, which, onChange }: { calc: Calculation; which: Which;
             <SheetOption
               key={modifier.id}
               label={modifier.name}
+              icon={<ItemSpriteFor id={modifier.id} />}
               {...(modifier.only === 'ditto' ? { description: 'Ditto only' } : {})}
               value={multiplierText(modifier)}
               isSelected={side.item === modifier.id}
@@ -120,6 +122,7 @@ function SidePanel({ calc, which, onChange }: { calc: Calculation; which: Which;
           {powerItem ? (
             <SheetOption
               label="Power item"
+              icon={<ItemSpriteFor id={isPowerItem(side.item) && side.item !== undefined ? side.item : POWER_ITEM_PICK} />}
               description="Power Anklet, Band, Belt, Bracer, Lens or Weight"
               value={multiplierText(powerItem)}
               isSelected={isPowerItem(side.item)}

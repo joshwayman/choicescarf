@@ -1,7 +1,8 @@
 /**
  * Builds src/data/gen9.json from @pkmn/dex and @pkmn/data (#80):
  * one compact entry per species and form, with base Speed, the Speed
- * abilities it can have and its place on the icon sheet. The full dex never ships to the browser.
+ * abilities it can have and its place on the icon sheet, plus each Speed
+ * item's place on the item icon sheet. The full dex never ships to the browser.
  *
  *   npm run data
  *
@@ -83,7 +84,12 @@ export function buildGen9(): SpeciesFile {
       a.entry.name.localeCompare(b.entry.name, 'en'),
   );
 
-  return { ruleset: 'gen9', species: entries.map(({ entry }) => entry) };
+  const items: Record<string, number> = {};
+  for (const modifier of gen9.modifiers) {
+    if (modifier.slot === 'item') items[modifier.id] = itemIconIndex(modifier.name);
+  }
+
+  return { ruleset: 'gen9', items, species: entries.map(({ entry }) => entry) };
 }
 
 /** Each icon on Showdown's sheet is 40 by 30 pixels, 12 to a row. */
@@ -101,10 +107,20 @@ export function iconIndex(name: string): number {
   return (-top / ICON_HEIGHT) * ICONS_PER_ROW + -left / ICON_WIDTH;
 }
 
+/** Each icon on Showdown's item sheet is 24 by 24 pixels, 16 to a row. */
+export const ITEM_ICON_SIZE = 24;
+export const ITEM_ICONS_PER_ROW = 16;
+
+/** Where an item's icon is on the item sheet in src/ui/sprites, as @pkmn/img places it (#108). */
+export function itemIconIndex(name: string): number {
+  const { left, top } = Icons.getItem(name);
+  return (-top / ITEM_ICON_SIZE) * ITEM_ICONS_PER_ROW + -left / ITEM_ICON_SIZE;
+}
+
 /** One species per line, so a data change is a readable diff. */
 export function serialize(file: SpeciesFile): string {
   const lines = file.species.map((entry) => `    ${JSON.stringify(entry)}`);
-  return `{\n  "ruleset": ${JSON.stringify(file.ruleset)},\n  "species": [\n${lines.join(',\n')}\n  ]\n}\n`;
+  return `{\n  "ruleset": ${JSON.stringify(file.ruleset)},\n  "items": ${JSON.stringify(file.items)},\n  "species": [\n${lines.join(',\n')}\n  ]\n}\n`;
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {

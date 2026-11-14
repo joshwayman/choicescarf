@@ -409,3 +409,38 @@ describe('Species picker (#50)', () => {
     expect(found.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(' ')).join(', ')}`)).toEqual([]);
   });
 });
+
+describe('Item icons (#108)', () => {
+  it('shows the Choice Scarf icon on its chip and in the Scarf fallback (#108)', async () => {
+    open('/?v=1&t=dragapult&y=garchomp');
+    const region = await results();
+    // Choice Scarf is row 4, column 5 of the item sheet: 4 × 16 + 5 = 69.
+    const answers = within(region)
+      .getAllByRole('cell')
+      .filter((cell) => cell.textContent.endsWith('EVs'));
+    expect(answers).toHaveLength(2);
+    for (const cell of answers) {
+      expect(cell.querySelector('[data-item-icon="69"]')).toHaveAttribute('aria-hidden', 'true');
+    }
+    expect(rows(region)[0]).toEqual(['68 EVs', '423']);
+    expect(screen.getByRole('button', { name: 'Choice Scarf' }).querySelector('[data-item-icon="69"]')).not.toBeNull();
+  });
+
+  it('shows no Scarf icon in the results when no Scarf is needed', async () => {
+    open('/?v=1&t=garchomp&y=dragapult');
+    expect((await results()).querySelector('[data-item-icon]')).toBeNull();
+  });
+
+  it('shows item icons on other item chips and in the Modifiers sheet (#108)', async () => {
+    const user = userEvent.setup();
+    open('/?v=1&t=garchomp&y=dragapult&t.item=ironball');
+    await results();
+    const ironBall = screen.getByRole('button', { name: /^Iron Ball/ });
+    expect(ironBall.querySelector('[data-item-icon="224"]')).not.toBeNull();
+
+    await user.click(ironBall);
+    const items = within(await screen.findByRole('dialog', { name: 'Modifiers' })).getByRole('group', { name: 'Item' });
+    expect(within(items).getByRole('button', { name: 'Choice Scarf ×1.5' }).querySelector('[data-item-icon="69"]')).not.toBeNull();
+    expect(within(items).getByRole('button', { name: /^Power item/ }).querySelector('[data-item-icon="354"]')).not.toBeNull();
+  });
+});

@@ -22,3 +22,14 @@
   background-repeat: no-repeat;
   image-rendering: pixelated;
 }
+
+/* One 24 × 24 cell of Showdown's item sheet. */
+.itemSprite {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  background-image: url('./sprites/itemicons-sheet.png');
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+}

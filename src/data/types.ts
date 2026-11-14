@@ -20,5 +20,7 @@ export interface SpeciesEntry extends StoredSpecies {
 
 export interface SpeciesFile {
   ruleset: 'gen9';
+  /** Each Speed item's place on the item icon sheet, by engine modifier id (see ItemSprite). */
+  items: Record<string, number>;
   species: StoredSpecies[];
 }

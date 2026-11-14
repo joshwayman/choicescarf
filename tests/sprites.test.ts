@@ -1,8 +1,9 @@
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { ICON_HEIGHT, ICON_WIDTH, ICONS_PER_ROW, iconIndex } from '../scripts/build-data.ts';
-import { GEN9_SPECIES, findSpecies } from '../src/data/index.ts';
+import { ICON_HEIGHT, ICON_WIDTH, ICONS_PER_ROW, ITEM_ICON_SIZE, ITEM_ICONS_PER_ROW, iconIndex } from '../scripts/build-data.ts';
+import { getRuleset } from '../src/engine/index.ts';
+import { GEN9_SPECIES, findSpecies, itemIcon } from '../src/data/index.ts';
 
 /**
  * The Pokémon icon sheet is a copy of Pokémon Showdown's, served by the site
@@ -58,5 +59,43 @@ describe('Pokémon icon sheet', () => {
   it('gives forms that look different their own icon', () => {
     expect(findSpecies('ogerponwellspring')?.icon).not.toBe(findSpecies('ogerpon')?.icon);
     expect(findSpecies('charizardmegax')?.icon).not.toBe(findSpecies('charizard')?.icon);
+  });
+});
+
+/** The item sheet, pinned to @pkmn/img the same way (#108). */
+const ITEM_SHEET = new URL('../src/ui/sprites/itemicons-sheet.png', import.meta.url);
+const ITEM_SHEET_SHA256 = '4348432f4664b55d22cd00af6b933f4a91f71e825dad88839f62a123b0f1dbc7';
+
+describe('Item icon sheet', () => {
+  const bytes = readFileSync(ITEM_SHEET);
+
+  it('is the copy that matches the installed @pkmn/img', () => {
+    expect(createHash('sha256').update(bytes).digest('hex')).toBe(ITEM_SHEET_SHA256);
+  });
+
+  it('is a grid of 24 × 24 icons, 16 to a row', () => {
+    const { width, height } = pngSize(bytes);
+    expect(width).toBe(ITEM_ICON_SIZE * ITEM_ICONS_PER_ROW);
+    expect(height % ITEM_ICON_SIZE).toBe(0);
+  });
+
+  it('has a place for every Speed item in Generation 9', () => {
+    const cells = (pngSize(bytes).height / ITEM_ICON_SIZE) * ITEM_ICONS_PER_ROW;
+    const items = getRuleset('gen9').modifiers.filter((m) => m.slot === 'item');
+    expect(items.length).toBeGreaterThan(0);
+    for (const item of items) {
+      const icon = itemIcon(item.id);
+      expect(icon !== undefined && Number.isInteger(icon) && icon > 0 && icon < cells, item.name).toBe(true);
+    }
+  });
+
+  it.each([
+    // Read off the sheet: row 4, column 5; row 14, column 0; the Power items side by side on row 22.
+    ['choicescarf', 69],
+    ['ironball', 224],
+    ['poweranklet', 354],
+    ['powerweight', 360],
+  ])('puts %s at %i', (id, icon) => {
+    expect(itemIcon(id)).toBe(icon);
   });
 });
