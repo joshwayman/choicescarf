@@ -1,4 +1,5 @@
 import { useId, type ReactNode } from 'react';
+import { getRuleset } from '../../engine/index.ts';
 import { Chip, ChipGroup, ChipToggle } from '../../ui/index.ts';
 import { ItemSpriteFor } from './ItemSpriteFor.tsx';
 import { modifiersIn, multiplierText } from '../calculation/derive.ts';
@@ -21,6 +22,8 @@ interface Props {
  */
 export function ModifierChips({ calc, which, onChange }: Props) {
   const side: Side = calc[which];
+  const trickRoom = calc.field.trickRoom;
+  const ruleset = getRuleset(calc.ruleset);
   const labelId = useId();
   const openModifiers = useOpenModifiers();
   const states = modifierStates(calc, side);
@@ -32,7 +35,9 @@ export function ModifierChips({ calc, which, onChange }: Props) {
     openModifiers(which);
   };
 
-  const item = side.item && side.item !== 'choicescarf' ? state(side.item) : undefined;
+  // Choice Scarf is a toggle; so is Iron Ball while Trick Room suggests it.
+  const toggled = side.item === 'choicescarf' || (trickRoom && side.item === 'ironball');
+  const item = side.item && !toggled ? state(side.item) : undefined;
   const ability = state(side.ability);
   const abilityModifier = modifiersIn(calc, 'ability').find((m) => m.id === side.ability);
   // Linked to the field when the weather or terrain is what switches it on.
@@ -45,14 +50,36 @@ export function ModifierChips({ calc, which, onChange }: Props) {
         Modifiers
       </span>
       <ChipGroup>
-        <ChipToggle
-          label="Choice Scarf"
-          icon={<ItemSpriteFor id="choicescarf" />}
-          isSelected={side.item === 'choicescarf'}
-          onChange={(on) => {
-            set({ item: on ? 'choicescarf' : undefined });
-          }}
-        />
+        {trickRoom ? (
+          // Under Trick Room slower is better, so these are the useful ones (#52).
+          <>
+            <ChipToggle
+              label="Iron Ball"
+              icon={<ItemSpriteFor id="ironball" />}
+              isSelected={side.item === 'ironball'}
+              onChange={(on) => {
+                set({ item: on ? 'ironball' : undefined });
+              }}
+            />
+            <ChipToggle
+              label="0 IVs"
+              isSelected={side.iv === 0}
+              onChange={(on) => {
+                set({ iv: on ? 0 : ruleset.iv.default });
+              }}
+            />
+          </>
+        ) : null}
+        {!trickRoom || side.item === 'choicescarf' ? (
+          <ChipToggle
+            label="Choice Scarf"
+            icon={<ItemSpriteFor id="choicescarf" />}
+            isSelected={side.item === 'choicescarf'}
+            onChange={(on) => {
+              set({ item: on ? 'choicescarf' : undefined });
+            }}
+          />
+        ) : null}
         <ChipToggle
           label="Tailwind"
           isSelected={side.tailwind}

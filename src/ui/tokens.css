@@ -97,6 +97,7 @@
   --color-display-text: #f4f7fb;
   --color-display-text-2: #b9c6dc;
   --color-shimmer: rgba(200, 231, 241, 0.3);
+  --color-room-grid: rgba(170, 120, 255, 0.16);
   --color-scrim: rgba(6, 7, 14, 0.62);
 }
 
@@ -122,6 +123,7 @@
   --color-display-text: #f4f7fb;
   --color-display-text-2: #b9c6dc;
   --color-shimmer: rgba(255, 255, 255, 0.85);
+  --color-room-grid: rgba(120, 70, 220, 0.14);
   --color-scrim: rgba(21, 22, 35, 0.42);
 }
 
@@ -148,6 +150,7 @@
     --color-display-text: #f4f7fb;
     --color-display-text-2: #b9c6dc;
     --color-shimmer: rgba(255, 255, 255, 0.85);
+    --color-room-grid: rgba(120, 70, 220, 0.14);
     --color-scrim: rgba(21, 22, 35, 0.42);
   --color-scrim: rgba(21, 22, 35, 0.42);
   }

@@ -427,6 +427,126 @@ describe('Species picker (#50)', () => {
   });
 });
 
+/**
+ * Trick Room (#52). Expected values are worked out from the in-game formula,
+ * not read off the code. Kingambit (base 50) under Trick Room defaults to the
+ * slowest spread: −Spe, 0 EVs, 0 IVs: floor((2×50)×100/100)+5 = 105, ×0.9 = 94.
+ * Garganacl (base 35, 0 IVs) needs to be slower than 94, and a tie is a loss:
+ *   neutral: 70 + EVs/4 + 5 → 72 EVs is 93, 76 EVs is 94 (a tie), so up to 72
+ *   +Spe: floor(×1.1) → 40 EVs is 85 → 93, 44 EVs is 86 → 94, so up to 40
+ *   −Spe: floor(×0.9) → 116 EVs is 104 → 93, 120 EVs is 105 → 94, so up to 116
+ * Dragapult (base 142) at its slowest, −Spe 0 EVs 0 IVs: 289 → 260; with an
+ * Iron Ball ×0.5 → 130. Both are above 94.
+ */
+describe('Trick Room', () => {
+  async function addTrickRoom(user: ReturnType<typeof userEvent.setup>) {
+    await user.click(await screen.findByRole('button', { name: 'Add Field' }));
+    const sheet = await screen.findByRole('dialog', { name: 'Modifiers' });
+    const room = within(sheet).getByRole('group', { name: 'Room' });
+    await user.click(within(room).getByRole('button', { name: /^Trick Room/ }));
+    await user.click(within(sheet).getByRole('button', { name: 'Done' }));
+  }
+
+  it('is added from the Field tab and flips the answer: Garganacl underspeeds Kingambit with up to 72 EVs', async () => {
+    const user = userEvent.setup();
+    const { router } = open('/?v=1&t=kingambit&y=garganacl');
+    expect(within(await results()).getByRole('heading')).toHaveTextContent('Garganacl needs a Choice Scarf to outspeed 218');
+
+    await addTrickRoom(user);
+    const region = await results();
+    expect(within(region).getByRole('heading', { name: 'Garganacl underspeeds 94 with up to' })).toBeInTheDocument();
+    expect(rows(region)).toEqual([
+      ['40 EVs', '93'],
+      ['72 EVs', '93'],
+      ['116 EVs', '93'],
+    ]);
+    expect(within(region).getByText('slower moves first')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Remove Trick Room' })).toBeInTheDocument();
+    expect(router.state.location.searchStr).toContain('tr=1');
+    // The background grid.
+    expect(document.documentElement).toHaveAttribute('data-trick-room', 'true');
+  });
+
+  it('turns back into an outspeed answer, without the grid, when removed', async () => {
+    const user = userEvent.setup();
+    open('/?v=1&t=kingambit&y=garganacl&tr=1');
+    await results();
+    expect(document.documentElement).toHaveAttribute('data-trick-room', 'true');
+    await user.click(screen.getByRole('button', { name: 'Remove Trick Room' }));
+    expect(within(await results()).getByRole('heading')).toHaveTextContent('Garganacl');
+    expect(within(await results()).queryByText('slower moves first')).not.toBeInTheDocument();
+    expect(document.documentElement).not.toHaveAttribute('data-trick-room');
+  });
+
+  it('says "can’t underspeed" with its slowest speed when even that is too fast', async () => {
+    open('/?v=1&t=kingambit&y=dragapult&tr=1');
+    const region = await results();
+    expect(within(region).getByRole('heading', { name: 'Dragapult can’t underspeed 94' })).toBeInTheDocument();
+    expect(rows(region)).toEqual([
+      ['Too fast', '—'],
+      ['Too fast', '—'],
+      ['Too fast', '—'],
+    ]);
+    const note = screen.getByText(/Even its slowest spread/);
+    expect(note).toHaveTextContent('Even its slowest spread (260) moves after Kingambit in Trick Room.');
+    expect(note).toHaveTextContent('An Iron Ball brings it to 130, still too fast.');
+  });
+
+  it('says when an Iron Ball would be enough', async () => {
+    // Garchomp (base 102) at its slowest, −Spe 0 EVs 0 IVs: 209 → 188; ×0.5 = 94, a tie, so still too fast.
+    // Against a base 60 target (125 → 112 slowest): Iron Ball 94 < 112 gets it under.
+    open('/?v=1&t.base=60&y=garchomp&tr=1');
+    const note = await screen.findByText(/Even its slowest spread/);
+    expect(note).toHaveTextContent('An Iron Ball brings it to 94, which is slow enough.');
+  });
+
+  it('counts a tie as a loss', async () => {
+    // Garchomp with an Iron Ball against a 94: slowest is 94, a tie, so it can't underspeed.
+    open('/?v=1&t=kingambit&y=garchomp&y.item=ironball&tr=1');
+    const region = await results();
+    expect(within(region).getByRole('heading')).toHaveTextContent('Garchomp can’t underspeed 94');
+  });
+
+  it('suggests 0 IVs and an Iron Ball while it is on, and hides the Choice Scarf', async () => {
+    const user = userEvent.setup();
+    const { router } = open('/?v=1&t=kingambit&y=garganacl');
+    await results();
+    expect(screen.getByRole('button', { name: 'Choice Scarf' })).toBeInTheDocument();
+    await addTrickRoom(user);
+
+    await user.click(screen.getByRole('tab', { name: /^You/ }));
+    expect(screen.queryByRole('button', { name: 'Choice Scarf' })).not.toBeInTheDocument();
+    // Your IVs default to 0 in Trick Room, so that chip starts on.
+    expect(screen.getByRole('button', { name: '0 IVs' })).toHaveAttribute('aria-pressed', 'true');
+    const ball = screen.getByRole('button', { name: 'Iron Ball' });
+    expect(ball).toHaveAttribute('aria-pressed', 'false');
+
+    await user.click(ball);
+    expect(router.state.location.searchStr).toContain('y.item=ironball');
+    // 70 + 63 + 5 = 138 × 0.5 = 69 for 252 EVs: well under 94, so every nature reaches 252 EVs.
+    const region = await results();
+    expect(rows(region).map((row) => row[0])).toEqual(['252 EVs', '252 EVs', '252 EVs']);
+
+    await user.click(screen.getByRole('button', { name: '0 IVs' }));
+    expect(screen.getByRole('button', { name: '0 IVs' })).toHaveAttribute('aria-pressed', 'false');
+  });
+
+  it('has the same flow on desktop', async () => {
+    stubWidth(true);
+    open('/?v=1&t=kingambit&y=dragapult&tr=1');
+    const region = await results();
+    expect(within(region).getByRole('heading')).toHaveTextContent('Dragapult can’t underspeed 94');
+    expect(screen.getAllByRole('button', { name: 'Iron Ball' })).toHaveLength(2);
+  });
+
+  it('has no axe violations under Trick Room', async () => {
+    open('/?v=1&t=kingambit&y=dragapult&tr=1');
+    await results();
+    const found = await axe.run(document, { rules: { 'color-contrast': { enabled: false } } });
+    expect(found.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(' ')).join(', ')}`)).toEqual([]);
+  });
+});
+
 describe('Item icons (#108)', () => {
   it('shows the Choice Scarf icon on its chip and in the Scarf fallback (#108)', async () => {
     open('/?v=1&t=dragapult&y=garchomp');

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button, CopyLinkButton, DESKTOP, PokemonBattleSprite, PokemonSprite, SideSwitcher, SwapIcon, useMediaQuery } from '../../ui/index.ts';
 import { nameOf, sideSpeed, solve, speciesOf } from '../calculation/derive.ts';
 import type { Calculation } from '../calculation/state.ts';
@@ -22,6 +22,16 @@ export function Calculator() {
   const shareUrl = useShareUrl();
   const desktop = useMediaQuery(DESKTOP);
   const answer = solve(calc);
+
+  // The Trick Room grid sits behind the whole page, header included (#52).
+  const trickRoom = calc.field.trickRoom;
+  useEffect(() => {
+    if (!trickRoom) return undefined;
+    document.documentElement.dataset.trickRoom = 'true';
+    return () => {
+      delete document.documentElement.dataset.trickRoom;
+    };
+  }, [trickRoom]);
 
   // One Modifiers sheet for both Pokémon and the field, opened on the right tab (#102).
   const [sheetOpen, setSheetOpen] = useState(false);
