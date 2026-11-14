@@ -5,7 +5,7 @@ import {
   type ButtonProps as AriaButtonProps,
   type ToggleButtonProps as AriaToggleButtonProps,
 } from 'react-aria-components';
-import { ChevronDownIcon, CloseIcon } from './icons.tsx';
+import { CheckIcon, ChevronDownIcon, CloseIcon } from './icons.tsx';
 import { classes } from './classes.ts';
 import styles from './Chip.module.css';
 
@@ -87,12 +87,31 @@ export interface ChipToggleProps extends Omit<AriaToggleButtonProps, 'className'
   icon?: ReactNode;
 }
 
-/** A modifier that is simply on or off, such as Tailwind. Announced as a pressed button. */
+/**
+ * A modifier that is simply on or off, such as Tailwind. Announced as a
+ * pressed button named by its label. Off, it looks like an add chip
+ * ("+ Tailwind", dashed); on, it is tinted with a check mark (#118).
+ */
 export function ChipToggle({ label, icon, ...props }: ChipToggleProps) {
   return (
-    <AriaToggleButton {...props} className={classes(styles.chip, styles.toggle)} data-has-icon={icon ? true : undefined}>
-      {icon ? <span className={classes(styles.icon)}>{icon}</span> : null}
-      <span>{label}</span>
+    <AriaToggleButton
+      {...props}
+      aria-label={label}
+      className={classes(styles.chip, styles.toggle)}
+      data-has-icon={icon ? true : undefined}
+    >
+      {({ isSelected }) => (
+        <>
+          {icon ? <span className={classes(styles.icon)}>{icon}</span> : null}
+          {isSelected ? null : <span aria-hidden="true">+</span>}
+          <span>{label}</span>
+          {isSelected ? (
+            <span aria-hidden="true" className={classes(styles.trailing)}>
+              <CheckIcon size={14} />
+            </span>
+          ) : null}
+        </>
+      )}
     </AriaToggleButton>
   );
 }

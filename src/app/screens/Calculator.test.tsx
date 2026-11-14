@@ -1,4 +1,4 @@
-import { act, render, screen, waitFor, within } from '@testing-library/react';
+import { act, cleanup, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from '@tanstack/react-router';
 import axe from 'axe-core';
@@ -581,3 +581,54 @@ describe('Item icons (#108)', () => {
     expect(within(items).getByRole('button', { name: /^Power item/ }).querySelector('[data-item-icon="354"]')).not.toBeNull();
   });
 });
+
+describe('one item slot (#118)', () => {
+  it('shows the Choice Scarf toggle until the Pokémon holds something else', async () => {
+    open('/?v=1&t=garchomp&y=dragapult');
+    await results();
+    expect(screen.getByRole('button', { name: 'Choice Scarf' })).toHaveAttribute('aria-pressed', 'false');
+
+    cleanupAndOpen('/?v=1&t=garchomp&t.item=ironball&y=dragapult');
+    await results();
+    expect(screen.queryByRole('button', { name: 'Choice Scarf' })).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /^Iron Ball/ })).toBeInTheDocument();
+  });
+
+  it('swaps the Scarf for an item picked in the Modifiers sheet, and back when it is removed', async () => {
+    const user = userEvent.setup();
+    const { router } = open('/?v=1&t=garchomp&t.item=choicescarf&y=dragapult');
+    await results();
+    expect(screen.getByRole('button', { name: 'Choice Scarf' })).toHaveAttribute('aria-pressed', 'true');
+
+    await user.click(screen.getByRole('button', { name: 'Add Modifier' }));
+    const items = within(await screen.findByRole('dialog', { name: 'Modifiers' })).getByRole('group', { name: 'Item' });
+    await user.click(within(items).getByRole('button', { name: /^Iron Ball/ }));
+    expect(router.state.location.searchStr).toContain('t.item=ironball');
+    await user.click(within(items).getByRole('button', { name: /^Iron Ball/ }));
+    await user.keyboard('{Escape}');
+
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
+    expect(screen.getByRole('button', { name: 'Choice Scarf' })).toHaveAttribute('aria-pressed', 'false');
+    expect(screen.queryByRole('button', { name: /^Iron Ball/ })).not.toBeInTheDocument();
+  });
+
+  it('under Trick Room, suggests Iron Ball in the slot, and a held Scarf takes its place', async () => {
+    open('/?v=1&t=kingambit&y=garganacl&tr=1');
+    await results();
+    expect(screen.getByRole('button', { name: 'Iron Ball' })).toHaveAttribute('aria-pressed', 'false');
+    expect(screen.queryByRole('button', { name: 'Choice Scarf' })).not.toBeInTheDocument();
+
+    cleanupAndOpen('/?v=1&t=kingambit&t.item=choicescarf&y=garganacl&tr=1');
+    await results();
+    expect(screen.getByRole('button', { name: 'Choice Scarf' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.queryByRole('button', { name: 'Iron Ball' })).not.toBeInTheDocument();
+  });
+});
+
+/** Starts again on another link in the same test. */
+function cleanupAndOpen(path: string) {
+  cleanup();
+  return open(path);
+}

@@ -52,10 +52,24 @@
   font-weight: 600;
 }
 
-.add {
+.add,
+.toggle:not([data-selected]) {
   border-style: dashed;
   background: transparent;
   color: var(--color-text-2);
+}
+
+/* A toggle reads "+ Choice Scarf" when off, "Choice Scarf ✓" when on (#118). */
+.toggle {
+  gap: 4px;
+}
+
+.toggle:not([data-selected]) .icon {
+  opacity: 0.55;
+}
+
+.toggle[data-selected] {
+  padding-right: var(--space-8);
 }
 
 .waiting {
@@ -79,7 +93,8 @@
 }
 
 .changed .trailing,
-.added .trailing {
+.added .trailing,
+.toggle .trailing {
   color: inherit;
 }
 
