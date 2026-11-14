@@ -16,3 +16,8 @@ const byId = new Map(GEN9_SPECIES.map((species) => [species.id, species]));
 export function findSpecies(id: string): SpeciesEntry | undefined {
   return byId.get(id);
 }
+
+/** An item's place on the item icon sheet, by engine modifier id: 'choicescarf'. */
+export function itemIcon(id: string | undefined): number | undefined {
+  return id === undefined ? undefined : file.items[id];
+}

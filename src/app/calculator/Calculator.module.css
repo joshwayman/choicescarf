@@ -68,6 +68,10 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+.pickerButton[data-has-icon] {
+  padding-left: var(--space-4);
+}
+
 .pickerButton[data-focus-visible] {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
@@ -239,9 +243,13 @@
 
 .cardHead {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: var(--space-16);
   min-width: 0;
+}
+
+.cardHead > button {
+  align-self: flex-start;
 }
 
 .cardTitles {

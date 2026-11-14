@@ -148,6 +148,12 @@
   color: var(--color-display-text-2);
 }
 
+.rowIcon {
+  display: inline-flex;
+  margin-right: var(--space-4);
+  vertical-align: middle;
+}
+
 .rowAnswer {
   text-align: right;
   font-family: var(--font-mono);

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Button, CopyLinkButton, DESKTOP, SideSwitcher, SwapIcon, useMediaQuery } from '../../ui/index.ts';
+import { Button, CopyLinkButton, DESKTOP, PokemonBattleSprite, PokemonSprite, SideSwitcher, SwapIcon, useMediaQuery } from '../../ui/index.ts';
 import { nameOf, sideSpeed, solve, speciesOf } from '../calculation/derive.ts';
 import type { Calculation } from '../calculation/state.ts';
 import { useCalculation, useShareUrl } from '../calculation/useCalculation.ts';
@@ -110,11 +110,13 @@ function PhoneLayout({
   const [editing, setEditing] = useState<Which>('target');
   const sides = (['target', 'you'] as const).map((which) => {
     const value = sideSpeed(calc, which, answer);
+    const species = speciesOf(calc[which]);
     return {
       id: which,
       role: which === 'target' ? 'Target' : 'You',
       name: nameOf(calc[which]) === 'Custom' ? nameText(calc, which) : (nameOf(calc[which]) ?? 'Not set'),
       ...(value === undefined ? {} : { speed: value }),
+      ...(species === undefined ? {} : { icon: <PokemonSprite icon={species.icon} /> }),
     };
   });
 
@@ -161,6 +163,7 @@ function SideCard({
   return (
     <section aria-labelledby={headingId} className={styles.card}>
       <div className={styles.cardHead}>
+        {species ? <PokemonBattleSprite id={species.id} /> : null}
         <div className={styles.cardTitles}>
           <span className={which === 'you' ? styles.eyebrowYou : styles.eyebrow}>{which === 'target' ? 'Target' : 'You'}</span>
           <h2 id={headingId} className={styles.cardName}>

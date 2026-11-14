@@ -1,6 +1,7 @@
-import { useId } from 'react';
+import { useId, type ReactNode } from 'react';
 import { getRuleset } from '../../engine/index.ts';
 import { Chip, ChipGroup, ChipToggle } from '../../ui/index.ts';
+import { ItemSpriteFor } from './ItemSpriteFor.tsx';
 import { modifiersIn, multiplierText } from '../calculation/derive.ts';
 import type { Calculation, Side } from '../calculation/state.ts';
 import { editSide, modifierStates, reasonText, type SideChange, type Which } from './edit.ts';
@@ -54,6 +55,7 @@ export function ModifierChips({ calc, which, onChange }: Props) {
           <>
             <ChipToggle
               label="Iron Ball"
+              icon={<ItemSpriteFor id="ironball" />}
               isSelected={side.item === 'ironball'}
               onChange={(on) => {
                 set({ item: on ? 'ironball' : undefined });
@@ -71,6 +73,7 @@ export function ModifierChips({ calc, which, onChange }: Props) {
         {!trickRoom || side.item === 'choicescarf' ? (
           <ChipToggle
             label="Choice Scarf"
+            icon={<ItemSpriteFor id="choicescarf" />}
             isSelected={side.item === 'choicescarf'}
             onChange={(on) => {
               set({ item: on ? 'choicescarf' : undefined });
@@ -87,6 +90,7 @@ export function ModifierChips({ calc, which, onChange }: Props) {
         {item ? (
           <StateChip
             label={isPowerItem(item.id) ? 'Power item' : item.name}
+            icon={<ItemSpriteFor id={item.id} />}
             active={item.active}
             detail={item.active ? undefined : reasonText(item.reason)}
             onPress={openSheet}
@@ -114,15 +118,17 @@ function StateChip({
   active,
   detail,
   linked = false,
+  icon,
   onPress,
 }: {
   label: string;
   active: boolean;
   detail?: string | undefined;
   linked?: boolean;
+  icon?: ReactNode;
   onPress: () => void;
 }) {
-  const extra = detail ? { detail, detailIsNumber: detail.startsWith('×') } : {};
+  const extra = { ...(detail ? { detail, detailIsNumber: detail.startsWith('×') } : {}), ...(icon ? { icon } : {}) };
   return active ? (
     <Chip variant="changed" label={label} {...extra} linked={linked} aria-haspopup="dialog" onPress={onPress} />
   ) : (

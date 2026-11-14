@@ -10,17 +10,22 @@ export interface SheetOptionProps extends Omit<ToggleButtonProps, 'className' | 
   description?: string;
   /** The effect, on the right: "×2", "Reverses". */
   value?: ReactNode;
+  /** A decorative image before the label, such as an item's icon. */
+  icon?: ReactNode;
 }
 
 /**
  * A row in a sheet that is on or off: a modifier, a weather. Announced as a
  * pressed button; a check shows when on. 48 px tall.
  */
-export function SheetOption({ label, description, value, ...props }: SheetOptionProps) {
+export function SheetOption({ label, description, value, icon, ...props }: SheetOptionProps) {
   return (
     <ToggleButton {...props} className={classes(styles.option)}>
       <span className={classes(styles.text)}>
-        <span className={classes(styles.label)}>{label}</span>
+        <span className={classes(styles.label)}>
+          {icon ? <span className={classes(styles.icon)}>{icon}</span> : null}
+          {label}
+        </span>
         {description ? (
           <>
             {' '}

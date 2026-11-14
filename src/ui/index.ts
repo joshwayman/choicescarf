@@ -9,8 +9,14 @@ export { HeaderBadge, HeaderPill } from './HeaderPill.tsx';
 export type { HeaderBadgeProps, HeaderPillProps } from './HeaderPill.tsx';
 export { NumberField } from './NumberField.tsx';
 export type { NumberFieldProps } from './NumberField.tsx';
-export { ItemIcon, PokemonIcon } from './PokemonIcon.tsx';
-export type { ItemIconProps, PokemonIconProps } from './PokemonIcon.tsx';
+export { ItemIcon, ItemSprite, PokemonBattleSprite, PokemonIcon, PokemonSprite } from './PokemonIcon.tsx';
+export type {
+  ItemIconProps,
+  ItemSpriteProps,
+  PokemonBattleSpriteProps,
+  PokemonIconProps,
+  PokemonSpriteProps,
+} from './PokemonIcon.tsx';
 export { RadioList } from './RadioList.tsx';
 export type { RadioListOption, RadioListProps } from './RadioList.tsx';
 export { AnswerDisplay, ResultsCard } from './Results.tsx';

@@ -371,6 +371,51 @@ describe('Species picker (#50)', () => {
     expect(screen.getByText('base 136')).toBeInTheDocument();
   });
 
+  it('shows each species’ sprite without changing what is read out (#106)', async () => {
+    const user = userEvent.setup();
+    open('/?v=1&t=garchomp&y=dragapult');
+    const button = await screen.findByRole('button', { name: 'Change Pokémon, now Garchomp' });
+    expect(button.querySelector('[data-icon="445"]')).toHaveAttribute('aria-hidden', 'true');
+    expect(screen.getByRole('tab', { name: /^You/ }).querySelector('[data-icon="887"]')).not.toBeNull();
+
+    await user.click(button);
+    const dialog = await screen.findByRole('dialog', { name: 'Change Pokémon' });
+    await user.type(within(dialog).getByRole('searchbox'), 'chomp');
+    expect(within(dialog).getByRole('option', { name: 'Garchomp 102' }).querySelector('[data-icon="445"]')).not.toBeNull();
+  });
+
+  it('shows no sprite for a custom base Speed', async () => {
+    const user = userEvent.setup();
+    open('/?v=1&t=garchomp&y=dragapult');
+    await typeInto(user, await screen.findByRole('textbox', { name: 'Base Speed' }), '120');
+    expect(screen.getByRole('button', { name: 'Change Pokémon, now Custom · base 120' }).querySelector('[data-icon]')).toBeNull();
+  });
+
+  it('shows the 96 px battle sprite in each desktop card, beside the heading (#110)', async () => {
+    stubWidth(true);
+    open('/?v=1&t=garchomp&y=dragapult');
+    await results();
+    for (const [name, id] of [
+      ['Garchomp', 'garchomp'],
+      ['Dragapult', 'dragapult'],
+    ] as const) {
+      const card = screen.getByRole('region', { name });
+      const sprite = card.querySelector(`img[src="/sprites/gen5/${id}.png"]`);
+      expect(sprite).toHaveAttribute('alt', '');
+      expect(sprite).toHaveAttribute('width', '96');
+      // The small icon is for lists and tabs, not the card.
+      expect(screen.getByRole('heading', { name }).querySelector('[data-icon]')).toBeNull();
+    }
+  });
+
+  it('shows no battle sprite on a desktop card with a custom base Speed', async () => {
+    stubWidth(true);
+    open('/?v=1&t=garchomp&y=dragapult&t.base=120');
+    await results();
+    const card = screen.getByRole('region', { name: 'Custom · base 120' });
+    expect(card.querySelector('img')).toBeNull();
+  });
+
   it('has no axe violations with the picker open', async () => {
     const user = userEvent.setup();
     open('/');
@@ -499,5 +544,40 @@ describe('Trick Room', () => {
     await results();
     const found = await axe.run(document, { rules: { 'color-contrast': { enabled: false } } });
     expect(found.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(' ')).join(', ')}`)).toEqual([]);
+  });
+});
+
+describe('Item icons (#108)', () => {
+  it('shows the Choice Scarf icon on its chip and in the Scarf fallback (#108)', async () => {
+    open('/?v=1&t=dragapult&y=garchomp');
+    const region = await results();
+    // Choice Scarf is row 4, column 5 of the item sheet: 4 × 16 + 5 = 69.
+    const answers = within(region)
+      .getAllByRole('cell')
+      .filter((cell) => cell.textContent.endsWith('EVs'));
+    expect(answers).toHaveLength(2);
+    for (const cell of answers) {
+      expect(cell.querySelector('[data-item-icon="69"]')).toHaveAttribute('aria-hidden', 'true');
+    }
+    expect(rows(region)[0]).toEqual(['68 EVs', '423']);
+    expect(screen.getByRole('button', { name: 'Choice Scarf' }).querySelector('[data-item-icon="69"]')).not.toBeNull();
+  });
+
+  it('shows no Scarf icon in the results when no Scarf is needed', async () => {
+    open('/?v=1&t=garchomp&y=dragapult');
+    expect((await results()).querySelector('[data-item-icon]')).toBeNull();
+  });
+
+  it('shows item icons on other item chips and in the Modifiers sheet (#108)', async () => {
+    const user = userEvent.setup();
+    open('/?v=1&t=garchomp&y=dragapult&t.item=ironball');
+    await results();
+    const ironBall = screen.getByRole('button', { name: /^Iron Ball/ });
+    expect(ironBall.querySelector('[data-item-icon="224"]')).not.toBeNull();
+
+    await user.click(ironBall);
+    const items = within(await screen.findByRole('dialog', { name: 'Modifiers' })).getByRole('group', { name: 'Item' });
+    expect(within(items).getByRole('button', { name: 'Choice Scarf ×1.5' }).querySelector('[data-item-icon="69"]')).not.toBeNull();
+    expect(within(items).getByRole('button', { name: /^Power item/ }).querySelector('[data-item-icon="354"]')).not.toBeNull();
   });
 });
