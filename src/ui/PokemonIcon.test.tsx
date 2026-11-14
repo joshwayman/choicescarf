@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { ItemIcon, PokemonIcon, PokemonSprite } from './PokemonIcon.tsx';
+import { ItemIcon, ItemSprite, PokemonIcon, PokemonSprite } from './PokemonIcon.tsx';
 
 describe('PokemonSprite', () => {
   it('shows the icon at its place on the sheet, 12 to a row', () => {
@@ -31,8 +31,24 @@ describe('PokemonIcon', () => {
   });
 });
 
+describe('ItemSprite', () => {
+  it('shows the icon at its place on the item sheet, 16 to a row', () => {
+    const { container } = render(<ItemSprite icon={69} />);
+    const sprite = container.firstElementChild as HTMLElement;
+    // 69 is row 4, column 5: 4 × 24 px down, 5 × 24 px across.
+    expect(sprite.style.backgroundPosition).toBe('-120px -96px');
+    expect(sprite).toHaveAttribute('aria-hidden', 'true');
+  });
+});
+
 describe('ItemIcon', () => {
-  it('renders the name as text, with no image', () => {
+  it('shows the icon before the name when it has one', () => {
+    const { container } = render(<ItemIcon name="Choice Scarf" icon={69} />);
+    expect(container.querySelector('[data-item-icon="69"]')).not.toBeNull();
+    expect(container.textContent).toBe('Choice Scarf');
+  });
+
+  it('renders the name as text, with no image, without one', () => {
     const { container } = render(<ItemIcon name="Choice Scarf" />);
     expect(screen.getByText('Choice Scarf')).toBeInTheDocument();
     expect(container.querySelector('img, [aria-hidden="true"]')).toBeNull();

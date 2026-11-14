@@ -83,6 +83,8 @@ export interface ResultRow {
   stat: ReactNode;
   /** No answer for this row ("Can't reach", "Too fast"): quieter, not yellow. */
   muted?: boolean;
+  /** A decorative image before the answer, such as the Choice Scarf it needs. */
+  icon?: ReactNode;
 }
 
 export interface ResultsCardProps {
@@ -128,7 +130,10 @@ export function ResultsCard({ heading, rows, calc, defaultCalcOpen = false, leve
               <th scope="row" className={classes(styles.rowLabel)}>
                 {row.label}
               </th>
-              <td className={classes(row.muted ? styles.rowMuted : styles.rowAnswer)}>{row.answer}</td>
+              <td className={classes(row.muted ? styles.rowMuted : styles.rowAnswer)}>
+                {row.icon ? <span className={classes(styles.rowIcon)}>{row.icon}</span> : null}
+                {row.answer}
+              </td>
               <td className={classes(styles.rowStat)}>{row.stat}</td>
             </tr>
           ))}

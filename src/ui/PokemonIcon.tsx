@@ -47,12 +47,45 @@ export function PokemonIcon({ name, icon }: PokemonIconProps) {
   );
 }
 
+/** Each icon on the item sheet is 24 by 24 pixels, 16 to a row. */
+const ITEM_ICON_SIZE = 24;
+const ITEM_ICONS_PER_ROW = 16;
+
+export interface ItemSpriteProps {
+  /** The icon's place on the item sheet, from the data (`itemIcon`). */
+  icon: number;
+}
+
+/**
+ * An item's icon from Pokémon Showdown's item sheet, via @pkmn/img (#108).
+ * Self-hosted and decorative, like PokemonSprite.
+ */
+export function ItemSprite({ icon }: ItemSpriteProps) {
+  const x = (icon % ITEM_ICONS_PER_ROW) * ITEM_ICON_SIZE;
+  const y = Math.floor(icon / ITEM_ICONS_PER_ROW) * ITEM_ICON_SIZE;
+  return (
+    <span
+      aria-hidden="true"
+      data-item-icon={icon}
+      className={classes(styles.itemSprite)}
+      style={{ backgroundPosition: `-${String(x)}px -${String(y)}px` }}
+    />
+  );
+}
+
 export interface ItemIconProps {
   /** The item, as it is written: "Choice Scarf". */
   name: string;
+  /** Its icon from the data. Left out, only the name shows. */
+  icon?: number | undefined;
 }
 
-/** An item. Text only: nothing shows an item yet, so the item sheet isn't shipped. */
-export function ItemIcon({ name }: ItemIconProps) {
-  return <span className={classes(styles.icon)}>{name}</span>;
+/** An item, as it is shown wherever one is named: its icon, then its name. */
+export function ItemIcon({ name, icon }: ItemIconProps) {
+  return (
+    <span className={classes(styles.pokemon)}>
+      {icon === undefined ? null : <ItemSprite icon={icon} />}
+      <span className={classes(styles.icon)}>{name}</span>
+    </span>
+  );
 }
