@@ -72,11 +72,14 @@ export function BoostSteps({
           {label}
         </span>
         <div className={classes(styles.row)}>
-          {stepButton(-2)}
-          {stepButton(-1)}
-          {readout}
-          {stepButton(1)}
-          {stepButton(2)}
+          {/* One joined control, like a stepper: the steps around the value. */}
+          <div className={classes(styles.bar)}>
+            {stepButton(-2)}
+            {stepButton(-1)}
+            {readout}
+            {stepButton(1)}
+            {stepButton(2)}
+          </div>
           <Button
             aria-label="Reset to 0"
             isDisabled={value === 0}
