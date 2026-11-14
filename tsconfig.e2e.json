@@ -1,0 +1,11 @@
+{
+  // Playwright flows (#85, #88). They run in Node but pass code to the
+  // browser (page.evaluate), so they need the DOM types too.
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.e2e.tsbuildinfo",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "types": ["node"]
+  },
+  "include": ["playwright.config.ts", "tests/e2e"]
+}

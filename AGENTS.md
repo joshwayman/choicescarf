@@ -40,6 +40,7 @@ npm run dev                  # dev server on :3000
 npm run lint                 # zero warnings allowed
 npm run typecheck            # tsc -b across every tsconfig
 npm test                     # vitest run (npm run test:watch to watch)
+npm run test:e2e             # Playwright flows against the production build (PLAYWRIGHT_CHROMIUM=<path> to use an installed Chromium)
 npm run build                # outputs to dist/
 npm run data                 # regenerate src/data/gen9.json from @pkmn/dex (commit the result)
 npm run sprites              # copy any missing battle sprites into public/sprites/gen5 (commit them)
