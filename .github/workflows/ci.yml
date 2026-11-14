@@ -37,3 +37,30 @@ jobs:
 
       - name: Build
         run: npm run build
+
+  e2e:
+    name: Flows, accessibility and layout  # #88: make this a required check on v5
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      - name: Install Chromium for Playwright
+        run: npx playwright install --with-deps chromium
+
+      - name: Run the flows against the production build
+        run: npm run test:e2e
+
+      - name: Keep the report if anything failed
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report
+          path: test-results/
+          retention-days: 7
