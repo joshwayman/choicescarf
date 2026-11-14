@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { Button, CopyLinkButton, DESKTOP, PokemonSprite, SideSwitcher, SwapIcon, useMediaQuery } from '../../ui/index.ts';
+import { Button, CopyLinkButton, DESKTOP, PokemonBattleSprite, PokemonSprite, SideSwitcher, SwapIcon, useMediaQuery } from '../../ui/index.ts';
 import { nameOf, sideSpeed, solve, speciesOf } from '../calculation/derive.ts';
 import type { Calculation } from '../calculation/state.ts';
 import { useCalculation, useShareUrl } from '../calculation/useCalculation.ts';
@@ -153,11 +153,11 @@ function SideCard({
   return (
     <section aria-labelledby={headingId} className={styles.card}>
       <div className={styles.cardHead}>
+        {species ? <PokemonBattleSprite id={species.id} /> : null}
         <div className={styles.cardTitles}>
           <span className={which === 'you' ? styles.eyebrowYou : styles.eyebrow}>{which === 'target' ? 'Target' : 'You'}</span>
           <h2 id={headingId} className={styles.cardName}>
-            {species ? <PokemonSprite icon={species.icon} /> : null}
-            <span>{nameText(calc, which)}</span>
+            {nameText(calc, which)}
           </h2>
           {species ? <p className={styles.cardBase}>base {species.spe}</p> : null}
           <p className={styles.cardSpeed}>

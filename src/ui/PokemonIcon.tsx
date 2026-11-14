@@ -30,6 +30,21 @@ export function PokemonSprite({ icon }: PokemonSpriteProps) {
   );
 }
 
+export interface PokemonBattleSpriteProps {
+  /** The species' id: 'garchomp'. */
+  id: string;
+}
+
+/**
+ * A Pokémon's 96 × 96 battle sprite, Showdown's "gen5" set, for the desktop
+ * side cards (#110). The copies are in public/sprites/gen5, one per species,
+ * written by `npm run sprites`, so each page loads only the two it
+ * shows. Decorative, like PokemonSprite. © Nintendo/Creatures Inc./GAME FREAK Inc.
+ */
+export function PokemonBattleSprite({ id }: PokemonBattleSpriteProps) {
+  return <img src={`/sprites/gen5/${id}.png`} alt="" width={96} height={96} className={classes(styles.battleSprite)} />;
+}
+
 export interface PokemonIconProps {
   /** The species or form, as it is written: "Ogerpon-Wellspring". */
   name: string;

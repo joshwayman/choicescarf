@@ -391,12 +391,29 @@ describe('Species picker (#50)', () => {
     expect(screen.getByRole('button', { name: 'Change Pokémon, now Custom · base 120' }).querySelector('[data-icon]')).toBeNull();
   });
 
-  it('shows the sprite in each desktop card heading', async () => {
+  it('shows the 96 px battle sprite in each desktop card, beside the heading (#110)', async () => {
     stubWidth(true);
     open('/?v=1&t=garchomp&y=dragapult');
     await results();
-    expect(screen.getByRole('heading', { name: 'Garchomp' }).querySelector('[data-icon="445"]')).not.toBeNull();
-    expect(screen.getByRole('heading', { name: 'Dragapult' }).querySelector('[data-icon="887"]')).not.toBeNull();
+    for (const [name, id] of [
+      ['Garchomp', 'garchomp'],
+      ['Dragapult', 'dragapult'],
+    ] as const) {
+      const card = screen.getByRole('region', { name });
+      const sprite = card.querySelector(`img[src="/sprites/gen5/${id}.png"]`);
+      expect(sprite).toHaveAttribute('alt', '');
+      expect(sprite).toHaveAttribute('width', '96');
+      // The small icon is for lists and tabs, not the card.
+      expect(screen.getByRole('heading', { name }).querySelector('[data-icon]')).toBeNull();
+    }
+  });
+
+  it('shows no battle sprite on a desktop card with a custom base Speed', async () => {
+    stubWidth(true);
+    open('/?v=1&t=garchomp&y=dragapult&t.base=120');
+    await results();
+    const card = screen.getByRole('region', { name: 'Custom · base 120' });
+    expect(card.querySelector('img')).toBeNull();
   });
 
   it('has no axe violations with the picker open', async () => {

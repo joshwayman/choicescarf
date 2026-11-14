@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { ICON_HEIGHT, ICON_WIDTH, ICONS_PER_ROW, ITEM_ICON_SIZE, ITEM_ICONS_PER_ROW, iconIndex } from '../scripts/build-data.ts';
 import { getRuleset } from '../src/engine/index.ts';
@@ -97,5 +97,31 @@ describe('Item icon sheet', () => {
     ['powerweight', 360],
   ])('puts %s at %i', (id, icon) => {
     expect(itemIcon(id)).toBe(icon);
+  });
+});
+
+/** The 96 × 96 battle sprites, one file per species (#110). */
+const BATTLE_SPRITES = new URL('../public/sprites/gen5/', import.meta.url);
+
+describe('Battle sprites', () => {
+  it('has a 96 × 96 PNG for every species, named by its id', () => {
+    const missing: string[] = [];
+    for (const species of GEN9_SPECIES) {
+      let bytes: Buffer;
+      try {
+        bytes = readFileSync(new URL(`${species.id}.png`, BATTLE_SPRITES));
+      } catch {
+        missing.push(species.name);
+        continue;
+      }
+      expect(bytes.subarray(1, 4).toString('latin1'), species.name).toBe('PNG');
+      expect(pngSize(bytes), species.name).toEqual({ width: 96, height: 96 });
+    }
+    expect(missing, 'run npm run sprites').toEqual([]);
+  });
+
+  it('has nothing but those sprites', () => {
+    const ids = new Set(GEN9_SPECIES.map((species) => `${species.id}.png`));
+    expect(readdirSync(BATTLE_SPRITES).filter((name) => !ids.has(name))).toEqual([]);
   });
 });
