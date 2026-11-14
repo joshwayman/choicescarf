@@ -55,6 +55,19 @@ describe('routes', () => {
     expect(document.title).toBe(title);
   });
 
+  it('credits Smogon, Pokémon Showdown and pkmn, and says who owns Pokémon (#112)', async () => {
+    renderAt('/about');
+    expect(await screen.findByRole('heading', { level: 2, name: 'Credits' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Smogon' })).toHaveAttribute('href', 'https://www.smogon.com/');
+    expect(screen.getByRole('link', { name: 'Pokémon Showdown' })).toHaveAttribute('href', 'https://pokemonshowdown.com/');
+    expect(screen.getByRole('link', { name: 'pkmn' })).toHaveAttribute('href', 'https://github.com/pkmn');
+    // Links to other sites keep their address instead of being made into a route.
+    expect(screen.getByRole('link', { name: 'the current calculator' })).toHaveAttribute('href', 'https://choicescarf.com/');
+    expect(screen.getByText(/Sprite images © Nintendo\/Creatures Inc\.\/GAME FREAK Inc\./)).toBeInTheDocument();
+    expect(screen.getByText(/Pokémon and Pokémon character names are trademarks of Nintendo/)).toBeInTheDocument();
+    expect(screen.getByText(/not affiliated with or endorsed by Nintendo, Game Freak, The Pokémon Company or Smogon/)).toBeInTheDocument();
+  });
+
   it('sends an unknown path to Calculator, replacing it in history', async () => {
     const { router, history } = renderAt('/battle/nowhere');
     expect(await heading('Calculator')).toBeInTheDocument();
