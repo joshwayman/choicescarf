@@ -49,11 +49,11 @@ describe('BoostSteps', () => {
     await user.click(up2);
     await user.click(up2);
     await user.click(up2);
-    expect(group).toHaveTextContent('+6 ×4 Speed');
+    expect(group).toHaveTextContent('+6 ×4');
     expect(up2).toBeDisabled();
     expect(within(group).getByRole('button', { name: 'Raise by 1' })).toBeDisabled();
     await user.click(within(group).getByRole('button', { name: 'Lower by 1' }));
-    expect(group).toHaveTextContent('+5 ×3.5 Speed');
+    expect(group).toHaveTextContent('+5 ×3.5');
   });
 
   it('goes negative without a keyboard, stops at −6, and resets to 0', async () => {
@@ -61,11 +61,11 @@ describe('BoostSteps', () => {
     render(<Steps start={-5} />);
     const group = screen.getByRole('group', { name: 'Speed boost' });
     await user.click(within(group).getByRole('button', { name: 'Lower by 2' }));
-    expect(group).toHaveTextContent('−6 ×0.25 Speed');
+    expect(group).toHaveTextContent('−6 ×0.25');
     expect(within(group).getByRole('button', { name: 'Lower by 1' })).toBeDisabled();
-    await user.click(within(group).getByRole('button', { name: 'Reset' }));
-    expect(group).toHaveTextContent('0 ×1 Speed');
-    expect(within(group).getByRole('button', { name: 'Reset' })).toBeDisabled();
+    await user.click(within(group).getByRole('button', { name: 'Reset to 0' }));
+    expect(group).toHaveTextContent('0 ×1');
+    expect(within(group).getByRole('button', { name: 'Reset to 0' })).toBeDisabled();
   });
 });
 

@@ -67,26 +67,44 @@
   outline: none;
 }
 
-/* Desktop: label and readout on one line, the steps and Reset under them. */
+/* Desktop: one row, the value between the steps like a stepper (#119). */
 .inline {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.inline .steps {
-  grid-template-columns: repeat(4, 52px) auto;
-  gap: 6px;
+.row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
-.inline .step {
+.row .step {
+  width: 44px;
   height: var(--size-control-min);
+  flex-shrink: 0;
   font-size: var(--type-body-size);
 }
 
+.row .readout {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.1;
+}
+
+.row .readoutValue {
+  font-size: 1.125rem;
+}
+
 .resetInline {
+  flex-shrink: 0;
+  min-width: var(--size-control-min);
   min-height: var(--size-control-min);
-  padding: 0 var(--space-8);
+  padding: 0 4px;
   border: none;
   background: transparent;
   color: var(--color-text-2);

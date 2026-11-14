@@ -26,9 +26,10 @@ export interface BoostProps {
 const STEPS = [-2, -1, 1, 2] as const;
 
 /**
- * The boost's controls (#119): what it is now and what it does to Speed,
- * then four big steps (−2, −1, +1, +2) to tap as often as needed, and a
- * reset. Shown in place on desktop and in BoostPicker's panel on phones.
+ * The boost's controls (#119): four big steps (−2, −1, +1, +2) to tap as
+ * often as needed, and what the boost is now and does to Speed. Inline (on
+ * desktop) it is one row with the value between the steps, like a stepper;
+ * in BoostPicker's panel on phones the value sits above them.
  */
 export function BoostSteps({
   label,
@@ -41,39 +42,43 @@ export function BoostSteps({
 }: BoostProps & { inline?: boolean; headingSlot?: boolean }) {
   const headingId = useId();
   const clamp = (next: number) => Math.min(max, Math.max(min, next));
-  return (
-    <div role="group" aria-labelledby={headingId} className={classes(inline ? styles.inline : styles.panel)}>
-      <div className={classes(styles.top)}>
-        {headingSlot ? (
-          <Heading slot="title" id={headingId} className={classes(styles.heading)}>
-            {label}
-          </Heading>
-        ) : (
-          <span id={headingId} className={classes(inline ? styles.label : styles.heading)}>
-            {label}
-          </span>
-        )}
-        <p aria-live="polite" className={classes(styles.readout)}>
-          <span className={classes(styles.readoutValue)}>{signed(value)}</span>{' '}
-          <span className={classes(styles.readoutEffect)}>{boostMultiplier(value)} Speed</span>
-        </p>
-      </div>
-      <div className={classes(styles.steps)}>
-        {STEPS.map((by) => (
+  const stepButton = (by: number) => (
+    <Button
+      key={by}
+      aria-label={`${by < 0 ? 'Lower' : 'Raise'} by ${String(Math.abs(by))}`}
+      isDisabled={by < 0 ? value <= min : value >= max}
+      onPress={() => {
+        onChange(clamp(value + by));
+      }}
+      className={classes(styles.step)}
+    >
+      {signed(by)}
+    </Button>
+  );
+  const readout = (
+    <p aria-live="polite" className={classes(styles.readout)}>
+      <span className={classes(styles.readoutValue)}>{signed(value)}</span>{' '}
+      <span className={classes(styles.readoutEffect)}>
+        {boostMultiplier(value)}
+        {inline ? null : ' Speed'}
+      </span>
+    </p>
+  );
+
+  if (inline) {
+    return (
+      <div role="group" aria-labelledby={headingId} className={classes(styles.inline)}>
+        <span id={headingId} className={classes(styles.label)}>
+          {label}
+        </span>
+        <div className={classes(styles.row)}>
+          {stepButton(-2)}
+          {stepButton(-1)}
+          {readout}
+          {stepButton(1)}
+          {stepButton(2)}
           <Button
-            key={by}
-            aria-label={`${by < 0 ? 'Lower' : 'Raise'} by ${String(Math.abs(by))}`}
-            isDisabled={by < 0 ? value <= min : value >= max}
-            onPress={() => {
-              onChange(clamp(value + by));
-            }}
-            className={classes(styles.step)}
-          >
-            {signed(by)}
-          </Button>
-        ))}
-        {inline ? (
-          <Button
+            aria-label="Reset to 0"
             isDisabled={value === 0}
             onPress={() => {
               onChange(0);
@@ -82,8 +87,26 @@ export function BoostSteps({
           >
             Reset
           </Button>
-        ) : null}
+        </div>
       </div>
+    );
+  }
+
+  return (
+    <div role="group" aria-labelledby={headingId} className={classes(styles.panel)}>
+      <div className={classes(styles.top)}>
+        {headingSlot ? (
+          <Heading slot="title" id={headingId} className={classes(styles.heading)}>
+            {label}
+          </Heading>
+        ) : (
+          <span id={headingId} className={classes(styles.heading)}>
+            {label}
+          </span>
+        )}
+        {readout}
+      </div>
+      <div className={classes(styles.steps)}>{STEPS.map(stepButton)}</div>
     </div>
   );
 }

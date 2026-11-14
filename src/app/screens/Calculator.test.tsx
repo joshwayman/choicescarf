@@ -299,7 +299,7 @@ describe('Calculator on desktop', () => {
     // On desktop the boost's steps are in place, with what it does to Speed (#119).
     const boosts = screen.getAllByRole('group', { name: 'Speed boost' });
     expect(boosts).toHaveLength(2);
-    expect(boosts[0]).toHaveTextContent('0 ×1 Speed');
+    expect(boosts[0]).toHaveTextContent('0 ×1');
   });
 
   it('has no axe violations', async () => {
