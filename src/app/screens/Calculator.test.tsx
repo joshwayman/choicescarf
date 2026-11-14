@@ -297,7 +297,9 @@ describe('Species picker (#50)', () => {
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });
     expect(router.state.location.searchStr).toBe('?v=1&t=ogerponwellspring');
-    expect(screen.getByRole('button', { name: 'Change Pokémon, now Ogerpon-Wellspring' })).toHaveFocus();
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Change Pokémon, now Ogerpon-Wellspring' })).toHaveFocus();
+    });
   });
 
   it('shows "Custom · base N" when base Speed is edited, and picking again takes the species’ own', async () => {

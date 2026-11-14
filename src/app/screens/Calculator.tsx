@@ -120,17 +120,17 @@ function SideCard({
   return (
     <section aria-labelledby={headingId} className={styles.card}>
       <div className={styles.cardHead}>
-        <span className={which === 'you' ? styles.eyebrowYou : styles.eyebrow}>{which === 'target' ? 'Target' : 'You'}</span>
-        <h2 id={headingId} className={styles.cardName}>
-          {nameText(calc, which)}
-        </h2>
-        {species ? <p className={styles.cardBase}>base {species.spe}</p> : null}
-        <div className={styles.cardPicker}>
-          <SpeciesPicker calc={calc} which={which} onChange={onChange} />
+        <div className={styles.cardTitles}>
+          <span className={which === 'you' ? styles.eyebrowYou : styles.eyebrow}>{which === 'target' ? 'Target' : 'You'}</span>
+          <h2 id={headingId} className={styles.cardName}>
+            {nameText(calc, which)}
+          </h2>
+          {species ? <p className={styles.cardBase}>base {species.spe}</p> : null}
+          <p className={styles.cardSpeed}>
+            <span className={styles.cardSpeedValue}>{speedValue ?? '—'}</span> <span className={styles.cardSpeedLabel}>Speed</span>
+          </p>
         </div>
-        <p className={styles.cardSpeed}>
-          <span className={styles.cardSpeedValue}>{speedValue ?? '—'}</span> <span className={styles.cardSpeedLabel}>Speed</span>
-        </p>
+        <SpeciesPicker calc={calc} which={which} onChange={onChange} variant="icon" />
       </div>
       <SideForm calc={calc} which={which} name={sheetName(calc, which)} layout="desktop" onChange={onChange} />
     </section>
