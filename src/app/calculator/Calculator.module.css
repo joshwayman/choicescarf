@@ -68,6 +68,10 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+.pickerButton[data-has-icon] {
+  padding-left: var(--space-4);
+}
+
 .pickerButton[data-focus-visible] {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
@@ -253,6 +257,9 @@
 }
 
 .cardName {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
   margin: 0;
   overflow-wrap: anywhere;
   font-family: var(--font-display);

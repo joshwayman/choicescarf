@@ -7,8 +7,11 @@ import { GEN9_SPECIES, findSpecies, toId } from './index.ts';
 
 const FILE = new URL('./gen9.json', import.meta.url);
 
-/** The size budget for the Generation 9 file, raw and gzipped (#80). */
-const BUDGET = { raw: 64_000, gzip: 12_000 };
+/**
+ * The size budget for the Generation 9 file, raw and gzipped (#80). Raised from
+ * 64 kB / 12 kB when each species gained its icon (#106), with the maintainer's agreement.
+ */
+const BUDGET = { raw: 72_000, gzip: 15_000 };
 
 describe('Generation 9 species data', () => {
   it.each([

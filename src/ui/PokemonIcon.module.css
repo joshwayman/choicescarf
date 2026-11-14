@@ -1,6 +1,24 @@
+.pokemon {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
 .icon {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/* One 40 × 30 cell of Showdown's icon sheet, kept crisp. */
+.sprite {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 40px;
+  height: 30px;
+  background-image: url('./sprites/pokemonicons-sheet.png');
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
 }

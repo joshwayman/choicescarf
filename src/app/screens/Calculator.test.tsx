@@ -371,6 +371,34 @@ describe('Species picker (#50)', () => {
     expect(screen.getByText('base 136')).toBeInTheDocument();
   });
 
+  it('shows each species’ sprite without changing what is read out (#106)', async () => {
+    const user = userEvent.setup();
+    open('/?v=1&t=garchomp&y=dragapult');
+    const button = await screen.findByRole('button', { name: 'Change Pokémon, now Garchomp' });
+    expect(button.querySelector('[data-icon="445"]')).toHaveAttribute('aria-hidden', 'true');
+    expect(screen.getByRole('tab', { name: /^You/ }).querySelector('[data-icon="887"]')).not.toBeNull();
+
+    await user.click(button);
+    const dialog = await screen.findByRole('dialog', { name: 'Change Pokémon' });
+    await user.type(within(dialog).getByRole('searchbox'), 'chomp');
+    expect(within(dialog).getByRole('option', { name: 'Garchomp 102' }).querySelector('[data-icon="445"]')).not.toBeNull();
+  });
+
+  it('shows no sprite for a custom base Speed', async () => {
+    const user = userEvent.setup();
+    open('/?v=1&t=garchomp&y=dragapult');
+    await typeInto(user, await screen.findByRole('textbox', { name: 'Base Speed' }), '120');
+    expect(screen.getByRole('button', { name: 'Change Pokémon, now Custom · base 120' }).querySelector('[data-icon]')).toBeNull();
+  });
+
+  it('shows the sprite in each desktop card heading', async () => {
+    stubWidth(true);
+    open('/?v=1&t=garchomp&y=dragapult');
+    await results();
+    expect(screen.getByRole('heading', { name: 'Garchomp' }).querySelector('[data-icon="445"]')).not.toBeNull();
+    expect(screen.getByRole('heading', { name: 'Dragapult' }).querySelector('[data-icon="887"]')).not.toBeNull();
+  });
+
   it('has no axe violations with the picker open', async () => {
     const user = userEvent.setup();
     open('/');
