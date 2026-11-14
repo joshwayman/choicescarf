@@ -246,3 +246,99 @@ describe('Calculator on desktop', () => {
     expect(found.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(' ')).join(', ')}`)).toEqual([]);
   });
 });
+
+describe('Species picker (#50)', () => {
+  async function pick(user: ReturnType<typeof userEvent.setup>, button: HTMLElement, query: string, option: RegExp) {
+    await user.click(button);
+    const dialog = await screen.findByRole('dialog', { name: 'Change Pokémon' });
+    await user.type(within(dialog).getByRole('searchbox', { name: 'Search Pokémon' }), query);
+    await user.click(await within(dialog).findByRole('option', { name: option }));
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
+  }
+
+  it('picks a species by a partial name and fills its base Speed', async () => {
+    const user = userEvent.setup();
+    const { router } = open('/');
+    await pick(user, await screen.findByRole('button', { name: 'Choose Pokémon' }), 'chomp', /^Garchomp \d+$/);
+    expect(screen.getByRole('button', { name: 'Change Pokémon, now Garchomp' })).toBeInTheDocument();
+    expect(screen.getByRole('textbox', { name: 'Base Speed' })).toHaveValue('102');
+    expect(router.state.location.searchStr).toBe('?v=1&t=garchomp');
+  });
+
+  it('shows base Speed in the results and says so when nothing matches', async () => {
+    const user = userEvent.setup();
+    open('/');
+    await user.click(await screen.findByRole('button', { name: 'Choose Pokémon' }));
+    const dialog = await screen.findByRole('dialog', { name: 'Change Pokémon' });
+    const box = within(dialog).getByRole('searchbox', { name: 'Search Pokémon' });
+    expect(box).toHaveFocus();
+    await user.type(box, 'chomp');
+    expect(within(dialog).getByRole('option', { name: 'Garchomp 102' })).toHaveAccessibleDescription('base Speed 102');
+    await user.clear(box);
+    await user.type(box, 'qqqqxx');
+    expect(within(dialog).getByRole('option')).toHaveTextContent('No Pokémon match');
+  });
+
+  it('picks with the keyboard alone: "ogre w", then Enter', async () => {
+    const user = userEvent.setup();
+    const { router } = open('/');
+    (await screen.findByRole('button', { name: 'Choose Pokémon' })).focus();
+    await user.keyboard('{Enter}');
+    const dialog = await screen.findByRole('dialog', { name: 'Change Pokémon' });
+    expect(within(dialog).getByRole('searchbox')).toHaveFocus();
+    await user.keyboard('ogre w');
+    await waitFor(() => {
+      expect(within(dialog).getAllByRole('option')[0]).toHaveTextContent('Ogerpon-Wellspring');
+    });
+    await user.keyboard('{Enter}');
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
+    expect(router.state.location.searchStr).toBe('?v=1&t=ogerponwellspring');
+    expect(screen.getByRole('button', { name: 'Change Pokémon, now Ogerpon-Wellspring' })).toHaveFocus();
+  });
+
+  it('shows "Custom · base N" when base Speed is edited, and picking again takes the species’ own', async () => {
+    const user = userEvent.setup();
+    open('/?v=1&t=garchomp&y=dragapult');
+    await typeInto(user, await screen.findByRole('textbox', { name: 'Base Speed' }), '120');
+    const button = screen.getByRole('button', { name: 'Change Pokémon, now Custom · base 120' });
+    expect(button).toHaveTextContent('Custom · base 120');
+    await pick(user, button, 'garchomp', /^Garchomp \d+$/);
+    expect(screen.getByRole('textbox', { name: 'Base Speed' })).toHaveValue('102');
+    expect(screen.getByRole('button', { name: 'Change Pokémon, now Garchomp' })).toBeInTheDocument();
+  });
+
+  it('keeps an ability the new species has and drops one it does not', async () => {
+    const user = userEvent.setup();
+    const { router } = open('/?v=1&t=garchomp&y=dragapult&y.ability=swiftswim');
+    await user.click(await screen.findByRole('tab', { name: /^You/ }));
+    await pick(user, screen.getByRole('button', { name: 'Change Pokémon, now Dragapult' }), 'iron bundle', /^Iron Bundle \d+$/);
+    expect(router.state.location.searchStr).not.toContain('ability');
+    expect(router.state.location.searchStr).toContain('y=ironbundle');
+  });
+
+  it('works on desktop, one picker for each Pokémon', async () => {
+    stubWidth(true);
+    const user = userEvent.setup();
+    const { router } = open('/?v=1&t=garchomp&y=dragapult');
+    await results();
+    expect(screen.getAllByRole('button', { name: /^Change Pokémon, now/ })).toHaveLength(2);
+    await pick(user, screen.getByRole('button', { name: 'Change Pokémon, now Dragapult' }), 'iron bun', /^Iron Bundle \d+$/);
+    expect(router.state.location.searchStr).toBe('?v=1&t=garchomp&y=ironbundle');
+    // "base N" sits beside the name.
+    expect(screen.getByText('base 136')).toBeInTheDocument();
+  });
+
+  it('has no axe violations with the picker open', async () => {
+    const user = userEvent.setup();
+    open('/');
+    await user.click(await screen.findByRole('button', { name: 'Choose Pokémon' }));
+    const dialog = await screen.findByRole('dialog', { name: 'Change Pokémon' });
+    await user.type(within(dialog).getByRole('searchbox'), 'gar');
+    const found = await axe.run(document, { rules: { 'color-contrast': { enabled: false } } });
+    expect(found.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(' ')).join(', ')}`)).toEqual([]);
+  });
+});

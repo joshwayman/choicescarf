@@ -5,6 +5,7 @@ import { baseOf, NATURE_LABEL, speciesOf } from '../calculation/derive.ts';
 import type { Calculation } from '../calculation/state.ts';
 import { editSide, type Which } from './edit.ts';
 import { ModifierChips } from './Modifiers.tsx';
+import { SpeciesPicker } from './SpeciesPicker.tsx';
 import styles from './Calculator.module.css';
 
 interface Props {
@@ -51,8 +52,7 @@ export function SideForm({ calc, which, name, layout, onChange }: Props) {
     <div className={styles.form}>
       {layout === 'phone' ? (
         <div className={styles.nameRow}>
-          {/* The species picker (#50) replaces this with a "Change Pokémon" button. */}
-          <p className={styles.name}>{nameText(calc, which)}</p>
+          <SpeciesPicker calc={calc} which={which} onChange={onChange} />
           <div className={styles.baseField}>{base}</div>
         </div>
       ) : null}

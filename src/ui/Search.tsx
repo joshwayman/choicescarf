@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
 import {
   Autocomplete,
   Input,
@@ -39,6 +39,13 @@ export interface SearchProps {
   onInputChange?: (value: string) => void;
   /** Shown when nothing matches. */
   emptyMessage?: string;
+  /**
+   * The caller has already filtered `items` for the text (with its own, more
+   * forgiving search), so the list shows them as they are. Needs `inputValue`.
+   */
+  prefiltered?: boolean;
+  /** Move focus to the box when it appears, such as when its sheet opens. */
+  focusOnMount?: boolean;
 }
 
 /**
@@ -55,18 +62,24 @@ export function Search({
   inputValue,
   onInputChange,
   emptyMessage = 'No matches',
+  prefiltered = false,
+  focusOnMount = false,
 }: SearchProps) {
   const { contains } = useFilter({ sensitivity: 'base' });
+  const inputRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (focusOnMount) inputRef.current?.focus();
+  }, [focusOnMount]);
   const controlled = inputValue !== undefined ? { inputValue, onInputChange: onInputChange ?? (() => undefined) } : {};
   return (
     <div className={classes(styles.search)}>
-      <Autocomplete filter={contains} {...controlled}>
+      <Autocomplete filter={prefiltered ? () => true : contains} {...controlled}>
         <SearchField className={classes(styles.field)}>
           <Label className={classes(styles.hiddenLabel)}>{label}</Label>
           <span aria-hidden="true" className={classes(styles.icon)}>
             <SearchIcon size={20} />
           </span>
-          <Input {...(placeholder === undefined ? {} : { placeholder })} className={classes(styles.input)} />
+          <Input ref={inputRef} {...(placeholder === undefined ? {} : { placeholder })} className={classes(styles.input)} />
         </SearchField>
         <ListBox
           aria-label={resultsLabel}

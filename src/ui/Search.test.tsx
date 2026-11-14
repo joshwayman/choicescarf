@@ -62,4 +62,21 @@ describe('Search', () => {
     // React Aria wraps the empty state in a single option so the list stays valid.
     expect(screen.getAllByRole('option').map((o) => o.textContent)).toEqual(['No Pokémon match']);
   });
+
+  it('shows the items it is given when the caller filters them', async () => {
+    const user = userEvent.setup();
+    const onInputChange = vi.fn();
+    render(
+      <Search label="Search Pokémon" items={POKEMON} inputValue="chomp" onInputChange={onInputChange} prefiltered onSelect={vi.fn()} />,
+    );
+    // "chomp" is not at the start of any name, but the caller said these match.
+    expect(screen.getAllByRole('option')).toHaveLength(POKEMON.length);
+    await user.type(screen.getByRole('searchbox'), 'x');
+    expect(onInputChange).toHaveBeenCalledWith('chompx');
+  });
+
+  it('can focus the box on appearing', () => {
+    render(<Search label="Search Pokémon" items={POKEMON} onSelect={vi.fn()} focusOnMount />);
+    expect(screen.getByRole('searchbox')).toHaveFocus();
+  });
 });
