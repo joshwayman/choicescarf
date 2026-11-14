@@ -42,6 +42,7 @@ npm run typecheck            # tsc -b across every tsconfig
 npm test                     # vitest run (npm run test:watch to watch)
 npm run build                # outputs to dist/
 npm run data                 # regenerate src/data/gen9.json from @pkmn/dex (commit the result)
+npm run sprites              # copy any missing battle sprites into public/sprites/gen5 (commit them)
 npm run preview              # serve the production build
 ```
 

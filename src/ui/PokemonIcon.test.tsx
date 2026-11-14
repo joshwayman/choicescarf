@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { ItemIcon, ItemSprite, PokemonIcon, PokemonSprite } from './PokemonIcon.tsx';
+import { ItemIcon, ItemSprite, PokemonBattleSprite, PokemonIcon, PokemonSprite } from './PokemonIcon.tsx';
 
 describe('PokemonSprite', () => {
   it('shows the icon at its place on the sheet, 12 to a row', () => {
@@ -13,6 +13,17 @@ describe('PokemonSprite', () => {
   it('is decorative, so screen readers skip it', () => {
     const { container } = render(<PokemonSprite icon={445} />);
     expect(container.firstElementChild).toHaveAttribute('aria-hidden', 'true');
+  });
+});
+
+describe('PokemonBattleSprite', () => {
+  it('is the self-hosted 96 × 96 sprite for the species, decorative', () => {
+    const { container } = render(<PokemonBattleSprite id="garchomp" />);
+    const img = container.querySelector('img');
+    expect(img).toHaveAttribute('src', '/sprites/gen5/garchomp.png');
+    expect(img).toHaveAttribute('alt', '');
+    expect(img).toHaveAttribute('width', '96');
+    expect(img).toHaveAttribute('height', '96');
   });
 });
 

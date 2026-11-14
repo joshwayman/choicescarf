@@ -243,9 +243,13 @@
 
 .cardHead {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: var(--space-16);
   min-width: 0;
+}
+
+.cardHead > button {
+  align-self: flex-start;
 }
 
 .cardTitles {
@@ -257,9 +261,6 @@
 }
 
 .cardName {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
   margin: 0;
   overflow-wrap: anywhere;
   font-family: var(--font-display);
