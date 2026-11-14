@@ -3,7 +3,8 @@ import { Button as AriaButton } from 'react-aria-components';
 import { findSpecies } from '../../data/index.ts';
 import { searchSpecies } from '../../data/search.ts';
 import { classes } from '../../ui/classes.ts';
-import { IconButton, PokemonIcon, SearchIcon, Search, Sheet, type SearchResult } from '../../ui/index.ts';
+import { IconButton, PokemonIcon, PokemonSprite, SearchIcon, Search, Sheet, type SearchResult } from '../../ui/index.ts';
+import { speciesOf } from '../calculation/derive.ts';
 import type { Calculation } from '../calculation/state.ts';
 import { editSide, type Which } from './edit.ts';
 import { nameText } from './SideForm.tsx';
@@ -24,12 +25,14 @@ export function SpeciesPicker({ calc, which, onChange, variant = 'field' }: Prop
   const side = calc[which];
   const named = side.species !== undefined || side.baseSpeed !== undefined;
   const label = named ? nameText(calc, which) : 'Choose Pokémon';
+  const icon = speciesOf(side)?.icon;
 
   const items: SearchResult[] = searchSpecies(text).map((species) => ({
     id: species.id,
     name: species.name,
     value: species.spe,
     valueLabel: `base Speed ${String(species.spe)}`,
+    icon: <PokemonSprite icon={species.icon} />,
   }));
 
   const buttonLabel = named ? `Change Pokémon, now ${label}` : 'Choose Pokémon';
@@ -60,9 +63,15 @@ export function SpeciesPicker({ calc, which, onChange, variant = 'field' }: Prop
           <SearchIcon size={20} />
         </IconButton>
       ) : (
-        <AriaButton className={classes(styles.pickerButton)} aria-label={buttonLabel} aria-haspopup="dialog" onPress={openSheet}>
+        <AriaButton
+          className={classes(styles.pickerButton)}
+          data-has-icon={icon === undefined ? undefined : true}
+          aria-label={buttonLabel}
+          aria-haspopup="dialog"
+          onPress={openSheet}
+        >
           <span className={styles.pickerName}>
-            <PokemonIcon name={label} />
+            <PokemonIcon name={label} icon={icon} />
           </span>
           <span aria-hidden="true" className={styles.pickerIcon}>
             <SearchIcon size={16} />

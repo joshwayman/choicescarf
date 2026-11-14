@@ -1,7 +1,7 @@
 # ADR 0001: The v5 stack
 
 - **Status:** Accepted
-- **Date:** 13 November 2026. Amended the same day with the analytics, error reporting and release order decisions.
+- **Date:** 13 November 2026. Amended the same day with the analytics, error reporting and release order decisions, and on 14 November 2026 with the sprite decision.
 - **Issue:** #61 (part of the v5 roadmap, #59)
 - **Supersedes:** #21
 
@@ -105,11 +105,15 @@ The third is what makes Battle mode cheap. A Speed range is the minimum and maxi
 
 ### 6. Images sit behind one component
 
-`@pkmn/img` returns addresses on Pokémon Showdown's servers plus a position within a sprite sheet. Whether v5 may use those images, and whether it hosts copies, depends on permission. The maintainer will ask Smogon once a text-only v5.0 is live to show them.
+`@pkmn/img` returns addresses on Pokémon Showdown's servers plus a position within a sprite sheet. v5 uses it, and does not wait for Smogon's permission first.
 
-- **One `PokemonIcon` component and one `ItemIcon` component** own that decision. Everything else asks for an icon by name.
-- **Both have a text-only fallback, and v5.0 ships with it.** Quick and Calculator must work with no images. Battle and Teams depend on them.
-- **Offline needs local copies.** If permission is granted, the sheets are stored with the app and cached by the service worker.
+- **Why that is acceptable.** `@pkmn/img` is MIT. The images it points to are Nintendo's, not Smogon's: Showdown's licence does not cover them, and neither does any other sprite source. PokeSprite's README, for example, says "The sprite images are © Nintendo/Creatures Inc./GAME FREAK Inc." No source can license them, so asking Smogon cannot make their use more certain. Using them is the same good-faith fan use that other Showdown-based tools rely on. In November 2026 `@pkmn/img` had about 4,000 downloads a month, and public projects such as PokeBin and several damage calculators and Showdown bots use it.
+- **Courtesy to Smogon.** When the maintainer asks Smogon about the usage data (#58), they also mention that the site uses the sprites and offer to change that if it is a problem.
+- **Self-hosted, never hotlinked.** The `@pkmn/img` README asks users to host their own copies so they do not add to Showdown's bandwidth costs, and to host the icon sheets at least, because Showdown can change the positions within a sheet at any time. The sheets used are copied into the app and pinned to the `@pkmn/img` version that matches them; a test fails if the two drift apart. The service worker caches them for offline use.
+- **Positions are worked out at build time.** The data build stores each species' place on the sheet, so `@pkmn/img` is a development dependency and never ships to the browser. Only the Pokémon sheet ships for now (#106). The item sheet waits until something shows an item.
+- **Credited.** The About page credits Smogon and Pokémon Showdown and `@pkmn`, and states that the sprite images are © Nintendo/Creatures Inc./GAME FREAK Inc. (#86).
+- **One `PokemonIcon` component and one `ItemIcon` component** own the images. Everything else asks for an icon by name.
+- **Images are decorative.** The name is always written beside a sprite, and a custom base Speed with no species shows the name alone. Quick and Calculator must work with no images. Battle and Teams depend on them.
 
 ### 7. React 19 with React Aria Components
 
@@ -157,10 +161,10 @@ v5 ships in pieces, not all at once. Each release proves the layer the next one 
 
 | Release | Contains | What it proves |
 |---|---|---|
-| v5.0 | Calculator mode with Trick Room, Generation 9 rules, a text-only species picker, light and dark themes, share links, offline | Engine, URL state, tokens, components, data build |
+| v5.0 | Calculator mode with Trick Room, Generation 9 rules, a species picker with sprites, light and dark themes, share links, offline | Engine, URL state, tokens, components, data build |
 | v5.1 | Rulesets for Generations 3 to 8 and Champions, and the formats built on them | Rulesets as data |
 | v5.2 | Quick mode | Formats, defaults, the chip components |
-| Later | Teams and Battle, usage data, sprites | Library, candidate sets |
+| Later | Teams and Battle, usage data | Library, candidate sets |
 
 The numbers are a guide to order, not a commitment. v5.0 replaces v4 on choicescarf.com once it does everything v4 does.
 
@@ -196,7 +200,7 @@ Vercel's Hobby plan is free for personal, non-commercial projects and includes a
 
 ## Open questions
 
-- **Sprites.** Permission, licence and hosting, as described in decision 6.
+- **Usage data terms.** The usage stats and sets are Smogon's. The maintainer is asking Smogon about using them (#58).
 
 ## Versions checked
 

@@ -4,6 +4,8 @@ export interface StoredSpecies {
   name: string;
   /** Base Speed. */
   spe: number;
+  /** Its icon's place on the Pokémon icon sheet, counting along each row from 0 (see PokemonSprite). */
+  icon: number;
   /** Speed-modifying abilities it can have, as engine modifier ids. Left out when none. */
   abilities?: string[];
   /** Only in National Dex, not in Scarlet and Violet. Left out otherwise. */
