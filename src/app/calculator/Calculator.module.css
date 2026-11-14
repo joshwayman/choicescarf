@@ -47,6 +47,50 @@
   font-weight: 700;
 }
 
+.pickerButton {
+  flex: 1 1 0;
+  min-width: 0;
+  height: var(--size-control-min);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-8);
+  padding: 0 var(--space-12);
+  border-radius: 10px;
+  border: 1px solid var(--color-control-line);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.pickerButton[data-focus-visible] {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.pickerName {
+  display: flex;
+  min-width: 0;
+}
+
+.pickerIcon {
+  display: flex;
+  flex-shrink: 0;
+  color: var(--color-text-3);
+}
+
+.cardBase {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--type-label-size);
+  color: var(--color-text-2);
+}
+
 .baseField {
   flex: 0 0 96px;
 }
@@ -195,9 +239,17 @@
 
 .cardHead {
   display: flex;
+  align-items: flex-start;
+  gap: var(--space-16);
+  min-width: 0;
+}
+
+.cardTitles {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
   flex-direction: column;
   gap: 2px;
-  min-width: 0;
 }
 
 .cardName {

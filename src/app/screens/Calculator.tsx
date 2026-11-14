@@ -9,6 +9,7 @@ import { FieldRow } from '../calculator/Field.tsx';
 import { ModifiersSheet } from '../calculator/ModifiersSheet.tsx';
 import { addChipId, ModifiersSheetContext, type SheetSectionId } from '../calculator/sheetContext.ts';
 import { SideForm, nameText } from '../calculator/SideForm.tsx';
+import { SpeciesPicker } from '../calculator/SpeciesPicker.tsx';
 import styles from '../calculator/Calculator.module.css';
 import { Page } from './Page.tsx';
 
@@ -146,17 +147,21 @@ function SideCard({
   onChange: (next: Calculation) => void;
 }) {
   const headingId = `side-${which}`;
+  const species = speciesOf(calc[which]);
   return (
     <section aria-labelledby={headingId} className={styles.card}>
       <div className={styles.cardHead}>
-        <span className={which === 'you' ? styles.eyebrowYou : styles.eyebrow}>{which === 'target' ? 'Target' : 'You'}</span>
-        {/* The species picker (#50) adds a "Change Pokémon" button here. */}
-        <h2 id={headingId} className={styles.cardName}>
-          {nameText(calc, which)}
-        </h2>
-        <p className={styles.cardSpeed}>
-          <span className={styles.cardSpeedValue}>{speedValue ?? '—'}</span> <span className={styles.cardSpeedLabel}>Speed</span>
-        </p>
+        <div className={styles.cardTitles}>
+          <span className={which === 'you' ? styles.eyebrowYou : styles.eyebrow}>{which === 'target' ? 'Target' : 'You'}</span>
+          <h2 id={headingId} className={styles.cardName}>
+            {nameText(calc, which)}
+          </h2>
+          {species ? <p className={styles.cardBase}>base {species.spe}</p> : null}
+          <p className={styles.cardSpeed}>
+            <span className={styles.cardSpeedValue}>{speedValue ?? '—'}</span> <span className={styles.cardSpeedLabel}>Speed</span>
+          </p>
+        </div>
+        <SpeciesPicker calc={calc} which={which} onChange={onChange} variant="icon" />
       </div>
       <SideForm calc={calc} which={which} layout="desktop" onChange={onChange} />
     </section>
