@@ -1,4 +1,4 @@
-import { act, render, screen, waitFor, within } from '@testing-library/react';
+import { act, cleanup, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from '@tanstack/react-router';
 import axe from 'axe-core';
@@ -135,17 +135,32 @@ describe('Calculator on a phone', () => {
     expect(within(panel).getByText('Solved')).toHaveAccessibleDescription('Nature and EVs are solved in the results');
   });
 
-  it('toggles Choice Scarf and Tailwind from the chips', async () => {
+  it('adds Choice Scarf and Tailwind from "+ Item", and shows them as chips (#118)', async () => {
     const user = userEvent.setup();
     const { router } = open('/?v=1&t=garchomp&y=dragapult');
     await results();
+    expect(screen.queryByRole('button', { name: /Tailwind/ })).not.toBeInTheDocument();
+    /** Picks something in the Modifiers sheet, then closes it. */
+    const pick = async (opener: string | RegExp, group: string, option: RegExp) => {
+      await user.click(screen.getByRole('button', { name: opener }));
+      const sheet = await screen.findByRole('dialog', { name: 'Modifiers' });
+      await user.click(within(within(sheet).getByRole('group', { name: group })).getByRole('button', { name: option }));
+      await user.keyboard('{Escape}');
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+      });
+    };
     // Garchomp 333 × 1.5 = 499: past Dragapult's 421 without a Scarf.
-    await user.click(screen.getByRole('button', { name: 'Choice Scarf' }));
+    await pick('Add Item', 'Item', /^Choice Scarf/);
     expect(within(await results()).getByRole('heading')).toHaveTextContent('Dragapult needs a Choice Scarf to outspeed 499');
     // With Tailwind too, ×3 = 999: past even Dragapult's Scarf 631.
-    await user.click(screen.getByRole('button', { name: 'Tailwind' }));
+    await pick('Add Modifier', 'Its side', /^Tailwind/);
     expect(within(await results()).getByRole('heading')).toHaveTextContent('Dragapult can’t outspeed 999');
     expect(router.state.location.searchStr).toBe('?v=1&t=garchomp&t.item=choicescarf&t.tw=1&y=dragapult');
+
+    expect(screen.getByRole('button', { name: /^Choice Scarf/ })).toHaveAttribute('aria-haspopup', 'dialog');
+    expect(screen.getByRole('button', { name: /^Tailwind/ })).toHaveTextContent('×2');
+    expect(screen.queryByRole('button', { name: 'Add Item' })).not.toBeInTheDocument();
   });
 
   it('adds an ability, then rain from the Field tab of the same sheet', async () => {
@@ -507,21 +522,28 @@ describe('Trick Room', () => {
     expect(within(region).getByRole('heading')).toHaveTextContent('Garchomp can’t underspeed 94');
   });
 
-  it('suggests 0 IVs and an Iron Ball while it is on, and hides the Choice Scarf', async () => {
+  it('suggests 0 IVs, and an Iron Ball in "+ Item", while it is on', async () => {
     const user = userEvent.setup();
     const { router } = open('/?v=1&t=kingambit&y=garganacl');
     await results();
-    expect(screen.getByRole('button', { name: 'Choice Scarf' })).toBeInTheDocument();
+    // Outside Trick Room "+ Item" shows the Choice Scarf (row 4, column 5 of the item sheet: 69).
+    expect(screen.getByRole('button', { name: 'Add Item' }).querySelector('[data-item-icon="69"]')).not.toBeNull();
     await addTrickRoom(user);
 
     await user.click(screen.getByRole('tab', { name: /^You/ }));
-    expect(screen.queryByRole('button', { name: 'Choice Scarf' })).not.toBeInTheDocument();
     // Your IVs default to 0 in Trick Room, so that chip starts on.
     expect(screen.getByRole('button', { name: '0 IVs' })).toHaveAttribute('aria-pressed', 'true');
-    const ball = screen.getByRole('button', { name: 'Iron Ball' });
-    expect(ball).toHaveAttribute('aria-pressed', 'false');
+    // Under Trick Room it shows the Iron Ball (row 14, column 0: 224).
+    const addItem = screen.getByRole('button', { name: 'Add Item' });
+    expect(addItem.querySelector('[data-item-icon="224"]')).not.toBeNull();
 
-    await user.click(ball);
+    await user.click(addItem);
+    const sheet = await screen.findByRole('dialog', { name: 'Modifiers' });
+    await user.click(within(within(sheet).getByRole('group', { name: 'Item' })).getByRole('button', { name: /^Iron Ball/ }));
+    await user.keyboard('{Escape}');
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
     expect(router.state.location.searchStr).toContain('y.item=ironball');
     // 70 + 63 + 5 = 138 × 0.5 = 69 for 252 EVs: well under 94, so every nature reaches 252 EVs.
     const region = await results();
@@ -536,7 +558,10 @@ describe('Trick Room', () => {
     open('/?v=1&t=kingambit&y=dragapult&tr=1');
     const region = await results();
     expect(within(region).getByRole('heading')).toHaveTextContent('Dragapult can’t underspeed 94');
-    expect(screen.getAllByRole('button', { name: 'Iron Ball' })).toHaveLength(2);
+    // Each card's "+ Item" shows the Iron Ball it suggests.
+    const addItems = screen.getAllByRole('button', { name: 'Add Item' });
+    expect(addItems).toHaveLength(2);
+    for (const chip of addItems) expect(chip.querySelector('[data-item-icon="224"]')).not.toBeNull();
   });
 
   it('has no axe violations under Trick Room', async () => {
@@ -548,7 +573,7 @@ describe('Trick Room', () => {
 });
 
 describe('Item icons (#108)', () => {
-  it('shows the Choice Scarf icon on its chip and in the Scarf fallback (#108)', async () => {
+  it('shows the Choice Scarf icon on "+ Item" and in the Scarf fallback (#108)', async () => {
     open('/?v=1&t=dragapult&y=garchomp');
     const region = await results();
     // Choice Scarf is row 4, column 5 of the item sheet: 4 × 16 + 5 = 69.
@@ -560,7 +585,7 @@ describe('Item icons (#108)', () => {
       expect(cell.querySelector('[data-item-icon="69"]')).toHaveAttribute('aria-hidden', 'true');
     }
     expect(rows(region)[0]).toEqual(['68 EVs', '423']);
-    expect(screen.getByRole('button', { name: 'Choice Scarf' }).querySelector('[data-item-icon="69"]')).not.toBeNull();
+    expect(screen.getByRole('button', { name: 'Add Item' }).querySelector('[data-item-icon="69"]')).not.toBeNull();
   });
 
   it('shows no Scarf icon in the results when no Scarf is needed', async () => {
@@ -581,3 +606,55 @@ describe('Item icons (#108)', () => {
     expect(within(items).getByRole('button', { name: /^Power item/ }).querySelector('[data-item-icon="354"]')).not.toBeNull();
   });
 });
+
+describe('one item slot (#118)', () => {
+  it('shows "+ Item" until the Pokémon holds something, then that item', async () => {
+    open('/?v=1&t=garchomp&y=dragapult');
+    await results();
+    expect(screen.getByRole('button', { name: 'Add Item' })).toBeInTheDocument();
+
+    cleanupAndOpen('/?v=1&t=garchomp&t.item=ironball&y=dragapult');
+    await results();
+    expect(screen.queryByRole('button', { name: 'Add Item' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /^Choice Scarf/ })).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /^Iron Ball/ })).toBeInTheDocument();
+  });
+
+  it('swaps the Scarf for an item picked in the Modifiers sheet, and back to "+ Item" when it is removed', async () => {
+    const user = userEvent.setup();
+    const { router } = open('/?v=1&t=garchomp&t.item=choicescarf&y=dragapult');
+    await results();
+    await user.click(screen.getByRole('button', { name: /^Choice Scarf/ }));
+    const items = within(await screen.findByRole('dialog', { name: 'Modifiers' })).getByRole('group', { name: 'Item' });
+    await user.click(within(items).getByRole('button', { name: /^Iron Ball/ }));
+    expect(router.state.location.searchStr).toContain('t.item=ironball');
+    await user.keyboard('{Escape}');
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
+    expect(screen.queryByRole('button', { name: /^Choice Scarf/ })).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: /^Iron Ball/ }));
+    const again = within(await screen.findByRole('dialog', { name: 'Modifiers' })).getByRole('group', { name: 'Item' });
+    await user.click(within(again).getByRole('button', { name: /^Iron Ball/ }));
+    await user.keyboard('{Escape}');
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
+    expect(screen.getByRole('button', { name: 'Add Item' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /^Iron Ball/ })).not.toBeInTheDocument();
+  });
+
+  it('under Trick Room, shows a held Scarf as the item', async () => {
+    open('/?v=1&t=kingambit&t.item=choicescarf&y=garganacl&tr=1');
+    await results();
+    expect(screen.getByRole('button', { name: /^Choice Scarf/ })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Add Item' })).not.toBeInTheDocument();
+  });
+});
+
+/** Starts again on another link in the same test. */
+function cleanupAndOpen(path: string) {
+  cleanup();
+  return open(path);
+}

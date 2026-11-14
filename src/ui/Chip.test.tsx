@@ -51,6 +51,18 @@ describe('ChipToggle', () => {
     await user.keyboard(' ');
     expect(chip).toHaveAttribute('aria-pressed', 'false');
   });
+
+  it('reads "+ Tailwind" when off and shows a check when on, keeping the name "Tailwind" (#118)', async () => {
+    const user = userEvent.setup();
+    render(<ChipToggle label="Tailwind" />);
+    const chip = screen.getByRole('button', { name: 'Tailwind' });
+    expect(chip).toHaveTextContent(/^\+Tailwind$/);
+    expect(chip.querySelector('svg')).toBeNull();
+    await user.click(chip);
+    expect(chip).toHaveTextContent(/^Tailwind$/);
+    expect(chip.querySelector('svg')).not.toBeNull();
+    expect(screen.getByRole('button', { name: 'Tailwind' })).toBe(chip);
+  });
 });
 
 describe('ChipGroup', () => {
