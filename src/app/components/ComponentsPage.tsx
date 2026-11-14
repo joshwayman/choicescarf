@@ -272,7 +272,15 @@ function Fields() {
       <div className={styles.fields}>
         <NumberField label="IVs" defaultValue={31} minValue={0} maxValue={31} />
         <NumberField label="Level" defaultValue={100} minValue={1} maxValue={100} />
-        <NumberField variant="stepper" label="Speed stage" defaultValue={0} minValue={-6} maxValue={6} />
+        <NumberField
+          variant="stepper"
+          label="Speed boost"
+          description="From moves like Dragon Dance (+1) or Icy Wind (−1), −6 to +6."
+          formatOptions={{ signDisplay: 'exceptZero' }}
+          defaultValue={0}
+          minValue={-6}
+          maxValue={6}
+        />
       </div>
       <NumberField
         variant="row"

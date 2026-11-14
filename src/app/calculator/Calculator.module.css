@@ -294,6 +294,11 @@
   gap: var(--space-8);
 }
 
+/* The Speed boost takes the row: stepper in the first half, its hint in the second (#119). */
+.stageRow > :only-child {
+  grid-column: 1 / -1;
+}
+
 /* The Modifiers sheet: Target / You / Field tabs, two columns on wider screens (#102). */
 
 .sheetTabs {

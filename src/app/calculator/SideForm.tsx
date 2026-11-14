@@ -22,6 +22,13 @@ function isNature(value: string): value is Nature {
 }
 
 /**
+ * The Speed boost, the game's stat stage (#119): moves raise or lower it, and
+ * it is shown signed, +1 or −1, so its direction is plain.
+ */
+const BOOST_HINT = 'From moves like Dragon Dance (+1) or Icy Wind (−1), −6 to +6.';
+const SIGNED: Intl.NumberFormatOptions = { signDisplay: 'exceptZero' };
+
+/**
  * One Pokémon's fields (#66): base Speed, then nature and EVs for the
  * target (yours are solved), IVs, level, stage, and its modifiers.
  */
@@ -113,7 +120,10 @@ export function SideForm({ calc, which, layout, onChange }: Props) {
         />
         {layout === 'phone' ? (
           <NumberField
-            label="Stage"
+            label="Boost"
+            description={BOOST_HINT}
+            hideDescription
+            formatOptions={SIGNED}
             minValue={ruleset.stage.min}
             maxValue={ruleset.stage.max}
             value={side.stage}
@@ -128,7 +138,9 @@ export function SideForm({ calc, which, layout, onChange }: Props) {
         <div className={styles.stageRow}>
           <NumberField
             variant="stepper"
-            label="Speed stage"
+            label="Speed boost"
+            description={BOOST_HINT}
+            formatOptions={SIGNED}
             minValue={ruleset.stage.min}
             maxValue={ruleset.stage.max}
             value={side.stage}
