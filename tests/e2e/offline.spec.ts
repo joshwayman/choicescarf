@@ -67,6 +67,8 @@ function recordNetwork(page: Page) {
   const pending: Promise<{ url: string; bytes: number }>[] = [];
   let all = 0;
   page.on('requestfinished', (request) => {
+    // Analytics and error reporting (#86) are other sites and go to the network by design.
+    if (new URL(request.url()).origin !== new URL(page.url() || 'http://localhost:4173').origin) return;
     all += 1;
     pending.push(
       (async () => {

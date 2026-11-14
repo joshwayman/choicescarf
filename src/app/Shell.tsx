@@ -10,6 +10,7 @@ import {
 import { HeaderBadge, IconButton, MenuIcon, MoonIcon, SunIcon } from '../ui/index.ts';
 import { classes } from '../ui/classes.ts';
 import { useTheme } from '../ui/theme.ts';
+import { Telemetry } from './telemetry/Telemetry.tsx';
 import { UpdateNotice } from './UpdateNotice.tsx';
 import styles from './Shell.module.css';
 
@@ -62,6 +63,7 @@ export function Shell() {
             </DesktopOnly>
           </div>
         </header>
+        <Telemetry />
         <UpdateNotice />
         <main id="main" tabIndex={-1} className={styles.main}>
           <Outlet />

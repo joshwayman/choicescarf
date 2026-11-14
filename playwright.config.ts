@@ -23,5 +23,11 @@ export default defineConfig({
     url: 'http://localhost:4173',
     reuseExistingServer: process.env.CI === undefined,
     timeout: 120_000,
+    // Placeholder ids, so the build loads analytics and error reporting
+    // and the flows can check they never block the app or see the calculation.
+    env: {
+      VITE_GA4_MEASUREMENT_ID: 'G-E2ETEST',
+      VITE_SENTRY_DSN: 'https://public@o0.ingest.sentry.io/0',
+    },
   },
 });
